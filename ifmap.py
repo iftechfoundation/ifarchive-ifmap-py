@@ -76,3 +76,12 @@ plan = ParamFile(os.path.join(opts.libdir, 'index'))
 
 filename = plan.get('Top-Level-Template')
 toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
+
+filename = plan.get('Dir-List-Template')
+dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
+
+filename = plan.get('XML-Template')
+xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
+
+filename = plan.get('Date-List-Template')
+datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
