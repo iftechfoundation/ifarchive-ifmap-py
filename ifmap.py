@@ -52,6 +52,19 @@ class ParamFile:
         self.body = fl.read()
         fl.close()
 
+    def get(self, key, default=None):
+        return self.map.get(key, default)
+
+def read_lib_file(filename, default):
+    if not filename:
+        return default
+    fl = open(os.path.join(opts.libdir, filename), encoding='utf-8')
+    res = fl.read()
+    fl.close()
+    return res
+
+# Begin work!
+
 (opts, args) = popt.parse_args()
 
 if not opts.libdir:
@@ -60,3 +73,6 @@ if not opts.destdir:
     raise Exception('--dest argument required')
 
 plan = ParamFile(os.path.join(opts.libdir, 'index'))
+
+filename = plan.get('Top-Level-Template')
+toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
