@@ -30,6 +30,9 @@ popt.add_option('-v', '--verbose',
                 help='print verbose output')
 
 class ParamFile:
+    """ParamFile: Store the contents of the lib/index file. This is a bunch
+    of key-value pairs, followed by a plain text body.
+    """
     def __init__(self, filename):
         self.filename = filename
         self.map = {}
@@ -55,7 +58,14 @@ class ParamFile:
     def get(self, key, default=None):
         return self.map.get(key, default)
 
-def read_lib_file(filename, default):
+    def put(self, key, val):
+        self.map[key] = val
+
+def read_lib_file(filename, default=''):
+    """Read a simple text file from the lib directory. Return it as a
+    string.
+    If filename is None, return the default string instead.
+    """
     if not filename:
         return default
     fl = open(os.path.join(opts.libdir, filename), encoding='utf-8')
