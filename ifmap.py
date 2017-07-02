@@ -39,6 +39,16 @@ class TemplateTag:
         
 class Template:
     tag_pattern = re.compile('[{]([^}]*)[}]')
+
+    cache = {}
+    
+    @staticmethod
+    def substitute(body, map, rock=None, outfl=sys.stdout):
+        template = Template.cache.get(body)
+        if template is None:
+            template = Template(body)
+            Template.cache[body] = template
+        template.subst(map, rock, outfl)
     
     def __init__(self, body):
         self.ls = []
@@ -88,7 +98,7 @@ class Template:
                 ls.append('{???}')
         return '<Template %r>' % (''.join(ls),)
 
-    def substitute(self, map, rock=None, outfl=sys.stdout):
+    def subst(self, map, rock=None, outfl=sys.stdout):
         activelist = [ True ]
         
         for tag in self.ls:
