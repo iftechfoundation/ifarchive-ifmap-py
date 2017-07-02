@@ -33,6 +33,8 @@ popt.add_option('-v', '--verbose',
                 help='print verbose output')
 
 class TemplateTag:
+    """Data element used inside a Template.
+    """
     def __init__(self, val, type=None):
         self.value = val
         self.type = type
@@ -40,6 +42,28 @@ class TemplateTag:
         return '<TemplateTag %s:%r>' % (self.type, self.value)
         
 class Template:
+    """Template: A basic template-substitution system.
+
+    You normally don't create Template objects. Instead, call
+    Template.substitute(body, map). This will create a Template
+    object if needed (caching known ones for speed) and then perform
+    the substitution.
+
+    The template language supports these tags:
+
+    {foo}: Substitute the value of map['foo'].
+    {?foo}if-yes{/}: If map['foo'] exists, substitute the if-yes part.
+    {?foo}if-yes{:}if-no{/}: If map['foo'] exists, substitute the if-yes
+        part; otherwise the if-no part.
+
+    If-then tags can be nested. {foo} is an error if the foo tag is
+    missing or its value is None.
+
+    The {?foo} test treats missing tags, None, and False as "no" results.
+    Zero and the empty string are treated as "yes", which is not the
+    usual Python convention, but our needs are specialized.
+    """
+    
     tag_pattern = re.compile('[{]([^}]*)[}]')
 
     cache = {}
