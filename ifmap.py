@@ -32,10 +32,10 @@ popt.add_option('-v', '--verbose',
 
 class TemplateTag:
     def __init__(self, val, type=None):
-        self.val = val
+        self.value = val
         self.type = type
     def __repr__(self):
-        return '<TemplateTag %s:%r>' % (self.type, self.val)
+        return '<TemplateTag %s:%r>' % (self.type, self.value)
         
 class Template:
     tag_pattern = re.compile('[{]([^}]*)[}]')
@@ -61,6 +61,8 @@ class Template:
                 tag = TemplateTag(None, 'else')
             elif val == '/':
                 tag = TemplateTag(None, 'endif')
+            elif val == '{':
+                tag = TemplateTag('{')
             elif val.startswith('?'):
                 tag = TemplateTag(val[1:], 'if')
             else:
@@ -70,7 +72,21 @@ class Template:
         return
 
     def __repr__(self):
-        return '<Template>'
+        ls = []
+        for tag in self.ls:
+            if not tag.type:
+                ls.append(tag.value)
+            elif tag.type == 'if':
+                ls.append('{?%s}' % (tag.value,))
+            elif tag.type == 'else':
+                ls.append('{:}')
+            elif tag.type == 'endif':
+                ls.append('{/}')
+            elif tag.type == 'var':
+                ls.append('{%s}' % (tag.value,))
+            else:
+                ls.append('{???}')
+        return '<Template %r>' % (''.join(ls),)
     
 class ParamFile:
     """ParamFile: Store the contents of the lib/index file. This is a bunch
