@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+### TODO:
+### move dirmap insertion to the top
+### name, rawname are bad labels. swap around.
+### correct escaping of everything
+### all the xml stuff
+
 import sys
 import re
 import os.path
