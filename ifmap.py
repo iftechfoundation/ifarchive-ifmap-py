@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import sys
+import re
 import os.path
 import optparse
 
@@ -29,6 +30,48 @@ popt.add_option('-v', '--verbose',
                 action='store_true', dest='verbose',
                 help='print verbose output')
 
+class TemplateTag:
+    def __init__(self, val, type=None):
+        self.val = val
+        self.type = type
+    def __repr__(self):
+        return '<TemplateTag %s:%r>' % (self.type, self.val)
+        
+class Template:
+    tag_pattern = re.compile('[{]([^}]*)[}]')
+    
+    def __init__(self, body):
+        self.ls = []
+        pos = 0
+        while True:
+            match = Template.tag_pattern.search(body, pos=pos)
+            if not match:
+                if pos < len(body):
+                    tag = TemplateTag(body[pos : ])
+                    self.ls.append(tag)
+                break
+
+            if match.start() > pos:
+                tag = TemplateTag(body[pos : match.start()])
+                self.ls.append(tag)
+                
+            val = match.group(1)
+            pos = match.end()
+            if val == ':':
+                tag = TemplateTag(None, 'else')
+            elif val == '/':
+                tag = TemplateTag(None, 'endif')
+            elif val.startswith('?'):
+                tag = TemplateTag(val[1:], 'if')
+            else:
+                tag = TemplateTag(val, 'var')
+            self.ls.append(tag)
+            
+        return
+
+    def __repr__(self):
+        return '<Template>'
+    
 class ParamFile:
     """ParamFile: Store the contents of the lib/index file. This is a bunch
     of key-value pairs, followed by a plain text body.
