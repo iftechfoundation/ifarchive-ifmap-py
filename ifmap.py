@@ -229,6 +229,15 @@ def expandtabs(val, colwidth=8):
 def xify_dirname(val):
     return val.replace('/', 'X')
 
+def bracket_count(val):
+    count = 0
+    for ch in val:
+        if ch == '[' or ch == '(':
+            count += 1
+        if ch == ']' or ch == ')':
+            count -= 1
+    return count
+    
 def append_string(val, val2):
     if not val2:
         return val
@@ -236,8 +245,11 @@ def append_string(val, val2):
         return val2
     return val + val2
 
-def append_string_esc(val, val2, forxml=False):
-    return append_string(val, val2) ###
+def escape_string(val, forxml=False):
+    return val ###
+
+def escape_url_string(val):
+    return val ###
 
 class Directory:
     def __init__(self, dirname):
@@ -265,8 +277,24 @@ class Directory:
         self.submap[key] = val
 
 class File:
-    def __init__(self, filename):
+    def __init__(self, filename, parentdir):
         self.submap = {}
+        self.parentdir = parentdir
+        parentdir.files[self.getkey('rawname')] = self
+
+        self.rawname = filename
+        self.putkey('rawname', filename)
+        self.putkey('name', escape_string(filename))
+        self.putkey('nameurl', escape_url_string(filename))
+        ### namexml
+
+        self.putkey('dir', parentdir.dir)
+
+    def complete(self, filestr):
+        if filestr is not None:
+            self.putkey('desc', filestr)
+            self.putkey('hasdesc', is_string_nonwhite(filestr))
+        ### filestrraw?
         
     def getkey(self, key, default=None):
         return self.submap.get(key)
@@ -283,7 +311,6 @@ def parse_master_index(indexpath, treedir):
     """
 
     dirmap = {}
-    filemap = {}
 
     dir = Directory(ROOTNAME)
     dirmap[dir.dir] = dir
@@ -299,6 +326,7 @@ def parse_master_index(indexpath, treedir):
         inheader = True
         headerpara = True
         headerstr = None
+        brackets = 0
         
         infl = open(indexpath, encoding='utf-8')
 
@@ -319,11 +347,7 @@ def parse_master_index(indexpath, treedir):
                 if dir:
                     if file:
                         # Also have to finish constructing the file entry.
-                        if filestr is not None:
-                            file.putkey('desc', filestr)
-                            file.putkey('hasdesc', is_string_nonwhite(filestr))
-                        ### filestrraw?
-                        filemap[file.getkey('rawname')] = file
+                        file.complete(filestr)
                         file = None
 
                     dirname = dir.dir
@@ -376,8 +400,9 @@ def parse_master_index(indexpath, treedir):
                         inheader = False
                         continue
 
+                # Further header lines become part of headerstr.
                 if len(bx):
-                    headerstr = append_string_esc(headerstr, bx, False)
+                    headerstr = append_string(headerstr, escape_string(bx, False))
                     headerstr = append_string(headerstr, '\n')
                     headerpara = False
                     ### headerstrraw
@@ -388,6 +413,49 @@ def parse_master_index(indexpath, treedir):
                     ### headerstrraw
                 
                 continue
+
+            if indent == 0 and bx:
+                # Start of a new file block.
+
+                if file:
+                    # Finish constructing the file in progress.
+                    file.complete(filestr)
+                    file = None
+
+                pos = bx.find(' ')
+                if pos >= 0:
+                    filename = bx[0:pos]
+                    bx = bx[pos:]
+                    match = indent_pattern.match(bx)
+                    firstindent = pos + len(match.group(1))
+                    bx = match.group(2)
+                    brackets = bracket_count(bx)
+                    filestr = escape_string(bx, False)
+                    filestr = append_string(filestr, '\n')
+                    ### filestrraw
+                else:
+                    filename = bx
+                    bx = ''
+                    firstindent = -1
+                    filestr = None
+                    ### filestrraw
+                    
+                file = File(filename, dir)
+
+            else:
+                # Continuing a file block.
+                if bx:
+                    if firstindent < 0:
+                        firstindent = indent
+                        brackets = 0
+                    if (firstindent != indent) and (brackets == 0):
+                        filestr = append_string(filestr, '<br>&nbsp;&nbsp;')
+                        ### filestrraw
+                    filestr = append_string(filestr, escape_string(bx, False))
+                    filestr = append_string(filestr, '\n')
+                    ### filestrraw
+                    brackets += bracket_count(bx)
+                ### filestrraw
 
         # Finished reading Master-Index.
         infl.close()
