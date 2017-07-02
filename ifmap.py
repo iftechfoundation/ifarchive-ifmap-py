@@ -115,7 +115,8 @@ class Template:
                     val = None
                     if map:
                         val = map.get(tag.value)
-                    activelist.append(val is not None)
+                    flag = (val is not None) and (val is not False)
+                    activelist.append(flag)
             elif tag.type == 'else':
                 if len(activelist) <= 1 or activelist[-2]:
                     activelist[-1] = not activelist[-1]
@@ -182,6 +183,11 @@ def read_lib_file(filename, default=''):
     fl.close()
     return res
 
+def is_string_nonwhite(val):
+    """Return (bool) whether val contains anything besides whitespace.
+    """
+    return bool(val.strip())
+    
 def expandtabs(val, colwidth=8):
     """Expand tabs in a string, using a given tab column width.
     (This is fast if val contains no tabs. It's not super-efficient
@@ -220,6 +226,12 @@ def parse_master_index(indexpath, treedir):
     dirmap[dir.dir] = dir
 
     if indexpath:
+        dirname_pattern = re.compile('^%s.*:$' % (re.escape(ROOTNAME),))
+        
+        dir = None
+        file = None
+        filestr = None
+        
         infl = open(indexpath, encoding='utf-8')
 
         done = False
@@ -231,6 +243,16 @@ def parse_master_index(indexpath, treedir):
             else:
                 ln = ln.rstrip()
                 ln = expandtabs(ln)
+
+            if done or dirname_pattern.match(ln):
+                # End of a directory block or end of file.
+                # Finish constructing the dir entry.
+
+                if dir:
+                    if file:
+                        if filestr is not None:
+                            file.putkey('desc', filestr)
+                            file.putkey('hasdesc', is_string_nonwhite(filestr))
 
     return dirmap
     
