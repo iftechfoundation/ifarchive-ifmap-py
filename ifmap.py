@@ -225,16 +225,34 @@ def expandtabs(val, colwidth=8):
             return val
         spaces = 8 - (pos & 7)
         val = val[0:pos] + (' '*spaces) + val[pos+1:]
-    
+
+def xify_dirname(val):
+    return val.replace('/', 'X')
+
 class Directory:
     def __init__(self, dirname):
         self.dir = dirname
-        self.xdir = dirname.replace('/', 'X')
-        self.files = {}
         self.submap = {}
+
+        self.putkey('dir', dirname)
+        self.putkey('xdir', xify_dirname(dirname))
+
+        pos = dirname.rfind('/')
+        if pos >= 0:
+            parentdirname = dirname[0:pos]
+            self.putkey('parentdir', parentdirname)
+            self.putkey('xparentdir', xify_dirname(parentdirname))
+        
+        self.files = {}
 
     def __repr__(self):
         return '<Directory %s>' % (self.dir,)
+
+    def getkey(self, key, default=None):
+        return self.submap.get(key)
+    
+    def putkey(self, key, val):
+        self.submap[key] = val
         
 def parse_master_index(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
@@ -245,6 +263,7 @@ def parse_master_index(indexpath, treedir):
     """
 
     dirmap = {}
+    filemap = {}
 
     dir = Directory(ROOTNAME)
     dirmap[dir.dir] = dir
@@ -255,6 +274,9 @@ def parse_master_index(indexpath, treedir):
         dir = None
         file = None
         filestr = None
+        inheader = True
+        headerpara = True
+        headerstr = None
         
         infl = open(indexpath, encoding='utf-8')
 
@@ -274,9 +296,42 @@ def parse_master_index(indexpath, treedir):
 
                 if dir:
                     if file:
+                        # Also have to finish constructing the file entry.
                         if filestr is not None:
                             file.putkey('desc', filestr)
                             file.putkey('hasdesc', is_string_nonwhite(filestr))
+                        ### filestrraw?
+                        filemap[file.getkey('rawname')] = file
+                        file = None
+
+                    dirname = dir.dir
+                    if opts.verbose:
+                        print('Completing %s...' % (dirname,))
+                    dirmap[dirname] = dir
+
+                    if headerstr is not None:
+                        dir.putkey('header', headerstr)
+                        dir.putkey('hasdesc', is_string_nonwhite(headerstr))
+                        headerstr = None
+                    ### headerstrraw?
+                    dir = None
+
+                if not done:
+                    # Beginning of a directory block.
+                    dirname = ln[0:-1]  # delete trailing colon
+                    if opts.verbose:
+                        print('Completing %s...' % (dirname,))
+                    dir = Directory(dirname)
+                    
+                    filestr = None
+                    inheader = True
+                    headerpara = True
+                    headerstr = None
+
+                continue
+
+            if dir is None:
+                continue
 
     return dirmap
     
