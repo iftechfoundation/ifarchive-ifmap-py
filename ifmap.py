@@ -87,6 +87,29 @@ class Template:
             else:
                 ls.append('{???}')
         return '<Template %r>' % (''.join(ls),)
+
+    def substitute(self, map, rock=None, outfl=sys.stdout):
+        activelist = [ True ]
+        depth = 0
+        
+        for tag in self.ls:
+            if not tag.type:
+                if activelist[depth]:
+                    outfl.write(tag.value)
+            elif tag.type == 'var':
+                val = None
+                if map:
+                    val = map.get(tag.value)
+                if val is None:
+                    outfl.write('[UNKNOWN]')
+                    print('Problem: undefined brace-tag: %s' % (tag.value,))
+                elif callable(val):
+                    val(outfl, rock)
+                elif type(val) in (str, int, float, bool):
+                    outfl.write(str(val))
+                else:
+                    outfl.write('[NOT-PRINTABLE]')
+                    print('Problem: unprintable brace-tag type: %s=%r' % (tag.value, val))
     
 class ParamFile:
     """ParamFile: Store the contents of the lib/index file. This is a bunch
