@@ -90,15 +90,24 @@ class Template:
 
     def substitute(self, map, rock=None, outfl=sys.stdout):
         activelist = [ True ]
-        depth = 0
         
         for tag in self.ls:
             if tag.type is None:
-                if not activelist[depth]:
+                if not activelist[-1]:
                     continue
                 outfl.write(tag.value)
+            elif tag.type == 'if':
+                if not activelist[-1]:
+                    activelist.append(False)
+                else:
+                    val = None
+                    if map:
+                        val = map.get(tag.value)
+                    activelist.append(val is not None)
+            elif tag.type == 'endif':
+                activelist.pop()
             elif tag.type == 'var':
-                if not activelist[depth]:
+                if not activelist[-1]:
                     continue
                 val = None
                 if map:
