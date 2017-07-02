@@ -104,6 +104,9 @@ class Template:
                     if map:
                         val = map.get(tag.value)
                     activelist.append(val is not None)
+            elif tag.type == 'else':
+                if len(activelist) <= 1 or activelist[-2]:
+                    activelist[-1] = not activelist[-1]
             elif tag.type == 'endif':
                 activelist.pop()
             elif tag.type == 'var':
