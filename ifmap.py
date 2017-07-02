@@ -229,6 +229,16 @@ def expandtabs(val, colwidth=8):
 def xify_dirname(val):
     return val.replace('/', 'X')
 
+def append_string(val, val2):
+    if not val2:
+        return val
+    if not val:
+        return val2
+    return val + val2
+
+def append_string_esc(val, val2, forxml=False):
+    return append_string(val, val2) ###
+
 class Directory:
     def __init__(self, dirname):
         self.dir = dirname
@@ -281,6 +291,7 @@ def parse_master_index(indexpath, treedir):
     if indexpath:
         dirname_pattern = re.compile('^%s.*:$' % (re.escape(ROOTNAME),))
         dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
+        indent_pattern = re.compile('^([ ]*)(.*)$')
         
         dir = None
         file = None
@@ -350,6 +361,33 @@ def parse_master_index(indexpath, treedir):
             if dashline_pattern.match(ln):
                 continue
 
+            match = indent_pattern.match(ln)
+            indent = len(match.group(1))
+            bx = match.group(2)
+
+            if inheader:
+                # The header ends when we find the line
+                #       "Index   this file"
+                # (Spacing and capitalization of the "this file" part
+                # may vary.)
+                if bx.startswith('Index'):
+                    val = bx[5:].strip().lower()
+                    if val.startswith('this file'):
+                        inheader = False
+                        continue
+
+                if len(bx):
+                    headerstr = append_string_esc(headerstr, bx, False)
+                    headerstr = append_string(headerstr, '\n')
+                    headerpara = False
+                    ### headerstrraw
+                else:
+                    if not headerpara:
+                        headerstr = append_string(headerstr, '<p>\n');
+                        headerpara = True
+                    ### headerstrraw
+                
+                continue
 
         # Finished reading Master-Index.
         infl.close()
