@@ -253,7 +253,17 @@ class Directory:
     
     def putkey(self, key, val):
         self.submap[key] = val
+
+class File:
+    def __init__(self, filename):
+        self.submap = {}
         
+    def getkey(self, key, default=None):
+        return self.submap.get(key)
+    
+    def putkey(self, key, val):
+        self.submap[key] = val
+
 def parse_master_index(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
     tree to find more files. Return all the known directories as a dict.
@@ -270,6 +280,7 @@ def parse_master_index(indexpath, treedir):
 
     if indexpath:
         dirname_pattern = re.compile('^%s.*:$' % (re.escape(ROOTNAME),))
+        dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
         
         dir = None
         file = None
@@ -330,8 +341,18 @@ def parse_master_index(indexpath, treedir):
 
                 continue
 
+            # We can't do any work outside of a directory block.
             if dir is None:
                 continue
+
+            # Skip any line which is entirely dashes (or dash-like
+            # characters). But we don't skip blank lines this way.
+            if dashline_pattern.match(ln):
+                continue
+
+
+        # Finished reading Master-Index.
+        infl.close()
 
     return dirmap
     
