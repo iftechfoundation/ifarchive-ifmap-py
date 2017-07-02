@@ -280,7 +280,7 @@ class File:
     def __init__(self, filename, parentdir):
         self.submap = {}
         self.parentdir = parentdir
-        parentdir.files[self.getkey('rawname')] = self
+        parentdir.files[filename] = self
 
         self.rawname = filename
         self.putkey('rawname', filename)
@@ -289,6 +289,9 @@ class File:
         ### namexml
 
         self.putkey('dir', parentdir.dir)
+
+    def __repr__(self):
+        return '<File %s>' % (self.rawname,)
 
     def complete(self, filestr):
         if filestr is not None:
