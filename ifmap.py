@@ -5,6 +5,8 @@ import re
 import os.path
 import optparse
 
+ROOTNAME = 'if-archive'
+
 popt = optparse.OptionParser(usage='ifmap.py')
 
 popt.add_option('--index',
@@ -180,6 +182,58 @@ def read_lib_file(filename, default=''):
     fl.close()
     return res
 
+def expandtabs(val, colwidth=8):
+    """Expand tabs in a string, using a given tab column width.
+    (This is fast if val contains no tabs. It's not super-efficient
+    if val contains a lot of tabs, but in fact our files contain
+    very few tabs, so that's okay.)
+    """
+    start = 0
+    while True:
+        pos = val.find('\t', start)
+        if pos < 0:
+            return val
+        spaces = 8 - (pos & 7)
+        val = val[0:pos] + (' '*spaces) + val[pos+1:]
+    
+class Directory:
+    def __init__(self, dirname):
+        self.dir = dirname
+        self.xdir = dirname.replace('/', 'X')
+        self.files = {}
+        self.submap = {}
+
+    def __repr__(self):
+        return '<Directory %s>' % (self.dir,)
+        
+def parse_master_index(indexpath, treedir):
+    """Parse the Master-Index file, and then go through the directory
+    tree to find more files. Return all the known directories as a dict.
+
+    Either or both arguments may be None. At a bare minimum, this always
+    returns the root directory.
+    """
+
+    dirmap = {}
+
+    dir = Directory(ROOTNAME)
+    dirmap[dir.dir] = dir
+
+    if indexpath:
+        infl = open(indexpath, encoding='utf-8')
+
+        done = False
+        while not done:
+            ln = infl.readline()
+            if not ln:
+                done = True
+                ln = None
+            else:
+                ln = ln.rstrip()
+                ln = expandtabs(ln)
+
+    return dirmap
+    
 # Begin work!
 
 (opts, args) = popt.parse_args()
@@ -202,3 +256,10 @@ xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
 filename = plan.get('Date-List-Template')
 datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
+
+dirmap = parse_master_index(opts.indexpath, opts.treedir)
+dir = dirmap[ROOTNAME]
+dir.submap['hasdesc'] = True
+dir.submap['header'] = toplevel_body
+
+
