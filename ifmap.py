@@ -74,7 +74,7 @@ class Template:
     def __repr__(self):
         ls = []
         for tag in self.ls:
-            if not tag.type:
+            if tag.type is None:
                 ls.append(tag.value)
             elif tag.type == 'if':
                 ls.append('{?%s}' % (tag.value,))
@@ -93,10 +93,13 @@ class Template:
         depth = 0
         
         for tag in self.ls:
-            if not tag.type:
-                if activelist[depth]:
-                    outfl.write(tag.value)
+            if tag.type is None:
+                if not activelist[depth]:
+                    continue
+                outfl.write(tag.value)
             elif tag.type == 'var':
+                if not activelist[depth]:
+                    continue
                 val = None
                 if map:
                     val = map.get(tag.value)
