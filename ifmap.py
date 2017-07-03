@@ -557,7 +557,7 @@ def parse_master_index(indexpath, treedir):
                     dir2 = dirmap.get(dirname2)
                     if dir2 is None:
                         dir2 = Directory(dirname2)
-                        ### dirmap[dirname2] = dir2 ?
+                        dirmap[dirname2] = dir2
                     file = dir.files.get(ent.name)
                     if file is not None:
                         file.putkey('linkdir', dirname2)
@@ -572,7 +572,8 @@ def parse_master_index(indexpath, treedir):
                     continue
                             
             # End of internal scan_directory function.
-        
+
+        # Call the above function recursively.
         scan_directory(ROOTNAME)
         
     return dirmap
