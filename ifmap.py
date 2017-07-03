@@ -259,6 +259,21 @@ def escape_string(val, forxml=False):
 def escape_url_string(val):
     return val ###
 
+def findfile(path):
+    """Locate the File object for a given pathname.
+    This is a debugging function; call it after the global dirmap
+    has been created.
+    """
+    (dirname, filename) = os.path.split(path)
+    if not dirname.startswith('if-archive'):
+        if not dirname:
+            dirname = 'if-archive'
+        else:
+            dirname = os.path.join('if-archive', dirname)
+
+    dir = dirmap[dirname]
+    return dir.files[filename]
+
 class Directory:
     def __init__(self, dirname):
         self.dir = dirname
