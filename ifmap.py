@@ -379,7 +379,7 @@ def parse_master_index(indexpath, treedir):
 
                     dirname = dir.dir
                     if opts.verbose:
-                        print('Starting  %s...' % (dirname,))
+                        print('Finishing %s...' % (dirname,))
                     dirmap[dirname] = dir
 
                     if headerstr is not None:
@@ -393,7 +393,7 @@ def parse_master_index(indexpath, treedir):
                     # Beginning of a directory block.
                     dirname = ln[0:-1]  # delete trailing colon
                     if opts.verbose:
-                        print('Finishing %s...' % (dirname,))
+                        print('Starting  %s...' % (dirname,))
                     dir = Directory(dirname)
                     
                     filestr = None
@@ -557,17 +557,17 @@ def parse_master_index(indexpath, treedir):
                     dir2 = dirmap.get(dirname2)
                     if dir2 is None:
                         dir2 = Directory(dirname2)
-                        file = dir.files.get(ent.name)
-                        if file is not None:
-                            file.putkey('linkdir', dirname2)
-                            file.putkey('xlinkdir', xify_dirname(dirname2))
-                        if parentlist and parentdir:
-                            parentname = os.path.join(parentdir, ent.name)
-                            parentfile = parentlist.get(parentname)
-                            if parentfile is not None:
-                                parentfile.putkey('linkdir', dirname2)
-                                parentfile.putkey('xlinkdir', xify_dirname(dirname2))
-                        scan_directory(dirname2, dir.files, ent.name)
+                    file = dir.files.get(ent.name)
+                    if file is not None:
+                        file.putkey('linkdir', dirname2)
+                        file.putkey('xlinkdir', xify_dirname(dirname2))
+                    if parentlist and parentdir:
+                        parentname = os.path.join(parentdir, ent.name)
+                        parentfile = parentlist.get(parentname)
+                        if parentfile is not None:
+                            parentfile.putkey('linkdir', dirname2)
+                            parentfile.putkey('xlinkdir', xify_dirname(dirname2))
+                    scan_directory(dirname2, dir.files, ent.name)
                                 
                             
         
