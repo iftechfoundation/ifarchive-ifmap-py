@@ -12,6 +12,7 @@ import re
 import os
 import os.path
 import time
+from collections import ChainMap
 import optparse
 
 ROOTNAME = 'if-archive'
@@ -622,6 +623,13 @@ def check_missing_files(dirmap):
             if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
 
+def parity_flip(map):
+    val = map.get('parity')
+    if val == 'Even':
+        map['parity'] = 'Odd'
+    else:
+        map['parity'] = 'Even'
+        
 def generate_output(dirmap):
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
@@ -634,17 +642,16 @@ def generate_output(dirmap):
     def dirlist_thunk(outfl, rock):
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
-        flag = False
+        itermap = {}
         for dir in dirlist:
-            dir.submap['parity'] = 'Odd' if flag else 'Even'
-            flag = not flag
-            Template.substitute(dirlist_entry, dir.submap, outfl=outfl)
+            parity_flip(itermap)
+            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
             outfl.write('\n')
-    plan.put('_dirs', dirlist_thunk)
+    itermap = { '_dirs':dirlist_thunk }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
     outfl = open(filename, 'w', encoding='utf-8')
-    Template.substitute(dirlist_body, plan.map, outfl=outfl)
+    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=outfl)
     outfl.close()
 
     filename = plan.get('XML-Template')
