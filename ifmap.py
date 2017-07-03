@@ -594,6 +594,12 @@ def parse_master_index(indexpath, treedir):
         dir.putkey('subdircount', str(len(dir.subdirs)))
         
     return dirmap
+
+def check_missing_files(dirmap):
+    for dir in dirmap.values():
+        for file in dir.files.values():
+            if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
+                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
     
 # Begin work!
 
@@ -623,4 +629,4 @@ dir = dirmap[ROOTNAME]
 dir.submap['hasdesc'] = True
 dir.submap['header'] = toplevel_body
 
-
+check_missing_files(dirmap)
