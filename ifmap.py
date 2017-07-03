@@ -621,7 +621,21 @@ def check_missing_files(dirmap):
         for file in dir.files.values():
             if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
-    
+
+def generate_output(dirmap):
+    if not os.path.exists(opts.destdir):
+        os.mkdir(opts.destdir)
+        
+    filename = plan.get('Dir-List-Template')
+    dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
+
+    filename = plan.get('XML-Template')
+    xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
+
+    filename = plan.get('Date-List-Template')
+    datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
+
+
 
 # Begin work!
 
@@ -637,18 +651,11 @@ plan = ParamFile(os.path.join(opts.libdir, 'index'))
 filename = plan.get('Top-Level-Template')
 toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
 
-filename = plan.get('Dir-List-Template')
-dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
-
-filename = plan.get('XML-Template')
-xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
-
-filename = plan.get('Date-List-Template')
-datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
-
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
 dir = dirmap[ROOTNAME]
 dir.submap['hasdesc'] = True
 dir.submap['header'] = toplevel_body
 
 check_missing_files(dirmap)
+
+generate_output(dirmap)
