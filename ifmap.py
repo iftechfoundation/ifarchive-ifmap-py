@@ -8,7 +8,9 @@
 
 import sys
 import re
+import os
 import os.path
+import time
 import optparse
 
 ROOTNAME = 'if-archive'
@@ -270,7 +272,8 @@ class Directory:
             parentdirname = dirname[0:pos]
             self.putkey('parentdir', parentdirname)
             self.putkey('xparentdir', xify_dirname(parentdirname))
-        
+
+        ### add_dir_links?
         self.files = {}
 
     def __repr__(self):
@@ -469,6 +472,90 @@ def parse_master_index(indexpath, treedir):
         # Finished reading Master-Index.
         infl.close()
 
+    if treedir:
+        # Do an actual scan of the tree and write in any directories
+        # we missed.
+
+        def scan_directory(dirname, parentlist, parentdir):
+            dir = dirmap.get(dirname)
+            if dir is None:
+                print('Problem: unable to find directory: %s' % (dirname,))
+                return
+            
+            pathname = os.path.join(treedir, dirname)
+            for ent in os.scandir(pathname):
+                if ent.name.startswith('.'):
+                    continue
+                sta = ent.stat(follow_symlinks=False)
+                dirname2 = os.path.join(dirname, ent.name)
+                pathname = os.path.join(treedir, dirname, ent.name)
+                
+                if ent.is_symlink():
+                    linkname = os.readlink(ent.path)
+                    # Symlink destinations should always be relative.
+                    if linkname.endswith('/'):
+                        linkname = linkname[0:-1]
+                    sta2 = ent.stat(follow_symlinks=True)
+                    if ent.is_file(follow_symlinks=True):
+                        file = dir.files.get(ent.name)
+                        if file is None:
+                            ### check_exclude
+                            file = File(ent.name, dir)
+                            file.putkey('desc', ' ')
+                        file.putkey('islink', True)
+                        file.putkey('islinkfile', True)
+                        file.putkey('linkpath', linkname) ### canonicalize?
+                        file.putkey('date', str(int(sta2.st_mtime)))
+                        tmdat = time.localtime(sta2.st_mtime)
+                        file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
+                    elif ent.is_dir(follow_symlinks=True):
+                        targetname = os.path.normpath(os.path.join(dirname, linkname))
+                        file = dir.files.get(ent.name)
+                        if file is None:
+                            file = File(ent.name, dir)
+                            file.putkey('desc', 'Symlink to '+targetname) ### escape?
+                        file.putkey('islink', True)
+                        file.putkey('islinkdir', True)
+                        file.putkey('linkdir', targetname)
+                        file.putkey('xlinkdir', xify_dirname(targetname))
+
+                    continue
+                        
+                if ent.is_file():
+                    if ent.name == 'Index':
+                        continue
+                    file = dir.files.get(ent.name)
+                    if file is None:
+                        ### check_exclude
+                        file = File(ent.name, dir)
+                        file.putkey('desc', ' ')
+                    file.putkey('filesize', str(sta.st_size))
+                    file.putkey('date', str(int(sta.st_mtime)))
+                    tmdat = time.localtime(sta.st_mtime)
+                    file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
+                    ### md5
+                    continue
+
+                if ent.is_dir():
+                    dir2 = dirmap.get(dirname2)
+                    if dir2 is None:
+                        dir2 = Directory(dirname2)
+                        file = dir.files.get(ent.name)
+                        if file is not None:
+                            file.putkey('linkdir', dirname2)
+                            file.putkey('xlinkdir', xify_dirname(dirname2))
+                        if parentlist and parentdir:
+                            parentname = os.path.join(parentdir, ent.name)
+                            parentfile = parentlist.get(parentname)
+                            if parentfile is not None:
+                                parentfile.putkey('linkdir', dirname2)
+                                parentfile.putkey('xlinkdir', xify_dirname(dirname2))
+                        scan_directory(dirname2, dir.files, ent.name)
+                                
+                            
+        
+        scan_directory(ROOTNAME)
+        
     return dirmap
     
 # Begin work!
