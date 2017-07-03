@@ -669,7 +669,7 @@ def generate_output_datelist(dirmap):
             if file.getkey('date'):
                 filelist.append(file)
 
-    filelist.sort(key=lambda file: -int(file.getkey('date')))
+    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.rawname.lower()))
 
     filename = plan.get('Date-List-Template')
     datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
