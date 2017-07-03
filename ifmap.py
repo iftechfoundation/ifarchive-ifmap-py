@@ -644,24 +644,74 @@ def generate_output_dirlist(dirmap):
             parity_flip(itermap)
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
             outfl.write('\n')
+            
     itermap = { '_dirs':dirlist_thunk }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
     outfl = open(filename, 'w', encoding='utf-8')
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=outfl)
     outfl.close()
+    
+def generate_output_datelist(dirmap):
+    intervals = [
+        (0, 0, None),
+        (1, 7*24*60*60, 'week'),
+        (2, 31*24*60*60, 'month'),
+        (3, 93*24*60*60, 'three months'),
+        (4, 366*24*60*60, 'year')
+    ]
+
+    # Create a list of all files is sorted by date, newest to oldest.
+    
+    filelist = []
+    for dir in dirmap.values():
+        for file in dir.files.values():
+            if file.getkey('date'):
+                filelist.append(file)
+
+    filelist.sort(key=lambda file: -int(file.getkey('date')))
+
+    filename = plan.get('Date-List-Template')
+    datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
+
+    datelist_entry = plan.get('Date-List-Entry', '<li>{name}')
+
+    curtime = int(time.time())
+    
+    for (intkey, intlen, intname) in intervals:
+        if intkey:
+            filename = os.path.join(opts.destdir, 'date_%d.html' % (intkey,))
+        else:
+            filename = os.path.join(opts.destdir, 'date.html')
+
+        def filelist_thunk(outfl, rock):
+            itermap = {}
+            for file in filelist:
+                parity_flip(itermap)
+                if intlen:
+                    if int(file.getkey('date')) + intlen < curtime:
+                        break
+                Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
+                outfl.write('\n')
+                
+        itermap = { '_files':filelist_thunk }
+        if intname:
+            itermap['interval'] = intname
+            
+        outfl = open(filename, 'w', encoding='utf-8')
+        Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=outfl)
+        outfl.close()
+    
 
 def generate_output(dirmap):
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
 
     generate_output_dirlist(dirmap)
+    generate_output_datelist(dirmap)
         
     filename = plan.get('XML-Template')
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
-
-    filename = plan.get('Date-List-Template')
-    datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
 
 
 
