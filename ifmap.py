@@ -236,9 +236,18 @@ def expandtabs(val, colwidth=8):
         val = val[0:pos] + (' '*spaces) + val[pos+1:]
 
 def xify_dirname(val):
+    """Convert a directory name to an X-string, as used in the index.html
+    filenames. The "if-archive/games" directory is mapped to
+    "if-archiveXgames", for example.
+    We acknowledge that this is ugly and stupid.
+    """
     return val.replace('/', 'X')
 
 def bracket_count(val):
+    """Check the running bracket balance of a string. This does not
+    distinguish between square brackets and parentheses. I can't remember
+    why we need this.
+    """
     count = 0
     for ch in val:
         if ch == '[' or ch == '(':
@@ -276,6 +285,8 @@ def findfile(path):
     return dir.files[filename]
 
 class Directory:
+    """Directory: one directory in the big directory map.
+    """
     def __init__(self, dirname):
         self.dir = dirname
         self.submap = {}
@@ -303,6 +314,10 @@ class Directory:
         self.submap[key] = val
 
 class File:
+    """File: one file in the big directory map.
+    (There is no global file list. You have to look at dir.files for each
+    directory in dirmap.)
+    """
     def __init__(self, filename, parentdir):
         self.submap = {}
         self.parentdir = parentdir
@@ -495,6 +510,8 @@ def parse_master_index(indexpath, treedir):
         # and sizes.
 
         def scan_directory(dirname, parentlist=None, parentdir=None):
+            """Internal recursive function.
+            """
             if opts.verbose:
                 print('Scanning  %s...' % (dirname,))
             dir = dirmap.get(dirname)
@@ -596,11 +613,16 @@ def parse_master_index(indexpath, treedir):
     return dirmap
 
 def check_missing_files(dirmap):
+    """Go through dirmap and look for entries which were not found in
+    the scan-directory phase. We know an entry was not found if we
+    never read its date (file timestamp).
+    """
     for dir in dirmap.values():
         for file in dir.files.values():
             if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
     
+
 # Begin work!
 
 (opts, args) = popt.parse_args()
