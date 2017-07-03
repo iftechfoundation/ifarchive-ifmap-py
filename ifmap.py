@@ -364,7 +364,7 @@ def parse_master_index(indexpath, treedir):
 
                     dirname = dir.dir
                     if opts.verbose:
-                        print('Completing %s...' % (dirname,))
+                        print('Starting  %s...' % (dirname,))
                     dirmap[dirname] = dir
 
                     if headerstr is not None:
@@ -378,7 +378,7 @@ def parse_master_index(indexpath, treedir):
                     # Beginning of a directory block.
                     dirname = ln[0:-1]  # delete trailing colon
                     if opts.verbose:
-                        print('Completing %s...' % (dirname,))
+                        print('Finishing %s...' % (dirname,))
                     dir = Directory(dirname)
                     
                     filestr = None
@@ -477,6 +477,8 @@ def parse_master_index(indexpath, treedir):
         # we missed.
 
         def scan_directory(dirname, parentlist=None, parentdir=None):
+            if opts.verbose:
+                print('Scanning  %s...' % (dirname,))
             dir = dirmap.get(dirname)
             if dir is None:
                 print('Problem: unable to find directory: %s' % (dirname,))
