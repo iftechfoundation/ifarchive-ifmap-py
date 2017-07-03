@@ -476,7 +476,7 @@ def parse_master_index(indexpath, treedir):
         # Do an actual scan of the tree and write in any directories
         # we missed.
 
-        def scan_directory(dirname, parentlist, parentdir):
+        def scan_directory(dirname, parentlist=None, parentdir=None):
             dir = dirmap.get(dirname)
             if dir is None:
                 print('Problem: unable to find directory: %s' % (dirname,))
