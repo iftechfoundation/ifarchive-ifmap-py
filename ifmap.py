@@ -380,7 +380,7 @@ def parse_master_index(indexpath, treedir):
                     dirname = dir.dir
                     if opts.verbose:
                         print('Finishing %s...' % (dirname,))
-                    dirmap[dirname] = dir
+                    dirmap[dirname] = dir  ### move to constructor?
 
                     if headerstr is not None:
                         dir.putkey('header', headerstr)
@@ -557,6 +557,7 @@ def parse_master_index(indexpath, treedir):
                     dir2 = dirmap.get(dirname2)
                     if dir2 is None:
                         dir2 = Directory(dirname2)
+                        ### dirmap[dirname2] = dir2 ?
                     file = dir.files.get(ent.name)
                     if file is not None:
                         file.putkey('linkdir', dirname2)
@@ -568,8 +569,9 @@ def parse_master_index(indexpath, treedir):
                             parentfile.putkey('linkdir', dirname2)
                             parentfile.putkey('xlinkdir', xify_dirname(dirname2))
                     scan_directory(dirname2, dir.files, ent.name)
-                                
+                    continue
                             
+            # End of internal scan_directory function.
         
         scan_directory(ROOTNAME)
         
