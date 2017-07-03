@@ -5,6 +5,7 @@
 ### name, rawname are bad labels. swap around.
 ### correct escaping of everything
 ### all the xml stuff
+### The N^2 loop in parse?
 
 import sys
 import re
@@ -290,6 +291,7 @@ class Directory:
 
         ### add_dir_links?
         self.files = {}
+        self.subdirs = {}
 
     def __repr__(self):
         return '<Directory %s>' % (self.dir,)
@@ -489,7 +491,8 @@ def parse_master_index(indexpath, treedir):
 
     if treedir:
         # Do an actual scan of the tree and write in any directories
-        # we missed.
+        # we missed. We also take the opportunity to scan file dates
+        # and sizes.
 
         def scan_directory(dirname, parentlist=None, parentdir=None):
             if opts.verbose:
@@ -575,6 +578,18 @@ def parse_master_index(indexpath, treedir):
 
         # Call the above function recursively.
         scan_directory(ROOTNAME)
+
+    # Create the subdir list and count for each directory.
+    for dir in dirmap.values():
+        dir.putkey('count', str(len(dir.files)))
+        
+        # This is N^2, sorry.
+        ### Probably a better way exists.
+        for subname, subdir in dirmap.items():
+            if subname.startswith(dir.dir):
+                val = subname[len(dir.dir):]
+                if val.startswith('/') and val.find('/', 1) < 0:
+                    dir.subdirs[subname] = subdir
         
     return dirmap
     
