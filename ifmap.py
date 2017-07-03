@@ -629,6 +629,11 @@ def generate_output(dirmap):
     filename = plan.get('Dir-List-Template')
     dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
 
+    filename = os.path.join(opts.destdir, 'dirlist.html')
+    outfl = open(filename, 'w', encoding='utf-8')
+    Template.substitute(dirlist_body, plan.map, outfl=outfl)
+    outfl.close()
+
     filename = plan.get('XML-Template')
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
