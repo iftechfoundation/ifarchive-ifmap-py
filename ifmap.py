@@ -590,6 +590,8 @@ def parse_master_index(indexpath, treedir):
                 val = subname[len(dir.dir):]
                 if val.startswith('/') and val.find('/', 1) < 0:
                     dir.subdirs[subname] = subdir
+
+        dir.putkey('subdircount', str(len(dir.subdirs)))
         
     return dirmap
     
