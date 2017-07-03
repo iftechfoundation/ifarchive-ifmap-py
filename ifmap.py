@@ -629,6 +629,15 @@ def generate_output(dirmap):
     filename = plan.get('Dir-List-Template')
     dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
 
+    dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
+    
+    def dirlist_thunk(outfl, rock):
+        dirlist = list(dirmap.values())
+        dirlist.sort(key=lambda dir:dir.dir.lower())
+        for dir in dirlist:
+            Template.substitute(dirlist_entry, dir.submap, outfl=outfl)
+    plan.put('_dirs', dirlist_thunk)
+
     filename = os.path.join(opts.destdir, 'dirlist.html')
     outfl = open(filename, 'w', encoding='utf-8')
     Template.substitute(dirlist_body, plan.map, outfl=outfl)
