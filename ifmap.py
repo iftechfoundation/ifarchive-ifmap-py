@@ -629,11 +629,8 @@ def parity_flip(map):
         map['parity'] = 'Odd'
     else:
         map['parity'] = 'Even'
-        
-def generate_output(dirmap):
-    if not os.path.exists(opts.destdir):
-        os.mkdir(opts.destdir)
-        
+
+def generate_output_dirlist(dirmap):
     filename = plan.get('Dir-List-Template')
     dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
 
@@ -654,6 +651,12 @@ def generate_output(dirmap):
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=outfl)
     outfl.close()
 
+def generate_output(dirmap):
+    if not os.path.exists(opts.destdir):
+        os.mkdir(opts.destdir)
+
+    generate_output_dirlist(dirmap)
+        
     filename = plan.get('XML-Template')
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
