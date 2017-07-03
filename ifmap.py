@@ -634,8 +634,12 @@ def generate_output(dirmap):
     def dirlist_thunk(outfl, rock):
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
+        flag = False
         for dir in dirlist:
+            dir.submap['parity'] = 'Odd' if flag else 'Even'
+            flag = not flag
             Template.substitute(dirlist_entry, dir.submap, outfl=outfl)
+            outfl.write('\n')
     plan.put('_dirs', dirlist_thunk)
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
