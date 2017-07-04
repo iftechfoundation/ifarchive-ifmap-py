@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 ### TODO:
-### move dirmap insertion to the top
 ### name, rawname are bad labels. swap around.
 ### correct escaping of everything
 ### all the xml stuff
@@ -314,8 +313,11 @@ def findfile(path):
 class Directory:
     """Directory: one directory in the big directory map.
     """
-    def __init__(self, dirname):
+    def __init__(self, dirname, dirmap):
         self.dir = dirname
+        # Place into the big directory map.
+        dirmap[dirname] = self
+        
         self.submap = {}
 
         self.putkey('dir', dirname)
@@ -360,6 +362,7 @@ class File:
     def __init__(self, filename, parentdir):
         self.submap = {}
         self.parentdir = parentdir
+        # Place into the parent directory.
         parentdir.files[filename] = self
 
         self.rawname = filename
@@ -395,8 +398,7 @@ def parse_master_index(indexpath, treedir):
 
     dirmap = {}
 
-    dir = Directory(ROOTNAME)
-    dirmap[dir.dir] = dir
+    dir = Directory(ROOTNAME, dirmap=dirmap)
 
     if indexpath:
         dirname_pattern = re.compile('^%s.*:$' % (re.escape(ROOTNAME),))
@@ -436,7 +438,6 @@ def parse_master_index(indexpath, treedir):
                     dirname = dir.dir
                     if opts.verbose:
                         print('Finishing %s...' % (dirname,))
-                    dirmap[dirname] = dir  ### move to constructor?
 
                     if headerstr is not None:
                         dir.putkey('header', headerstr)
@@ -450,7 +451,7 @@ def parse_master_index(indexpath, treedir):
                     dirname = ln[0:-1]  # delete trailing colon
                     if opts.verbose:
                         print('Starting  %s...' % (dirname,))
-                    dir = Directory(dirname)
+                    dir = Directory(dirname, dirmap=dirmap)
                     
                     filestr = None
                     inheader = True
@@ -615,8 +616,7 @@ def parse_master_index(indexpath, treedir):
                 if ent.is_dir():
                     dir2 = dirmap.get(dirname2)
                     if dir2 is None:
-                        dir2 = Directory(dirname2)
-                        dirmap[dirname2] = dir2
+                        dir2 = Directory(dirname2, dirmap=dirmap)
                     file = dir.files.get(ent.name)
                     if file is not None:
                         file.putkey('linkdir', dirname2)
