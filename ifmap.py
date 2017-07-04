@@ -752,6 +752,9 @@ def generate_output_datelist(dirmap):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
+    filename = plan.get('Top-Level-Template')
+    toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
+
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     
@@ -777,6 +780,9 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
         
         itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
+        if dir.dir == ROOTNAME:
+            itermap['hasdesc'] = True
+            itermap['header'] = toplevel_body
         
         outfl = open(filename, 'w', encoding='utf-8')
         Template.substitute(plan.body, ChainMap(itermap, dir.submap), outfl=outfl)
@@ -809,13 +815,7 @@ if not opts.destdir:
 
 plan = ParamFile(os.path.join(opts.libdir, 'index'))
 
-filename = plan.get('Top-Level-Template')
-toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
-
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
-dir = dirmap[ROOTNAME]
-dir.submap['hasdesc'] = True
-dir.submap['header'] = toplevel_body
 
 check_missing_files(dirmap)
 
