@@ -793,13 +793,17 @@ def generate_output_xml(dirmap):
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
     filename = plan.get('XML-Dir-Template')
-    xml_dir_entry = read_lib_file(filename, '<directory>\n{dir}\n</directory>\n')
+    dirlist_entry = read_lib_file(filename, '<directory>\n{dir}\n</directory>\n')
     
     filename = plan.get('XML-File-Template')
-    xml_dir_entry = read_lib_file(filename, '<file>\n{name}\n</file>\n')
+    filelist_entry = read_lib_file(filename, '<file>\n{name}\n</file>\n')
 
     def dirlist_thunk(outfl):
-        pass
+        dirlist = list(dirmap.values())
+        dirlist.sort(key=lambda dir:dir.dir.lower())
+        itermap = {}
+        for dir in dirlist:
+            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
     
     itermap = { '_dirs':dirlist_thunk }
     
