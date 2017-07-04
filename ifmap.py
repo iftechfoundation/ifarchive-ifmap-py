@@ -723,11 +723,20 @@ def generate_output_datelist(dirmap):
         outfl.close()
     
 def generate_output_indexes(dirmap):
+    filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
+    subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
+    
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, dir.getkey('xdir')+'.html')
         
         def filelist_thunk(outfl):
-            pass
+            filelist = list(dir.files.values())
+            filelist.sort(key=lambda file:file.rawname.lower())
+            itermap = {}
+            for file in filelist:
+                parity_flip(itermap)
+                Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
+                outfl.write('\n')
         
         def subdirlist_thunk(outfl):
             pass
