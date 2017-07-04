@@ -31,10 +31,6 @@ popt.add_option('--tree',
 popt.add_option('--dest',
                 action='store', dest='destdir',
                 help='pathname of directory to write index files')
-
-popt.add_option('--xml',
-                action='store_true', dest='buildxml',
-                help='also create a Master-Index.xml file in the dest directory')
 popt.add_option('--exclude',
                 action='store_true', dest='excludemissing',
                 help='files without index entries are excluded from index listings')
