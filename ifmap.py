@@ -631,7 +631,7 @@ def parse_master_index(indexpath, treedir):
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    file.putkey('md5', '###') ### implement
+                    file.putkey('md5', hasher.calculate_md5(pathname))
                     continue
 
                 if ent.is_dir():
