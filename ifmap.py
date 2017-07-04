@@ -2,8 +2,7 @@
 
 ### TODO:
 ### name, rawname are bad labels. swap around.
-### correct escaping of everything
-### all the xml stuff
+### escape_xml_string, escape_string are bad too.
 ### The N^2 loop in parse?
 ### cache md5 checksums?
 ### correct plurals of "items", "subdirectories"
@@ -264,6 +263,15 @@ def append_string(val, val2):
     if not val:
         return val2
     return val + val2
+
+def escape_xml_string(val):
+    """Apply the basic XML &-escapes to a string. This does not do
+    fancy <url> detection.
+    """
+    val = val.replace('&', '&amp;')
+    val = val.replace('<', '&lt;')
+    val = val.replace('>', '&gt;')
+    return val
 
 shorturl_pattern = re.compile('<(http(s)?:[^>]+)>')
 
