@@ -7,6 +7,7 @@
 ### all the xml stuff
 ### The N^2 loop in parse?
 ### cache md5 checksums?
+### correct plurals of "items", "subdirectories"
 
 import sys
 import re
@@ -739,7 +740,13 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
         
         def subdirlist_thunk(outfl):
-            pass
+            dirlist = list(dir.subdirs.values())
+            dirlist.sort(key=lambda dir:dir.dir.lower())
+            itermap = {}
+            for subdir in dirlist:
+                parity_flip(itermap)
+                Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
+                outfl.write('\n')
         
         itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
         
