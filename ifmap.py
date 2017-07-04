@@ -801,10 +801,18 @@ def generate_output_xml(dirmap):
     def dirlist_thunk(outfl):
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
-        itermap = {}
+        
         for dir in dirlist:
+            def filelist_thunk(outfl):
+                filelist = list(dir.files.values())
+                filelist.sort(key=lambda file:file.rawname.lower())
+                itermap = {}
+                for file in filelist:
+                    Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
+
+            itermap = { '_files':filelist_thunk }
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
-    
+        
     itermap = { '_dirs':dirlist_thunk }
     
     filename = os.path.join(opts.destdir, 'Master-Index.xml')
