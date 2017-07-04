@@ -494,6 +494,7 @@ def parse_master_index(indexpath, treedir):
         inheader = True
         headerpara = True
         headerstr = None
+        headerstrraw = None
         brackets = 0
         
         infl = open(indexpath, encoding='utf-8')
@@ -526,7 +527,12 @@ def parse_master_index(indexpath, treedir):
                         dir.putkey('header', headerstr)
                         dir.putkey('hasdesc', is_string_nonwhite(headerstr))
                         headerstr = None
-                    ### headerstrraw?
+                    if headerstrraw is not None:
+                        val = escape_xml_string(headerstrraw)
+                        val = val.rstrip() + '\n'
+                        dir.putkey('xmlheader', val)
+                        dir.putkey('hasxmldesc', is_string_nonwhite(val))
+                        headerstrraw = None
                     dir = None
 
                 if not done:
@@ -540,6 +546,7 @@ def parse_master_index(indexpath, treedir):
                     inheader = True
                     headerpara = True
                     headerstr = None
+                    headerstrraw = None
 
                 continue
 
@@ -572,12 +579,14 @@ def parse_master_index(indexpath, treedir):
                     headerstr = append_string(headerstr, escape_string(bx, False))
                     headerstr = append_string(headerstr, '\n')
                     headerpara = False
-                    ### headerstrraw
+                    headerstrraw = append_string(headerstrraw, bx)
+                    headerstrraw = append_string(headerstrraw, '\n')
                 else:
                     if not headerpara:
                         headerstr = append_string(headerstr, '<p>\n');
                         headerpara = True
-                    ### headerstrraw
+                    if headerstrraw:
+                        headerstrraw = append_string(headerstrraw, '\n')
                 
                 continue
 
