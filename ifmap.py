@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 ### TODO:
+### excludes
 ### name, rawname are bad labels. swap around.
 ### escape_xml_string, escape_string are bad too.
 ### The N^2 loop in parse?
-### cache md5 checksums?
 ### correct plurals of "items", "subdirectories"
 
 import sys
@@ -204,6 +204,20 @@ class ParamFile:
 
 class FileHasher:
     """FileHasher: A module which can extract the MD5 hashes of files.
+
+    Since MD5 hashing is this script's slowest task, we keep a cache of
+    checksums. (In the indexes directory, since we know that's writable.)
+    The cache file has a very simple tab-separated format:
+    
+       size mtime md5 filename
+       
+    We only use a cache entry if the size and mtime both match. (So if a
+    file is updated, we'll recalculate.)
+
+    We only ever append to the cache file. So if a file is updated, we
+    wind up with redundant lines in the cache. That's fine; the latest
+    one is the one that counts. But it might be a good idea to delete
+    the cache file every couple of years to clean things out.
     """
     def __init__(self):
         # Maps filenames to (size, timestamp, md5)
