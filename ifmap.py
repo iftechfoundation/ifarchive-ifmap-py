@@ -205,8 +205,33 @@ class ParamFile:
 class FileHasher:
     """FileHasher: A module which can extract the MD5 hashes of files.
     """
-    def __init__(self, cachefile=None):
-        self.cachefile = cachefile
+    def __init__(self):
+        # Maps filenames to (size, md5)
+        self.cache = {}
+        
+        if not os.path.exists(opts.destdir):
+            os.mkdir(opts.destdir)
+        self.cachefile = os.path.join(opts.destdir, 'md5-cache.txt')
+
+        if not os.path.exists(self.cachefile):
+            fl = open(self.cachefile, 'w', encoding='utf-8')
+            fl.close()
+        
+        fl = open(self.cachefile, encoding='utf-8')
+        pattern = re.compile('^([0-9]+)\s([0-9a-f]+)\s(.*)$')
+        while True:
+            ln = fl.readline()
+            if not ln:
+                break
+            ln = ln.rstrip()
+            match = pattern.match(ln)
+            if match:
+                size = int(match.groups(1))
+                md5 = match.groups(2)
+                fname = match.groups(3)
+                self.cache[fname] = (size, md5)
+        fl.close()
+            
     def calculate_md5(self, filename):
         accum = hashlib.md5()
         fl = open(filename, 'rb')
