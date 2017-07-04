@@ -216,13 +216,15 @@ class FileHasher:
 
     We only ever append to the cache file. So if a file is updated, we
     wind up with redundant lines in the cache. That's fine; the latest
-    one is the one that counts. But it might be a good idea to delete
-    the cache file every couple of years to clean things out.
+    line is the one that counts. But it might be a good idea to delete
+    the cache file every couple of years to tidy up.
     """
     def __init__(self):
         # Maps filenames to (size, timestamp, md5)
         self.cache = {}
-        
+
+        # Create the output directory and the cache file if they don't
+        # exist.
         if not os.path.exists(opts.destdir):
             os.mkdir(opts.destdir)
         self.cachefile = os.path.join(opts.destdir, 'md5-cache.txt')
