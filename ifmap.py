@@ -206,7 +206,7 @@ class FileHasher:
     """FileHasher: A module which can extract the MD5 hashes of files.
     """
     def __init__(self):
-        # Maps filenames to (size, md5)
+        # Maps filenames to (size, timestamp, md5)
         self.cache = {}
         
         if not os.path.exists(opts.destdir):
@@ -218,7 +218,7 @@ class FileHasher:
             fl.close()
         
         fl = open(self.cachefile, encoding='utf-8')
-        pattern = re.compile('^([0-9]+)\s([0-9a-f]+)\s(.*)$')
+        pattern = re.compile('^([0-9]+)\s([0-9]+)\s([0-9a-f]+)\s(.*)$')
         while True:
             ln = fl.readline()
             if not ln:
@@ -226,10 +226,24 @@ class FileHasher:
             ln = ln.rstrip()
             match = pattern.match(ln)
             if match:
-                size = int(match.groups(1))
-                md5 = match.groups(2)
-                fname = match.groups(3)
-                self.cache[fname] = (size, md5)
+                size = int(match.group(1))
+                timestamp = int(match.group(2))
+                md5 = match.group(3)
+                filename = match.group(4)
+                self.cache[filename] = (size, timestamp, md5)
+        fl.close()
+
+    def get_md5(self, filename, size, timestamp):
+        if filename in self.cache:
+            (cachesize, cachetimestamp, md5) = self.cache[filename]
+            if size == cachesize and timestamp == cachetimestamp:
+                return md5
+        if opts.verbose:
+            print('Computing md5 for %s' % (filename,))
+        md5 = self.calculate_md5(filename)
+        self.cache[filename] = (size, timestamp, md5)
+        fl = open(self.cachefile, 'a', encoding='utf-8')
+        fl.write('%d\t%d\t%s\t%s\n' % (size, timestamp, md5, filename))
         fl.close()
             
     def calculate_md5(self, filename):
@@ -656,7 +670,7 @@ def parse_master_index(indexpath, treedir):
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    file.putkey('md5', hasher.calculate_md5(pathname))
+                    file.putkey('md5', hasher.get_md5(pathname, sta.st_size, sta.st_mtime))
                     continue
 
                 if ent.is_dir():
