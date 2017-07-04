@@ -377,7 +377,7 @@ class File:
         self.putkey('rawname', filename)
         self.putkey('name', escape_string(filename))
         self.putkey('nameurl', escape_url_string(filename))
-        ### namexml
+        self.putkey('namexml', escape_xml_string(filename))
 
         self.putkey('dir', parentdir.dir)
 
