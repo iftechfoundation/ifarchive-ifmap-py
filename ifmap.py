@@ -6,6 +6,7 @@
 ### correct escaping of everything
 ### all the xml stuff
 ### The N^2 loop in parse?
+### cache md5 checksums?
 
 import sys
 import re
@@ -267,8 +268,27 @@ def append_string(val, val2):
 def escape_string(val, forxml=False):
     return val ###
 
+urlable_pattern = re.compile('[+-;@-z]+')
+
 def escape_url_string(val):
-    return val ###
+    """Apply URL escaping (percent escapes) to a string.
+    This is a bit over-zealous; it matches the behavior of the original
+    C ifmap.
+    Does not work correctly on Unicode characters outside the Latin-1
+    range (0 to 0xFF).
+    """
+    res = []
+    pos = 0
+    while pos < len(val):
+        match = urlable_pattern.match(val, pos=pos)
+        if match:
+            res.append(match.group())
+            pos = match.end()
+        else:
+            ch = val[pos]
+            res.append('%%%02X' % (ord(ch) & 0xFF),)
+            pos += 1
+    return ''.join(res)
 
 def findfile(path):
     """Locate the File object for a given pathname.
