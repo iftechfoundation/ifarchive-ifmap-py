@@ -726,10 +726,16 @@ def generate_output_indexes(dirmap):
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, dir.getkey('xdir')+'.html')
         
+        def filelist_thunk(outfl, rock):
+            pass
+        
+        def subdirlist_thunk(outfl, rock):
+            pass
+        
         itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
         
         outfl = open(filename, 'w', encoding='utf-8')
-        Template.substitute(toplevel_body, ChainMap(itermap, dir.map), outfl=outfl)
+        Template.substitute(plan.body, ChainMap(itermap, dir.submap), outfl=outfl)
         outfl.close()
         
 
