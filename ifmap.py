@@ -80,12 +80,12 @@ class Template:
     cache = {}
     
     @staticmethod
-    def substitute(body, map, rock=None, outfl=sys.stdout):
+    def substitute(body, map, outfl=sys.stdout):
         template = Template.cache.get(body)
         if template is None:
             template = Template(body)
             Template.cache[body] = template
-        template.subst(map, rock, outfl)
+        template.subst(map, outfl)
     
     def __init__(self, body):
         self.ls = []
@@ -135,7 +135,7 @@ class Template:
                 ls.append('{???}')
         return '<Template %r>' % (''.join(ls),)
 
-    def subst(self, map, rock=None, outfl=sys.stdout):
+    def subst(self, map, outfl=sys.stdout):
         activelist = [ True ]
         
         for tag in self.ls:
@@ -167,7 +167,7 @@ class Template:
                     outfl.write('[UNKNOWN]')
                     print('Problem: undefined brace-tag: %s' % (tag.value,))
                 elif callable(val):
-                    val(outfl, rock)
+                    val(outfl)
                 elif type(val) in (str, int, float, bool):
                     outfl.write(str(val))
                 else:
@@ -656,7 +656,7 @@ def generate_output_dirlist(dirmap):
 
     dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
     
-    def dirlist_thunk(outfl, rock):
+    def dirlist_thunk(outfl):
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
         itermap = {}
@@ -704,7 +704,7 @@ def generate_output_datelist(dirmap):
         else:
             filename = os.path.join(opts.destdir, 'date.html')
 
-        def filelist_thunk(outfl, rock):
+        def filelist_thunk(outfl):
             itermap = {}
             for file in filelist:
                 parity_flip(itermap)
@@ -726,10 +726,10 @@ def generate_output_indexes(dirmap):
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, dir.getkey('xdir')+'.html')
         
-        def filelist_thunk(outfl, rock):
+        def filelist_thunk(outfl):
             pass
         
-        def subdirlist_thunk(outfl, rock):
+        def subdirlist_thunk(outfl):
             pass
         
         itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
