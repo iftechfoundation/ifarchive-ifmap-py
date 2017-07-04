@@ -266,8 +266,13 @@ def append_string(val, val2):
         return val2
     return val + val2
 
+shorturl_pattern = re.compile('<(http(s)?:[^>]+)>')
+
 def escape_string(val, forxml=False):
-    return val ###
+    def thunk(match):
+        url = match.group(1)
+        return '<a href="%s">%s</a>' % (url, url,)
+    return shorturl_pattern.sub(thunk, val)
 
 urlable_pattern = re.compile('[+-;@-z]+')
 
