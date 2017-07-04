@@ -658,6 +658,10 @@ def check_missing_files(dirmap):
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
 
 def parity_flip(map):
+    """Utility function to change the "parity" entry in a dict from "Even"
+    to "Odd" and vice versa. Call this at the top of a loop. The dict
+    should start with no "parity" entry.
+    """
     val = map.get('parity')
     if val == 'Even':
         map['parity'] = 'Odd'
@@ -665,6 +669,8 @@ def parity_flip(map):
         map['parity'] = 'Even'
 
 def generate_output_dirlist(dirmap):
+    """Write out the dirlist.html index.
+    """
     filename = plan.get('Dir-List-Template')
     dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
 
@@ -687,6 +693,8 @@ def generate_output_dirlist(dirmap):
     outfl.close()
     
 def generate_output_datelist(dirmap):
+    """Write out the date.html indexes.
+    """
     intervals = [
         (0, 0, None),
         (1, 7*24*60*60, 'week'),
@@ -737,6 +745,8 @@ def generate_output_datelist(dirmap):
         outfl.close()
     
 def generate_output_indexes(dirmap):
+    """Write out the general (per-directory) indexes.
+    """
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     
