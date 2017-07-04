@@ -787,7 +787,26 @@ def generate_output_indexes(dirmap):
         outfl = open(filename, 'w', encoding='utf-8')
         Template.substitute(plan.body, ChainMap(itermap, dir.submap), outfl=outfl)
         outfl.close()
-        
+
+def generate_output_xml(dirmap):
+    filename = plan.get('XML-Template')
+    xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
+
+    filename = plan.get('XML-Dir-Template')
+    xml_dir_entry = read_lib_file(filename, '<directory>\n{dir}\n</directory>\n')
+    
+    filename = plan.get('XML-File-Template')
+    xml_dir_entry = read_lib_file(filename, '<file>\n{name}\n</file>\n')
+
+    def dirlist_thunk(outfl):
+        pass
+    
+    itermap = { '_dirs':dirlist_thunk }
+    
+    filename = os.path.join(opts.destdir, 'Master-Index.xml')
+    outfl = open(filename, 'w', encoding='utf-8')
+    Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=outfl)
+    outfl.close()
 
 def generate_output(dirmap):
     """Write out all the index files.
@@ -798,10 +817,7 @@ def generate_output(dirmap):
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
-    
-    filename = plan.get('XML-Template')
-    xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
-
+    generate_output_xml(dirmap)
 
 
 # Begin work!
