@@ -12,6 +12,7 @@ import re
 import os
 import os.path
 import time
+import hashlib
 from collections import ChainMap
 import optparse
 
@@ -201,6 +202,22 @@ class ParamFile:
     def put(self, key, val):
         self.map[key] = val
 
+class FileHasher:
+    """FileHasher: A module which can extract the MD5 hashes of files.
+    """
+    def __init__(self, cachefile=None):
+        self.cachefile = cachefile
+    def calculate_md5(self, filename):
+        accum = hashlib.md5()
+        fl = open(filename, 'rb')
+        while True:
+            dat = fl.read(1024)
+            if not dat:
+                break
+            accum.update(dat)
+        fl.close()
+        return accum.hexdigest()
+        
 def read_lib_file(filename, default=''):
     """Read a simple text file from the lib directory. Return it as a
     string.
@@ -846,6 +863,8 @@ if not opts.destdir:
     raise Exception('--dest argument required')
 
 plan = ParamFile(os.path.join(opts.libdir, 'index'))
+
+hasher = FileHasher()
 
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
 
