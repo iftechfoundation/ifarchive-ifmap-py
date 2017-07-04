@@ -3,8 +3,10 @@
 ### TODO:
 ### excludes
 ### name, rawname are bad labels. swap around.
+### filestr, filestrraw, ditto
 ### escape_xml_string, escape_string are bad too.
 ### The N^2 loop in parse?
+### look at various counts. Can we use ints in the submap?
 ### correct plurals of "items", "subdirectories"
 
 import sys
@@ -452,11 +454,15 @@ class File:
     def __repr__(self):
         return '<File %s>' % (self.rawname,)
 
-    def complete(self, filestr):
+    def complete(self, filestr, filestrraw):
         if filestr is not None:
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
-        ### filestrraw?
+        if filestrraw is not None:
+            val = escape_xml_string(filestrraw)
+            val = val.rstrip() + '\n'
+            self.putkey('xmldesc', val)
+            self.putkey('hasxmldesc', is_string_nonwhite(val))
         
     def getkey(self, key, default=None):
         return self.submap.get(key)
@@ -484,6 +490,7 @@ def parse_master_index(indexpath, treedir):
         dir = None
         file = None
         filestr = None
+        filestrraw = None
         inheader = True
         headerpara = True
         headerstr = None
@@ -508,7 +515,7 @@ def parse_master_index(indexpath, treedir):
                 if dir:
                     if file:
                         # Also have to finish constructing the file entry.
-                        file.complete(filestr)
+                        file.complete(filestr, filestrraw)
                         file = None
 
                     dirname = dir.dir
@@ -579,7 +586,7 @@ def parse_master_index(indexpath, treedir):
 
                 if file:
                     # Finish constructing the file in progress.
-                    file.complete(filestr)
+                    file.complete(filestr, filestrraw)
                     file = None
 
                 pos = bx.find(' ')
@@ -592,13 +599,14 @@ def parse_master_index(indexpath, treedir):
                     brackets = bracket_count(bx)
                     filestr = escape_string(bx, False)
                     filestr = append_string(filestr, '\n')
-                    ### filestrraw
+                    filestrraw = bx
+                    filestrraw = append_string(filestrraw, '\n')
                 else:
                     filename = bx
                     bx = ''
                     firstindent = -1
                     filestr = None
-                    ### filestrraw
+                    filestrraw = None
                     
                 file = File(filename, dir)
 
@@ -610,12 +618,12 @@ def parse_master_index(indexpath, treedir):
                         brackets = 0
                     if (firstindent != indent) and (brackets == 0):
                         filestr = append_string(filestr, '<br>&nbsp;&nbsp;')
-                        ### filestrraw
+                        filestrraw = append_string(filestrraw, ' '*(indent-firstindent))
                     filestr = append_string(filestr, escape_string(bx, False))
                     filestr = append_string(filestr, '\n')
-                    ### filestrraw
+                    filestrraw = append_string(filestrraw, bx)
                     brackets += bracket_count(bx)
-                ### filestrraw
+                filestrraw = append_string(filestrraw, '\n')
 
         # Finished reading Master-Index.
         infl.close()
@@ -885,6 +893,7 @@ def generate_output_xml(dirmap):
                 itermap = {}
                 for file in filelist:
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
+                    outfl.write('\n')
 
             itermap = { '_files':filelist_thunk }
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
