@@ -591,7 +591,7 @@ def parse_master_index(indexpath, treedir):
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    ### md5
+                    file.putkey('md5', '###') ### implement
                     continue
 
                 if ent.is_dir():
@@ -722,6 +722,16 @@ def generate_output_datelist(dirmap):
         Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=outfl)
         outfl.close()
     
+def generate_output_indexes(dirmap):
+    for dir in dirmap.values():
+        filename = os.path.join(opts.destdir, dir.getkey('xdir')+'.html')
+        
+        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
+        
+        outfl = open(filename, 'w', encoding='utf-8')
+        Template.substitute(toplevel_body, ChainMap(itermap, dir.map), outfl=outfl)
+        outfl.close()
+        
 
 def generate_output(dirmap):
     if not os.path.exists(opts.destdir):
@@ -729,7 +739,8 @@ def generate_output(dirmap):
 
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
-        
+    generate_output_indexes(dirmap)
+    
     filename = plan.get('XML-Template')
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
