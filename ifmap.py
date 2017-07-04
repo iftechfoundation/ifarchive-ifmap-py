@@ -322,7 +322,19 @@ class Directory:
             self.putkey('parentdir', parentdirname)
             self.putkey('xparentdir', xify_dirname(parentdirname))
 
-        ### add_dir_links?
+        ls = []
+        val = ''
+        els = dirname.split('/')
+        for el in els:
+            if not val:
+                val = el
+            else:
+                val = val + '/' + el
+            if ls:
+                ls.append('/')
+            ls.append('<a href="%s.html">%s</a>' % (xify_dirname(val), el,))
+        self.putkey('xdirlinks', ''.join(ls))
+
         self.files = {}
         self.subdirs = {}
 
