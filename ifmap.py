@@ -779,6 +779,8 @@ def generate_output_indexes(dirmap):
         
 
 def generate_output(dirmap):
+    """Write out all the index files.
+    """
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
 
