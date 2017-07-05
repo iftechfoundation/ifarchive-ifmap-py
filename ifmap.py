@@ -509,6 +509,7 @@ class File:
         parentdir.files[filename] = self
 
         self.rawname = filename
+        self.path = parentdir.dir+'/'+filename
         self.putkey('rawname', filename)
         self.putkey('name', escape_string(filename))
         self.putkey('nameurl', escape_url_string(filename))
@@ -881,7 +882,7 @@ def generate_output_datelist(dirmap):
             if file.getkey('date'):
                 filelist.append(file)
 
-    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.rawname.lower()))
+    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.rawname.lower(), file.path.lower()))
 
     filename = plan.get('Date-List-Template')
     datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
