@@ -800,6 +800,9 @@ def parse_master_index(indexpath, treedir):
         # Call the above function recursively.
         scan_directory(ROOTNAME)
 
+    if opts.verbose:
+        print('Creating subdirectory lists and counts...')
+            
     # Create the subdir list and count for each directory.
     for dir in dirmap.values():
         if len(dir.files):
@@ -997,6 +1000,9 @@ def generate_output(dirmap):
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
 
+    if opts.verbose:
+        print('Generating output...')
+            
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
