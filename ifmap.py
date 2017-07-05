@@ -204,6 +204,26 @@ class ParamFile:
     def put(self, key, val):
         self.map[key] = val
 
+class NoIndexEntry:
+    """NoIndexEntry: A list of directories in which it's okay that there's
+    no index entries.
+    """
+    def __init__(self):
+        self.set = set()
+        try:
+            filename = os.path.join(opts.libdir, 'no-index-entry')
+            fl = open(filename, encoding='utf-8')
+        except:
+            return
+        while True:
+            ln = fl.readline()
+            if not ln:
+                break
+            ln = ln.strip()
+            self.set.add(ln)
+        fl.close()
+        
+    
 class FileHasher:
     """FileHasher: A module which can extract the MD5 hashes of files.
 
@@ -938,6 +958,7 @@ if not opts.destdir:
 plan = ParamFile(os.path.join(opts.libdir, 'index'))
 
 hasher = FileHasher()
+noindexlist = NoIndexEntry()
 
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
 
