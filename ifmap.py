@@ -4,9 +4,12 @@
 ### name, rawname are bad labels. swap around.
 ### filestr, filestrraw, ditto
 ### escape_xml_string, escape_string are bad too.
+### forxml argument in escape_string is unused.
 ### The N^2 loop in parse?
 ### look at various counts. Can we use ints in the submap?
 ### correct plurals of "items", "subdirectories"
+
+### if-archiveXinfoXarchive-stats.html ([UNKNOWN] desc)
 
 import sys
 import re
@@ -387,13 +390,27 @@ def escape_xml_string(val):
     val = val.replace('>', '&gt;')
     return val
 
-shorturl_pattern = re.compile('<(http(s)?:[^>]+)>')
+escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
+### & is missing from the above pattern, and the function below, for
+### backwards compatibility with the old ifmap program. We should
+### fix that.
 
 def escape_string(val, forxml=False):
     def thunk(match):
-        url = match.group(1)
-        return '<a href="%s">%s</a>' % (url, url,)
-    return shorturl_pattern.sub(thunk, val)
+        if match.group(1) is not None:
+            url = match.group(2)
+            return '<a href="%s">%s</a>' % (url, url,)
+        else:
+            ch = match.group(3)
+            if ch == '<':
+                return '&lt;'
+            elif ch == '>':
+                return '&gt;'
+            #elif ch == '&':
+            #    return '&amp;'
+            else:
+                return ch
+    return escape_html_pattern.sub(thunk, val)
 
 urlable_pattern = re.compile('[+-;@-z]+')
 
