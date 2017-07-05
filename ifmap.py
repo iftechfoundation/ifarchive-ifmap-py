@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 ### TODO:
-### excludes
 ### name, rawname are bad labels. swap around.
 ### filestr, filestrraw, ditto
 ### escape_xml_string, escape_string are bad too.
