@@ -388,11 +388,18 @@ def escape_xml_string(val):
     return val
 
 escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
-### & is missing from the above pattern, and the function below, for
-### backwards compatibility with the old ifmap program. We should
-### fix that.
 
 def escape_string(val):
+    """Apply the basic HTML &-escapes to a string. Also detect strings
+    of the form <http://...> and automagically linkify them.
+
+    ### For backwards compatibility with the old ifmap, this does not
+    convert & to &amp;! This is because our Index files contain literal
+    Unicode sequences (like &ouml;) which we want to preserve in the
+    HTML output. It would be better to change the Index files to UTF-8
+    and then add &amp; to the escaping list. (In the pattern above and
+    the function below.)
+    """
     def thunk(match):
         if match.group(1) is not None:
             url = match.group(2)
