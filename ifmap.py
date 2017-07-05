@@ -4,7 +4,6 @@
 ### name, rawname are bad labels. swap around.
 ### filestr, filestrraw, ditto
 ### escape_xml_string, escape_string are bad too.
-### forxml argument in escape_string is unused.
 ### The N^2 loop in parse?
 ### look at various counts. Can we use ints in the submap?
 ### correct plurals of "items", "subdirectories"
@@ -393,7 +392,7 @@ escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
 ### backwards compatibility with the old ifmap program. We should
 ### fix that.
 
-def escape_string(val, forxml=False):
+def escape_string(val):
     def thunk(match):
         if match.group(1) is not None:
             url = match.group(2)
@@ -639,7 +638,7 @@ def parse_master_index(indexpath, treedir):
 
                 # Further header lines become part of headerstr.
                 if len(bx):
-                    headerstr = append_string(headerstr, escape_string(bx, False))
+                    headerstr = append_string(headerstr, escape_string(bx))
                     headerstr = append_string(headerstr, '\n')
                     headerpara = False
                     headerstrraw = append_string(headerstrraw, bx)
@@ -669,7 +668,7 @@ def parse_master_index(indexpath, treedir):
                     firstindent = pos + len(match.group(1))
                     bx = match.group(2)
                     brackets = bracket_count(bx)
-                    filestr = escape_string(bx, False)
+                    filestr = escape_string(bx)
                     filestr = append_string(filestr, '\n')
                     filestrraw = bx
                     filestrraw = append_string(filestrraw, '\n')
@@ -691,7 +690,7 @@ def parse_master_index(indexpath, treedir):
                     if (firstindent != indent) and (brackets == 0):
                         filestr = append_string(filestr, '<br>&nbsp;&nbsp;')
                         filestrraw = append_string(filestrraw, ' '*(indent-firstindent))
-                    filestr = append_string(filestr, escape_string(bx, False))
+                    filestr = append_string(filestr, escape_string(bx))
                     filestr = append_string(filestr, '\n')
                     filestrraw = append_string(filestrraw, bx)
                     brackets += bracket_count(bx)
