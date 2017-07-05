@@ -962,6 +962,8 @@ def generate_output_indexes(dirmap):
         outfl.close()
 
 def generate_output_xml(dirmap):
+    """Write out the Master-Index.xml file.
+    """
     filename = plan.get('XML-Template')
     xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
 
