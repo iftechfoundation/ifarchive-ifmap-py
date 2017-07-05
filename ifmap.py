@@ -776,7 +776,8 @@ def parse_master_index(indexpath, treedir):
 
     # Create the subdir list and count for each directory.
     for dir in dirmap.values():
-        dir.putkey('count', str(len(dir.files)))
+        if len(dir.files):
+            dir.putkey('count', str(len(dir.files)))
         
         # This is N^2, sorry.
         ### Probably a better way exists.
