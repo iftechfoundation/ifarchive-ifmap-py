@@ -307,6 +307,7 @@ class FileHasher:
         fl = open(self.cachefile, 'a', encoding='utf-8')
         fl.write('%d\t%d\t%s\t%s\n' % (size, timestamp, md5, filename))
         fl.close()
+        return md5
             
     def calculate_md5(self, filename):
         accum = hashlib.md5()
