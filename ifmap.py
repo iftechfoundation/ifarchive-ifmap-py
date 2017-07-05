@@ -714,7 +714,8 @@ def parse_master_index(indexpath, treedir):
                     if ent.is_file(follow_symlinks=True):
                         file = dir.files.get(ent.name)
                         if file is None:
-                            ### check_exclude
+                            if noindexlist.check(dirname2):
+                                continue
                             file = File(ent.name, dir)
                             file.putkey('desc', ' ')
                         file.putkey('islink', True)
@@ -741,7 +742,8 @@ def parse_master_index(indexpath, treedir):
                         continue
                     file = dir.files.get(ent.name)
                     if file is None:
-                        ### check_exclude
+                        if noindexlist.check(dirname2):
+                            continue
                         file = File(ent.name, dir)
                         file.putkey('desc', ' ')
                     file.putkey('filesize', str(sta.st_size))
