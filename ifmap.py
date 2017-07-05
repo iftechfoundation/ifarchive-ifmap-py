@@ -9,8 +9,6 @@
 ### look at various counts. Can we use ints in the submap?
 ### correct plurals of "items", "subdirectories"
 
-### if-archiveXinfoXarchive-stats.html ([UNKNOWN] desc)
-
 import sys
 import re
 import os
@@ -516,9 +514,13 @@ class File:
         return '<File %s>' % (self.rawname,)
 
     def complete(self, filestr, filestrraw):
-        if filestr is not None:
-            self.putkey('desc', filestr)
-            self.putkey('hasdesc', is_string_nonwhite(filestr))
+        ### The File-List-Entry currently does not check hasdesc, so
+        ### every file needs a desc. Should fix that and then only create
+        ### the desc key if not None.
+        if filestr is None:
+            filestr = ''
+        self.putkey('desc', filestr)
+        self.putkey('hasdesc', is_string_nonwhite(filestr))
         if filestrraw is not None:
             val = escape_xml_string(filestrraw)
             val = val.rstrip() + '\n'
