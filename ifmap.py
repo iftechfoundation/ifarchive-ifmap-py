@@ -882,6 +882,10 @@ def generate_output_datelist(dirmap):
             if file.getkey('date'):
                 filelist.append(file)
 
+    # We're sorting by date, but there are cases where files have exactly
+    # the same timestamp. (Possibly because one is a symlink to the other!)
+    # In those cases, we have a secondary sort key of filename, and then
+    # a tertiary key of directory name.
     filelist.sort(key=lambda file: (-int(file.getkey('date')), file.rawname.lower(), file.path.lower()))
 
     filename = plan.get('Date-List-Template')
