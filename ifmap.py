@@ -563,9 +563,7 @@ def parse_master_index(indexpath, treedir):
         filestr = None
         filestrraw = None
         inheader = True
-        headerpara = True
-        headerstr = None
-        headerstrraw = None
+        headerlines = None
         brackets = 0
         
         infl = open(indexpath, encoding='utf-8')
@@ -594,16 +592,17 @@ def parse_master_index(indexpath, treedir):
                     if opts.verbose:
                         print('Finishing %s...' % (dirname,))
 
-                    if headerstr is not None:
-                        dir.putkey('header', headerstr)
-                        dir.putkey('hasdesc', is_string_nonwhite(headerstr))
-                        headerstr = None
-                    if headerstrraw is not None:
-                        val = escape_xml_string(headerstrraw)
-                        val = val.rstrip() + '\n'
+                    headerstr = '\n'.join(headerlines)
+                    headerstr = headerstr.rstrip() + '\n\n'
+                    anyheader = bool(headerstr.strip())
+                    dir.putkey('hasdesc', anyheader)
+                    dir.putkey('hasxmldesc', anyheader)
+                    if anyheader:
+                        val = escape_string(headerstr)
+                        val = val.replace('\n\n', '\n<p>\n')
+                        dir.putkey('header', val)
+                        val = escape_xml_string(headerstr)
                         dir.putkey('xmlheader', val)
-                        dir.putkey('hasxmldesc', is_string_nonwhite(val))
-                        headerstrraw = None
                     dir = None
 
                 if not done:
@@ -615,9 +614,7 @@ def parse_master_index(indexpath, treedir):
                     
                     filestr = None
                     inheader = True
-                    headerpara = True
-                    headerstr = None
-                    headerstrraw = None
+                    headerlines = []
 
                 continue
 
@@ -645,20 +642,8 @@ def parse_master_index(indexpath, treedir):
                         inheader = False
                         continue
 
-                # Further header lines become part of headerstr.
-                if len(bx):
-                    headerstr = append_string(headerstr, escape_string(bx))
-                    headerstr = append_string(headerstr, '\n')
-                    headerpara = False
-                    headerstrraw = append_string(headerstrraw, bx)
-                    headerstrraw = append_string(headerstrraw, '\n')
-                else:
-                    if not headerpara:
-                        headerstr = append_string(headerstr, '<p>\n');
-                        headerpara = True
-                    if headerstrraw:
-                        headerstrraw = append_string(headerstrraw, '\n')
-                
+                # Further header lines become part of headerlines.
+                headerlines.append(bx)
                 continue
 
             if indent == 0 and bx:
