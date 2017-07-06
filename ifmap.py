@@ -513,7 +513,7 @@ class File:
         self.name = filename
         self.path = parentdir.dir+'/'+filename
 
-        # Note that in the map, 'rawname' is the plain name; 'name'
+        ### Note that in the map, 'rawname' is the plain name; 'name'
         # is an HTML-escaped version. This is confusing, and I'd like
         # to rename them. (But it would require a template change.)
         self.putkey('rawname', filename)
@@ -528,8 +528,8 @@ class File:
 
     def complete(self, filestr, filestrraw):
         ### The File-List-Entry currently does not check hasdesc, so
-        ### every file needs a desc. Should fix that and then only create
-        ### the desc key if not None.
+        # every file needs a desc. I'd like to fix that (template change)
+        # and then only create the desc key if not None.
         if filestr is None:
             filestr = ''
         self.putkey('desc', filestr)
