@@ -729,7 +729,7 @@ def parse_master_index(indexpath, treedir):
                             if noindexlist.check(dirname2):
                                 continue
                             file = File(ent.name, dir)
-                            file.putkey('desc', ' ')
+                            file.putkey('desc', '')
                         file.putkey('islink', True)
                         file.putkey('islinkfile', True)
                         file.putkey('linkpath', linkname) ### canonicalize?
@@ -757,7 +757,7 @@ def parse_master_index(indexpath, treedir):
                         if noindexlist.check(dirname2):
                             continue
                         file = File(ent.name, dir)
-                        file.putkey('desc', ' ')
+                        file.putkey('desc', '')
                     file.putkey('filesize', str(sta.st_size))
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
