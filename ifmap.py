@@ -59,7 +59,10 @@ class Template:
 
     The template language supports these tags:
 
-    {foo}: Substitute the value of map['foo'].
+    {foo}: Substitute the value of map['foo']. This can be a string/
+        int/bool value or a function. Functions must be of the form
+        func(outfl) and write text to outfile. (Functions should not
+        return anything.)
     {?foo}if-yes{/}: If map['foo'] exists, substitute the if-yes part.
     {?foo}if-yes{:}if-no{/}: If map['foo'] exists, substitute the if-yes
         part; otherwise the if-no part.
@@ -67,9 +70,8 @@ class Template:
     If-then tags can be nested. {foo} is an error if the foo tag is
     missing or its value is None.
 
-    The {?foo} test treats missing tags, None, and False as "no" results.
-    Zero and the empty string are treated as "yes", which is not the
-    usual Python convention, but our needs are specialized.
+    The {?foo} test treats missing tags and Python-falsy values
+    (None/False/0/'') as "no" results, all other values as "yes".
     """
     
     tag_pattern = re.compile('[{]([^}]*)[}]')
@@ -147,8 +149,7 @@ class Template:
                     val = None
                     if map:
                         val = map.get(tag.value)
-                    flag = (val is not None) and (val is not False)
-                    activelist.append(flag)
+                    activelist.append(bool(val))
             elif tag.type == 'else':
                 if len(activelist) <= 1 or activelist[-2]:
                     activelist[-1] = not activelist[-1]
@@ -791,8 +792,7 @@ def parse_master_index(indexpath, treedir):
             
     # Create the subdir list and count for each directory.
     for dir in dirmap.values():
-        if len(dir.files):
-            dir.putkey('count', str(len(dir.files)))
+        dir.putkey('count', len(dir.files))
         
         # This is N^2, sorry.
         ### Probably a better way exists.
@@ -802,8 +802,7 @@ def parse_master_index(indexpath, treedir):
                 if val.startswith('/') and val.find('/', 1) < 0:
                     dir.subdirs[subname] = subdir
 
-        if len(dir.subdirs):
-            dir.putkey('subdircount', str(len(dir.subdirs)))
+        dir.putkey('subdircount', len(dir.subdirs))
         
     return dirmap
 
