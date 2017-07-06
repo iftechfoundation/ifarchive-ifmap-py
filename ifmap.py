@@ -512,6 +512,10 @@ class File:
 
         self.name = filename
         self.path = parentdir.dir+'/'+filename
+
+        # Note that in the map, 'rawname' is the plain name; 'name'
+        # is an HTML-escaped version. This is confusing, and I'd like
+        # to rename them. (But it would require a template change.)
         self.putkey('rawname', filename)
         self.putkey('name', escape_string(filename))
         self.putkey('nameurl', escape_url_string(filename))
