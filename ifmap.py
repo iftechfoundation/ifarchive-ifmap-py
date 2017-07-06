@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 ### TODO:
-### The N^2 loop in parse?
 ### correct plurals of "items", "subdirectories"
 
 import sys
