@@ -597,15 +597,22 @@ def parse_master_index(indexpath, treedir):
                     if opts.verbose:
                         print('Finishing %s...' % (dirname,))
 
+                    while len(headerlines) and headerlines[0] == '':
+                        headerlines.pop(0)
                     headerstr = '\n'.join(headerlines)
-                    headerstr = headerstr.rstrip() + '\n\n'
+                    headerstr = headerstr.rstrip() + '\n'
+                    # Now headerstr starts with zero newlines and ends
+                    # with one newline.
                     anyheader = bool(headerstr.strip())
                     dir.putkey('hasdesc', anyheader)
                     dir.putkey('hasxmldesc', anyheader)
                     if anyheader:
+                        # For HTML, we escape (and linkify <urls>); then
+                        # we convert blank lines to <p>, and end with <p>.
                         val = escape_string(headerstr)
-                        val = val.replace('\n\n', '\n<p>\n')
+                        val = val.replace('\n\n', '\n<p>\n') + '<p>\n'
                         dir.putkey('header', val)
+                        # For XML, we just escape.
                         val = escape_xml_string(headerstr)
                         dir.putkey('xmlheader', val)
                     dir = None
