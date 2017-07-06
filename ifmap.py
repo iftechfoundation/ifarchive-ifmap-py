@@ -369,13 +369,6 @@ def bracket_count(val):
             count -= 1
     return count
     
-def append_string(val, val2):
-    if not val2:
-        return val
-    if not val:
-        return val2
-    return val + val2
-
 def escape_xml_string(val):
     """Apply the basic XML &-escapes to a string. This does not do
     fancy <url> detection.
