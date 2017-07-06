@@ -1,8 +1,5 @@
 #!/usr/bin/env python3
 
-### TODO:
-### correct plurals of "items", "subdirectories"
-
 import sys
 import re
 import os
