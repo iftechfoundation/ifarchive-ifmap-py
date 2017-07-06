@@ -659,6 +659,16 @@ def parse_master_index(indexpath, treedir):
                     file.complete(filedeschtmllines, filedesclines)
                     file = None
 
+                # Set up the new file, including fresh filedesclines and
+                # filedeschtmllines accumulators.
+                # We need separate accumulators for XML and HTML
+                # description tags because we handle the HTML indentation
+                # in a hacky way. As you see below (the "continuing a
+                # file block" case), we want to stick <br> and &nbsp; into
+                # the desc accumulator. That means we have to HTML-escape
+                # now, rather than doing it in the complete() routine (which
+                # would be cleaner).
+
                 pos = bx.find(' ')
                 if pos >= 0:
                     filename = bx[0:pos]
