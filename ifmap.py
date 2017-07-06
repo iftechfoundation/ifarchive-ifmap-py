@@ -526,7 +526,7 @@ class File:
     def __repr__(self):
         return '<File %s>' % (self.name,)
 
-    def complete(self, filestr, filestrraw):
+    def complete(self, filestr, desclines):
         ### The File-List-Entry currently does not check hasdesc, so
         # every file needs a desc. I'd like to fix that (template change)
         # and then only create the desc key if not None.
@@ -534,11 +534,12 @@ class File:
             filestr = ''
         self.putkey('desc', filestr)
         self.putkey('hasdesc', is_string_nonwhite(filestr))
-        if filestrraw is not None:
-            val = escape_xml_string(filestrraw)
-            val = val.rstrip() + '\n'
-            self.putkey('xmldesc', val)
-            self.putkey('hasxmldesc', is_string_nonwhite(val))
+        if desclines:
+            descstr = '\n'.join(desclines)
+            descstr = descstr.rstrip() + '\n'
+            descstr = escape_xml_string(descstr)
+            self.putkey('xmldesc', descstr)
+            self.putkey('hasxmldesc', is_string_nonwhite(descstr))
         
     def getkey(self, key, default=None):
         return self.submap.get(key)
@@ -566,7 +567,7 @@ def parse_master_index(indexpath, treedir):
         dir = None
         file = None
         filestr = None
-        filestrraw = None
+        filedesclines = None
         inheader = True
         headerlines = None
         brackets = 0
@@ -590,7 +591,7 @@ def parse_master_index(indexpath, treedir):
                 if dir:
                     if file:
                         # Also have to finish constructing the file entry.
-                        file.complete(filestr, filestrraw)
+                        file.complete(filestr, filedesclines)
                         file = None
 
                     dirname = dir.dir
@@ -625,6 +626,7 @@ def parse_master_index(indexpath, treedir):
                     dir = Directory(dirname, dirmap=dirmap)
                     
                     filestr = None
+                    filedesclines = None
                     inheader = True
                     headerlines = []
 
@@ -663,7 +665,7 @@ def parse_master_index(indexpath, treedir):
 
                 if file:
                     # Finish constructing the file in progress.
-                    file.complete(filestr, filestrraw)
+                    file.complete(filestr, filedesclines)
                     file = None
 
                 pos = bx.find(' ')
@@ -676,14 +678,13 @@ def parse_master_index(indexpath, treedir):
                     brackets = bracket_count(bx)
                     filestr = escape_string(bx)
                     filestr = append_string(filestr, '\n')
-                    filestrraw = bx
-                    filestrraw = append_string(filestrraw, '\n')
+                    filedesclines = [ bx ]
                 else:
                     filename = bx
                     bx = ''
                     firstindent = -1
                     filestr = None
-                    filestrraw = None
+                    filedesclines = []
                     
                 file = File(filename, dir)
 
@@ -693,14 +694,14 @@ def parse_master_index(indexpath, treedir):
                     if firstindent < 0:
                         firstindent = indent
                         brackets = 0
+                    prefix = ''
                     if (firstindent != indent) and (brackets == 0):
                         filestr = append_string(filestr, '<br>&nbsp;&nbsp;')
-                        filestrraw = append_string(filestrraw, ' '*(indent-firstindent))
+                        prefix = ' '*(indent-firstindent)
                     filestr = append_string(filestr, escape_string(bx))
                     filestr = append_string(filestr, '\n')
-                    filestrraw = append_string(filestrraw, bx)
+                    filedesclines.append(prefix+bx)
                     brackets += bracket_count(bx)
-                filestrraw = append_string(filestrraw, '\n')
 
         # Finished reading Master-Index.
         infl.close()
