@@ -515,18 +515,24 @@ class File:
     def __repr__(self):
         return '<File %s>' % (self.name,)
 
-    def complete(self, deschtmllines, desclines):
+    def complete(self, desclines):
         # Take the accumulated description text and stick it into our
         # File object.
-        # Note that desclines (for XML) is not yet escaped, but
-        # deschtmllines (for HTML) *is*. This is clunky.
-        
         ### The File-List-Entry currently does not check hasdesc, so
         # every file needs a desc. I'd like to fix that (template change)
         # and then only create the desc key if not ''.
+        htmllines = []
+        for ln in desclines:
+            if ln.startswith(' '):
+                ln = '&nbsp;&nbsp;' + escape_string(ln.lstrip())
+                if htmllines:
+                    ln = '<br>' + ln
+            else:
+                ln = escape_string(ln)
+            htmllines.append(ln)
         filestr = ''
-        if deschtmllines:
-            filestr = '\n'.join(deschtmllines)
+        if htmllines:
+            filestr = '\n'.join(htmllines)
             filestr = filestr.rstrip() + '\n'
         self.putkey('desc', filestr)
         self.putkey('hasdesc', is_string_nonwhite(filestr))
@@ -564,7 +570,6 @@ def parse_master_index(indexpath, treedir):
         dir = None
         file = None
         filedesclines = None
-        filedeschtmllines = None
         inheader = True
         headerlines = None
         brackets = 0
@@ -588,7 +593,7 @@ def parse_master_index(indexpath, treedir):
                 if dir:
                     if file:
                         # Also have to finish constructing the file entry.
-                        file.complete(filedeschtmllines, filedesclines)
+                        file.complete(filedesclines)
                         file = None
 
                     dirname = dir.dir
@@ -622,7 +627,6 @@ def parse_master_index(indexpath, treedir):
                         print('Starting  %s...' % (dirname,))
                     dir = Directory(dirname, dirmap=dirmap)
                     
-                    filedeschtmllines = None
                     filedesclines = None
                     inheader = True
                     headerlines = []
@@ -662,18 +666,11 @@ def parse_master_index(indexpath, treedir):
 
                 if file:
                     # Finish constructing the file in progress.
-                    file.complete(filedeschtmllines, filedesclines)
+                    file.complete(filedesclines)
                     file = None
 
-                # Set up the new file, including fresh filedesclines and
-                # filedeschtmllines accumulators.
-                # We need separate accumulators for XML and HTML
-                # description tags because we handle the HTML indentation
-                # in a hacky way. As you see below (the "continuing a
-                # file block" case), we want to stick <br> and &nbsp; into
-                # the desc accumulator. That means we have to HTML-escape
-                # now, rather than doing it in the complete() routine (which
-                # would be cleaner).
+                # Set up the new file, including a fresh filedesclines
+                # accumulator.
 
                 pos = bx.find(' ')
                 if pos >= 0:
@@ -683,13 +680,11 @@ def parse_master_index(indexpath, treedir):
                     firstindent = pos + len(match.group(1))
                     bx = match.group(2)
                     brackets = bracket_count(bx)
-                    filedeschtmllines = [ escape_string(bx) ]
                     filedesclines = [ bx ]
                 else:
                     filename = bx
                     bx = ''
                     firstindent = -1
-                    filedeschtmllines = []
                     filedesclines = []
                     
                 file = File(filename, dir)
@@ -701,12 +696,9 @@ def parse_master_index(indexpath, treedir):
                         firstindent = indent
                         brackets = 0
                     prefix = ''
-                    htmlprefix = ''
                     if (firstindent != indent) and (brackets == 0):
                         prefix = ' '*(indent-firstindent)
-                        htmlprefix = '<br>&nbsp;&nbsp;'
                     filedesclines.append(prefix+bx)
-                    filedeschtmllines.append(htmlprefix+escape_string(bx))
                     brackets += bracket_count(bx)
 
         # Finished reading Master-Index.
