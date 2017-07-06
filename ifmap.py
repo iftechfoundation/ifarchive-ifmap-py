@@ -516,6 +516,11 @@ class File:
         return '<File %s>' % (self.name,)
 
     def complete(self, deschtmllines, desclines):
+        # Take the accumulated description text and stick it into our
+        # File object.
+        # Note that desclines (for XML) is not yet escaped, but
+        # deschtmllines (for HTML) *is*. This is clunky.
+        
         ### The File-List-Entry currently does not check hasdesc, so
         # every file needs a desc. I'd like to fix that (template change)
         # and then only create the desc key if not ''.
@@ -525,6 +530,7 @@ class File:
             filestr = filestr.rstrip() + '\n'
         self.putkey('desc', filestr)
         self.putkey('hasdesc', is_string_nonwhite(filestr))
+        
         if desclines:
             descstr = '\n'.join(desclines)
             descstr = descstr.rstrip() + '\n'
