@@ -510,7 +510,7 @@ class File:
         # Place into the parent directory.
         parentdir.files[filename] = self
 
-        self.rawname = filename
+        self.name = filename
         self.path = parentdir.dir+'/'+filename
         self.putkey('rawname', filename)
         self.putkey('name', escape_string(filename))
@@ -520,7 +520,7 @@ class File:
         self.putkey('dir', parentdir.dir)
 
     def __repr__(self):
-        return '<File %s>' % (self.rawname,)
+        return '<File %s>' % (self.name,)
 
     def complete(self, filestr, filestrraw):
         ### The File-List-Entry currently does not check hasdesc, so
@@ -814,7 +814,7 @@ def check_missing_files(dirmap):
     for dir in dirmap.values():
         for file in dir.files.values():
             if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
-                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.rawname))
+                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.name))
 
 def parity_flip(map):
     """Utility function to change the "parity" entry in a dict from "Even"
@@ -874,7 +874,7 @@ def generate_output_datelist(dirmap):
     # the same timestamp. (Possibly because one is a symlink to the other!)
     # In those cases, we have a secondary sort key of filename, and then
     # a tertiary key of directory name.
-    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.rawname.lower(), file.path.lower()))
+    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.name.lower(), file.path.lower()))
 
     filename = plan.get('Date-List-Template')
     datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
@@ -921,7 +921,7 @@ def generate_output_indexes(dirmap):
         
         def filelist_thunk(outfl):
             filelist = list(dir.files.values())
-            filelist.sort(key=lambda file:file.rawname.lower())
+            filelist.sort(key=lambda file:file.name.lower())
             itermap = {}
             for file in filelist:
                 parity_flip(itermap)
@@ -965,7 +965,7 @@ def generate_output_xml(dirmap):
         for dir in dirlist:
             def filelist_thunk(outfl):
                 filelist = list(dir.files.values())
-                filelist.sort(key=lambda file:file.rawname.lower())
+                filelist.sort(key=lambda file:file.name.lower())
                 itermap = {}
                 for file in filelist:
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
