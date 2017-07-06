@@ -451,15 +451,18 @@ class Directory:
         self.dir = dirname
         # Place into the big directory map.
         dirmap[dirname] = self
-        
+
         self.submap = {}
 
         self.putkey('dir', dirname)
         self.putkey('xdir', xify_dirname(dirname))
 
         pos = dirname.rfind('/')
-        if pos >= 0:
+        if pos < 0:
+            self.parentdirname = None
+        else:
             parentdirname = dirname[0:pos]
+            self.parentdirname = parentdirname
             self.putkey('parentdir', parentdirname)
             self.putkey('xparentdir', xify_dirname(parentdirname))
 
@@ -476,8 +479,10 @@ class Directory:
             ls.append('<a href="%s.html">%s</a>' % (xify_dirname(val), el,))
         self.putkey('xdirlinks', ''.join(ls))
 
+        # To be filled in later
         self.files = {}
         self.subdirs = {}
+        self.parentdir = None
 
     def __repr__(self):
         return '<Directory %s>' % (self.dir,)
@@ -802,16 +807,15 @@ def parse_master_index(indexpath, treedir):
             
     # Create the subdir list and count for each directory.
     for dir in dirmap.values():
+        if dir.parentdirname:
+            dir2 = dirmap.get(dir.parentdirname)
+            if not dir2:
+                sys.stderr.write('Directory\'s parent is not listed: %s\n' % (dir.dir))
+                continue
+            dir2.subdirs[dir.dir] = dir
+                
+    for dir in dirmap.values():
         dir.putkey('count', len(dir.files))
-        
-        # This is N^2, sorry.
-        ### Probably a better way exists.
-        for subname, subdir in dirmap.items():
-            if subname.startswith(dir.dir):
-                val = subname[len(dir.dir):]
-                if val.startswith('/') and val.find('/', 1) < 0:
-                    dir.subdirs[subname] = subdir
-
         dir.putkey('subdircount', len(dir.subdirs))
         
     return dirmap
