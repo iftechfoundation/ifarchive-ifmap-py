@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 
 ### TODO:
-### name, rawname are bad labels. swap around.
-### filestr, filestrraw, ditto
-### escape_xml_string, escape_string are bad too.
 ### The N^2 loop in parse?
-### look at various counts. Can we use ints in the submap?
 ### correct plurals of "items", "subdirectories"
 
 import sys
@@ -526,12 +522,14 @@ class File:
     def __repr__(self):
         return '<File %s>' % (self.name,)
 
-    def complete(self, filestr, desclines):
+    def complete(self, deschtmllines, desclines):
         ### The File-List-Entry currently does not check hasdesc, so
         # every file needs a desc. I'd like to fix that (template change)
-        # and then only create the desc key if not None.
-        if filestr is None:
-            filestr = ''
+        # and then only create the desc key if not ''.
+        filestr = ''
+        if deschtmllines:
+            filestr = '\n'.join(deschtmllines)
+            filestr = filestr.rstrip() + '\n'
         self.putkey('desc', filestr)
         self.putkey('hasdesc', is_string_nonwhite(filestr))
         if desclines:
@@ -566,8 +564,8 @@ def parse_master_index(indexpath, treedir):
         
         dir = None
         file = None
-        filestr = None
         filedesclines = None
+        filedeschtmllines = None
         inheader = True
         headerlines = None
         brackets = 0
@@ -591,7 +589,7 @@ def parse_master_index(indexpath, treedir):
                 if dir:
                     if file:
                         # Also have to finish constructing the file entry.
-                        file.complete(filestr, filedesclines)
+                        file.complete(filedeschtmllines, filedesclines)
                         file = None
 
                     dirname = dir.dir
@@ -625,7 +623,7 @@ def parse_master_index(indexpath, treedir):
                         print('Starting  %s...' % (dirname,))
                     dir = Directory(dirname, dirmap=dirmap)
                     
-                    filestr = None
+                    filedeschtmllines = None
                     filedesclines = None
                     inheader = True
                     headerlines = []
@@ -665,7 +663,7 @@ def parse_master_index(indexpath, treedir):
 
                 if file:
                     # Finish constructing the file in progress.
-                    file.complete(filestr, filedesclines)
+                    file.complete(filedeschtmllines, filedesclines)
                     file = None
 
                 pos = bx.find(' ')
@@ -676,14 +674,13 @@ def parse_master_index(indexpath, treedir):
                     firstindent = pos + len(match.group(1))
                     bx = match.group(2)
                     brackets = bracket_count(bx)
-                    filestr = escape_string(bx)
-                    filestr = append_string(filestr, '\n')
+                    filedeschtmllines = [ escape_string(bx) ]
                     filedesclines = [ bx ]
                 else:
                     filename = bx
                     bx = ''
                     firstindent = -1
-                    filestr = None
+                    filedeschtmllines = []
                     filedesclines = []
                     
                 file = File(filename, dir)
@@ -695,12 +692,12 @@ def parse_master_index(indexpath, treedir):
                         firstindent = indent
                         brackets = 0
                     prefix = ''
+                    htmlprefix = ''
                     if (firstindent != indent) and (brackets == 0):
-                        filestr = append_string(filestr, '<br>&nbsp;&nbsp;')
                         prefix = ' '*(indent-firstindent)
-                    filestr = append_string(filestr, escape_string(bx))
-                    filestr = append_string(filestr, '\n')
+                        htmlprefix = '<br>&nbsp;&nbsp;'
                     filedesclines.append(prefix+bx)
+                    filedeschtmllines.append(htmlprefix+escape_string(bx))
                     brackets += bracket_count(bx)
 
         # Finished reading Master-Index.
