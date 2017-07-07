@@ -453,8 +453,8 @@ class Directory:
 
         self.submap = {}
 
-        self.putkey('dir', dirname)
-        self.putkey('xdir', xify_dirname(dirname))
+        self.putkey('dir', escape_html_string(dirname))
+        self.putkey('xdir', escape_html_string(xify_dirname(dirname)))
 
         pos = dirname.rfind('/')
         if pos < 0:
@@ -462,8 +462,8 @@ class Directory:
         else:
             parentdirname = dirname[0:pos]
             self.parentdirname = parentdirname
-            self.putkey('parentdir', parentdirname)
-            self.putkey('xparentdir', xify_dirname(parentdirname))
+            self.putkey('parentdir', escape_html_string(parentdirname))
+            self.putkey('xparentdir', escape_html_string(xify_dirname(parentdirname)))
 
         ls = []
         val = ''
@@ -475,7 +475,7 @@ class Directory:
                 val = val + '/' + el
             if ls:
                 ls.append('/')
-            ls.append('<a href="%s.html">%s</a>' % (xify_dirname(val), el,))
+            ls.append('<a href="%s.html">%s</a>' % (escape_html_string(xify_dirname(val)), escape_html_string(el),))
         self.putkey('xdirlinks', ''.join(ls))
 
         # To be filled in later
@@ -514,7 +514,7 @@ class File:
         self.putkey('nameurl', escape_url_string(filename))
         self.putkey('namexml', escape_html_string(filename))
 
-        self.putkey('dir', parentdir.dir)
+        self.putkey('dir', escape_html_string(parentdir.dir))
 
     def __repr__(self):
         return '<File %s>' % (self.name,)
@@ -931,7 +931,7 @@ def generate_output_indexes(dirmap):
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     
     for dir in dirmap.values():
-        filename = os.path.join(opts.destdir, dir.getkey('xdir')+'.html')
+        filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
         
         def filelist_thunk(outfl):
             filelist = list(dir.files.values())
