@@ -35,9 +35,10 @@ popt.add_option('-v', '--verbose',
 class TemplateTag:
     """Data element used inside a Template.
     """
-    def __init__(self, val, type=None):
+    def __init__(self, val, type=None, args=None):
         self.value = val
         self.type = type
+        self.args = args
     def __repr__(self):
         return '<TemplateTag %s:%r>' % (self.type, self.value)
         
@@ -55,6 +56,11 @@ class Template:
         int/bool value or a function. Functions must be of the form
         func(outfl) and write text to outfile. (Functions should not
         return anything.)
+    {foo>filter}: Same as above, but values are processed through a
+        function named filter. (There is a global list of filters, set
+        up with the addfilter static method.) You can run several
+        filters sequentially by writing >f1>f2>f3. Note that function
+        substitutions cannot currently be filtered.
     {?foo}if-yes{/}: If map['foo'] exists, substitute the if-yes part.
     {?foo}if-yes{:}if-no{/}: If map['foo'] exists, substitute the if-yes
         part; otherwise the if-no part.
@@ -104,7 +110,12 @@ class Template:
             elif val.startswith('?'):
                 tag = TemplateTag(val[1:], 'if')
             else:
-                tag = TemplateTag(val, 'var')
+                args = None
+                if '>' in val:
+                    args = val.split('>')
+                    args = [ el.strip() for el in args if el.strip() ]
+                    val = args.pop(0)
+                tag = TemplateTag(val, 'var', args)
             self.ls.append(tag)
             
         return
