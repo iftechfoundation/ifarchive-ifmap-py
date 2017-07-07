@@ -366,8 +366,9 @@ def bracket_count(val):
     return count
     
 def escape_html_string(val):
-    """Apply the basic HTML/XML &-escapes to a string. This does not do
-    fancy <url> detection.
+    """Apply the basic HTML/XML &-escapes to a string.
+    This does not do the fancy <url> detection you'll see in
+    escape_htmldesc_string, below.
     """
     val = val.replace('&', '&amp;')
     val = val.replace('<', '&lt;')
@@ -378,7 +379,9 @@ escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
 
 def escape_htmldesc_string(val):
     """Apply the basic HTML &-escapes to a string. Also detect strings
-    of the form <http://...> and automagically linkify them.
+    of the form <http://...> and automagically linkify them. We use
+    this for the file/dir description blocks in HTML index files (but
+    not XML).
 
     ### For backwards compatibility with the old ifmap, this does not
     convert & to &amp;! This is because our Index files contain literal
