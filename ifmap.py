@@ -71,10 +71,16 @@ class Template:
     The {?foo} test treats missing tags and Python-falsy values
     (None/False/0/'') as "no" results, all other values as "yes".
     """
-    
+
     tag_pattern = re.compile('[{]([^}]*)[}]')
 
-    cache = {}
+    filters = {}  # known filter functions (by name)
+    
+    cache = {}   # known Templates (by body string)
+
+    @staticmethod
+    def addfilter(name, func):
+        Template.filters[name] = func
     
     @staticmethod
     def substitute(body, map, outfl=sys.stdout):
@@ -132,7 +138,11 @@ class Template:
             elif tag.type == 'endif':
                 ls.append('{/}')
             elif tag.type == 'var':
-                ls.append('{%s}' % (tag.value,))
+                if tag.args:
+                    args = [ tag.value ] + tag.args
+                    ls.append('{%s}' % ('>'.join(args),))
+                else:
+                    ls.append('{%s}' % (tag.value,))
             else:
                 ls.append('{???}')
         return '<Template %r>' % (''.join(ls),)
@@ -170,7 +180,11 @@ class Template:
                 elif callable(val):
                     val(outfl)
                 elif type(val) in (str, int, float, bool):
-                    outfl.write(str(val))
+                    res = str(val)
+                    if tag.args:
+                        for filter in tag.args:
+                            res = Template.filters[filter](res)
+                    outfl.write(res)
                 else:
                     outfl.write('[NOT-PRINTABLE]')
                     print('Problem: unprintable brace-tag type: %s=%r' % (tag.value, val))
@@ -1056,6 +1070,9 @@ plan = ParamFile(os.path.join(opts.libdir, 'index'))
 
 hasher = FileHasher()
 noindexlist = NoIndexEntry()
+
+Template.addfilter('upper', lambda val:val.upper())
+Template.addfilter('lower', lambda val:val.lower())
 
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
 
