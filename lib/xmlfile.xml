@@ -1,0 +1,22 @@
+<file>
+<name>{namexml}</name>
+<directory>{dir}</directory>
+<path>{dir}/{namexml}</path>
+{?filesize}<size>{filesize}</size>{/}
+{?date}<date>{datestr}</date>
+<rawdate>{date}</rawdate>
+{/}
+{?md5}<md5>{md5}</md5>
+{/}
+{?islinkfile}<symlink type="file">
+<path>{linkpath}</path>
+</symlink>
+{/}
+{?islinkdir}<symlink type="dir">
+<name>{linkdir}</name>
+<xdir>{xlinkdir}</xdir>
+</symlink>
+{/}
+{?hasxmldesc}<description>
+{xmldesc}</description>{/}
+</file>

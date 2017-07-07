@@ -1,0 +1,13 @@
+<directory>
+<name>{dir}</name>
+<xdir>{xdir}</xdir>
+<parent>{?parentdir}{parentdir}{/}</parent>
+<filecount>{?count}{count}{:}0{/}</filecount>
+<subdircount>{?subdircount}{subdircount}{:}0{/}</subdircount>
+{?hasxmldesc}{?xmlheader}
+<description>
+{xmlheader}</description>
+{/}{/}
+</directory>
+
+{_files}
