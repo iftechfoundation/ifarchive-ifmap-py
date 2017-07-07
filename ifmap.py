@@ -179,11 +179,17 @@ class Template:
                     print('Problem: undefined brace-tag: %s' % (tag.value,))
                 elif callable(val):
                     val(outfl)
+                    if tag.args:
+                        print('Problem: cannot use filters with a callable value')
                 elif type(val) in (str, int, float, bool):
                     res = str(val)
                     if tag.args:
                         for filter in tag.args:
-                            res = Template.filters[filter](res)
+                            func = Template.filters.get(filter)
+                            if func:
+                                res = Template.filters[filter](res)
+                            else:
+                                print('Problem: undefined filter: %s' % (filter,))
                     outfl.write(res)
                 else:
                     outfl.write('[NOT-PRINTABLE]')
