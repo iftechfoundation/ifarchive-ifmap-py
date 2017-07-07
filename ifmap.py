@@ -1073,6 +1073,9 @@ noindexlist = NoIndexEntry()
 
 Template.addfilter('upper', lambda val:val.upper())
 Template.addfilter('lower', lambda val:val.lower())
+Template.addfilter('html', escape_html_string)
+Template.addfilter('url', escape_url_string)
+Template.addfilter('xify', xify_dirname)
 
 dirmap = parse_master_index(opts.indexpath, opts.treedir)
 
