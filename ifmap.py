@@ -475,7 +475,7 @@ class Directory:
                 val = val + '/' + el
             if ls:
                 ls.append('/')
-            ls.append('<a href="%s.html">%s</a>' % (escape_html_string(xify_dirname(val)), escape_html_string(el),))
+            ls.append('<a href="%s.html">%s</a>' % (escape_url_string(xify_dirname(val)), escape_html_string(el),))
         self.putkey('xdirlinks', ''.join(ls))
 
         # To be filled in later
