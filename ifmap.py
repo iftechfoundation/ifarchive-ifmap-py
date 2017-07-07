@@ -811,6 +811,7 @@ def parse_master_index(indexpath, treedir):
             if not dir2:
                 sys.stderr.write('Directory\'s parent is not listed: %s\n' % (dir.dir))
                 continue
+            dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
                 
     for dir in dirmap.values():
