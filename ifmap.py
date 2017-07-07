@@ -364,16 +364,38 @@ def bracket_count(val):
         if ch == ']' or ch == ')':
             count -= 1
     return count
-    
+
+# All ASCII characters except <&>
+htmlable_pattern = re.compile("[ -%'-;=?-~]+")
+html_entities = {
+    '&': '&amp;', '<': '&lt;', '>': '&gt;',
+    # could add more classic accented characters, but not really important
+    # actually, if we do, we'd have to distinguish HTML escaping from
+    # XML escaping. So let's not.
+}
+
 def escape_html_string(val):
-    """Apply the basic HTML/XML &-escapes to a string.
+    """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
+    for Unicode characters.
     This does not do the fancy <url> detection you'll see in
     escape_htmldesc_string, below.
     """
-    val = val.replace('&', '&amp;')
-    val = val.replace('<', '&lt;')
-    val = val.replace('>', '&gt;')
-    return val
+    res = []
+    pos = 0
+    while pos < len(val):
+        match = htmlable_pattern.match(val, pos=pos)
+        if match:
+            res.append(match.group())
+            pos = match.end()
+        else:
+            ch = val[pos]
+            ent = html_entities.get(ch)
+            if ent:
+                res.append(ent)
+            else:
+                res.append('&#x%X;' % (ord(ch),))
+            pos += 1
+    return ''.join(res)
 
 escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
 
