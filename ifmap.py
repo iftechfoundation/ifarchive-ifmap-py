@@ -365,8 +365,8 @@ def bracket_count(val):
             count -= 1
     return count
     
-def escape_xml_string(val):
-    """Apply the basic XML &-escapes to a string. This does not do
+def escape_html_string(val):
+    """Apply the basic HTML/XML &-escapes to a string. This does not do
     fancy <url> detection.
     """
     val = val.replace('&', '&amp;')
@@ -376,7 +376,7 @@ def escape_xml_string(val):
 
 escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
 
-def escape_string(val):
+def escape_htmldesc_string(val):
     """Apply the basic HTML &-escapes to a string. Also detect strings
     of the form <http://...> and automagically linkify them.
 
@@ -507,9 +507,9 @@ class File:
         # is an HTML-escaped version. This is confusing, and I'd like
         # to rename them. (But it would require a template change.)
         self.putkey('rawname', filename)
-        self.putkey('name', escape_string(filename))
+        self.putkey('name', escape_html_string(filename))
         self.putkey('nameurl', escape_url_string(filename))
-        self.putkey('namexml', escape_xml_string(filename))
+        self.putkey('namexml', escape_html_string(filename))
 
         self.putkey('dir', parentdir.dir)
 
@@ -525,11 +525,11 @@ class File:
         htmllines = []
         for ln in desclines:
             if ln.startswith(' '):
-                ln = '&nbsp;&nbsp;' + escape_string(ln.lstrip())
+                ln = '&nbsp;&nbsp;' + escape_htmldesc_string(ln.lstrip())
                 if htmllines:
                     ln = '<br>' + ln
             else:
-                ln = escape_string(ln)
+                ln = escape_htmldesc_string(ln)
             htmllines.append(ln)
         filestr = ''
         if htmllines:
@@ -541,7 +541,7 @@ class File:
         if desclines:
             descstr = '\n'.join(desclines)
             descstr = descstr.rstrip() + '\n'
-            descstr = escape_xml_string(descstr)
+            descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
         
@@ -613,11 +613,11 @@ def parse_master_index(indexpath, treedir):
                     if anyheader:
                         # For HTML, we escape (and linkify <urls>); then
                         # we convert blank lines to <p>, and end with <p>.
-                        val = escape_string(headerstr)
+                        val = escape_htmldesc_string(headerstr)
                         val = val.replace('\n\n', '\n<p>\n') + '<p>\n'
                         dir.putkey('header', val)
                         # For XML, we just escape.
-                        val = escape_xml_string(headerstr)
+                        val = escape_html_string(headerstr)
                         dir.putkey('xmlheader', val)
                     dir = None
 
