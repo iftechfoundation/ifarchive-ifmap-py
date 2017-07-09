@@ -1064,27 +1064,31 @@ def generate_output(dirmap):
 
 
 # Begin work!
+# We only do this if we're the executing script. If this is just an imported
+# module, we do no work. (This lets the test script "import ifmap" for unit
+# tests.)
 
-(opts, args) = popt.parse_args()
+if __name__ == '__main__':
+    (opts, args) = popt.parse_args()
 
-if not opts.libdir:
-    raise Exception('--src argument required')
-if not opts.destdir:
-    raise Exception('--dest argument required')
-
-plan = ParamFile(os.path.join(opts.libdir, 'index'))
-
-hasher = FileHasher()
-noindexlist = NoIndexEntry()
-
-Template.addfilter('upper', lambda val:val.upper())
-Template.addfilter('lower', lambda val:val.lower())
-Template.addfilter('html', escape_html_string)
-Template.addfilter('url', escape_url_string)
-Template.addfilter('xify', xify_dirname)
-
-dirmap = parse_master_index(opts.indexpath, opts.treedir)
-
-check_missing_files(dirmap)
-
-generate_output(dirmap)
+    if not opts.libdir:
+        raise Exception('--src argument required')
+    if not opts.destdir:
+        raise Exception('--dest argument required')
+    
+    plan = ParamFile(os.path.join(opts.libdir, 'index'))
+    
+    hasher = FileHasher()
+    noindexlist = NoIndexEntry()
+    
+    Template.addfilter('upper', lambda val:val.upper())
+    Template.addfilter('lower', lambda val:val.lower())
+    Template.addfilter('html', escape_html_string)
+    Template.addfilter('url', escape_url_string)
+    Template.addfilter('xify', xify_dirname)
+    
+    dirmap = parse_master_index(opts.indexpath, opts.treedir)
+    
+    check_missing_files(dirmap)
+    
+    generate_output(dirmap)
