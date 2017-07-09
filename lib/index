@@ -3,17 +3,17 @@ XML-Template: xmlbase.xml
 XML-Dir-Template: xmldir.xml
 XML-File-Template: xmlfile.xml
 Dir-List-Template: dirlist.html
-Dir-List-Entry: <li class="Par{parity}"><a href="{xdir}.html">{dir}</a>
+Dir-List-Entry: <li class="Par{parity}"><a href="{dir|xify|url}.html">{dir|html}</a>
 Date-List-Template: datelist.html
-Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="../{dir}/{name|url}">{dir}/{name|html}</a>
-Subdir-List-Entry: <li class="Par{parity}"><a href="{xdir}.html">{dir}</a>
-File-List-Entry: <dt class="Par{parity}"><a href={?xlinkdir}{xlinkdir}.html{:}"../{dir}/{name|url}"{/}>{name|html}</a>{?date} <span class="Date">[{datestr}]</span>{/}<dd class="Par{parity}">{desc}
+Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="../{dir|url}/{name|url}">{dir|html}/{name|html}</a>
+Subdir-List-Entry: <li class="Par{parity}"><a href="{dir|xify|url}.html">{dir|html}</a>
+File-List-Entry: <dt class="Par{parity}"><a href={?xlinkdir}{xlinkdir}.html{:}"../{dir|url}/{name|url}"{/}>{name|html}</a>{?date} <span class="Date">[{datestr}]</span>{/}<dd class="Par{parity}">{desc}
 
 <!DOCTYPE html>
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Index: {dir}</title>
+<title>Index: {dir|html}</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="../misc/ifarchive.css" type="text/css">
 <link rel="alternate" type="application/rss+xml" title="RSS" href="/indexes/archive.rss">
@@ -30,7 +30,7 @@ File-List-Entry: <dt class="Par{parity}"><a href={?xlinkdir}{xlinkdir}.html{:}".
 <li><a href="{xparentdir}.html">Up to parent</a>
 <li><a href="if-archive.html">Up to root</a>
 <li><a href="dirlist.html">List of all directories</a>
-<li><a href="http://mirror.ifarchive.org/indexes/{xdir}.html">Go to this directory on mirror.ifarchive.org</a>
+<li><a href="http://mirror.ifarchive.org/indexes/{dir|xify|url}.html">Go to this directory on mirror.ifarchive.org</a>
 </ul>
 <hr>
 </div>

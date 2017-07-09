@@ -512,8 +512,7 @@ class Directory:
 
         self.submap = {}
 
-        self.putkey('dir', escape_html_string(dirname))
-        self.putkey('xdir', escape_html_string(xify_dirname(dirname)))
+        self.putkey('dir', dirname)
 
         pos = dirname.rfind('/')
         if pos < 0:
@@ -566,7 +565,8 @@ class File:
         self.path = parentdir.dir+'/'+filename
 
         self.putkey('name', filename)
-        self.putkey('dir', escape_html_string(parentdir.dir))
+        self.putkey('dir', parentdir.dir)
+        self.putkey('path', self.path)
 
     def __repr__(self):
         return '<File %s>' % (self.name,)

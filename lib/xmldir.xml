@@ -1,6 +1,6 @@
 <directory>
-<name>{dir}</name>
-<xdir>{xdir}</xdir>
+<name>{dir|html}</name>
+<xdir>{dir|xify|html}</xdir>
 <parent>{?parentdir}{parentdir}{/}</parent>
 <filecount>{?count}{count}{:}0{/}</filecount>
 <subdircount>{?subdircount}{subdircount}{:}0{/}</subdircount>
