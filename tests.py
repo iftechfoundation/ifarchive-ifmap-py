@@ -112,6 +112,10 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('foo={bar|html|upper}', { 'bar':'x&y' }), 'foo=X&AMP;Y')
         self.assertEqual(self.substitute('foo={bar|upper|html}', { 'bar':'x&y' }), 'foo=X&amp;Y')
 
+        def subfunc(outfl):
+            Template.substitute('bar={baz|upper}', { 'baz':'text' }, outfl=outfl)
+        self.assertEqual(self.substitute('foo={bar}', { 'bar':subfunc }), 'foo=bar=TEXT')
+
 if __name__ == '__main__':
     unittest.main()
     
