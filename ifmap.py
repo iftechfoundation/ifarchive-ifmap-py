@@ -560,26 +560,23 @@ class File:
     def complete(self, desclines):
         # Take the accumulated description text and stick it into our
         # File object.
-        ### The File-List-Entry currently does not check hasdesc, so
-        # every file needs a desc. I'd like to fix that (template change)
-        # and then only create the desc key if not ''.
-        htmllines = []
-        for ln in desclines:
-            if ln.startswith(' '):
-                ln = '&nbsp;&nbsp;' + escape_htmldesc_string(ln.lstrip())
-                if htmllines:
-                    ln = '<br>' + ln
-            else:
-                ln = escape_htmldesc_string(ln)
-            htmllines.append(ln)
-        filestr = ''
-        if htmllines:
-            filestr = '\n'.join(htmllines)
-            filestr = filestr.rstrip() + '\n'
-        self.putkey('desc', filestr)
-        self.putkey('hasdesc', is_string_nonwhite(filestr))
-        
         if desclines:
+            htmllines = []
+            for ln in desclines:
+                if ln.startswith(' '):
+                    ln = '&nbsp;&nbsp;' + escape_htmldesc_string(ln.lstrip())
+                    if htmllines:
+                        ln = '<br>' + ln
+                else:
+                    ln = escape_htmldesc_string(ln)
+                htmllines.append(ln)
+            filestr = ''
+            if htmllines:
+                filestr = '\n'.join(htmllines)
+                filestr = filestr.rstrip() + '\n'
+            self.putkey('desc', filestr)
+            self.putkey('hasdesc', is_string_nonwhite(filestr))
+        
             descstr = '\n'.join(desclines)
             descstr = descstr.rstrip() + '\n'
             descstr = escape_html_string(descstr)
@@ -781,7 +778,6 @@ def parse_master_index(indexpath, treedir):
                             if noindexlist.check(dirname2):
                                 continue
                             file = File(ent.name, dir)
-                            file.putkey('desc', '')
                         file.putkey('islink', True)
                         file.putkey('islinkfile', True)
                         file.putkey('linkpath', linkname) ### canonicalize?
@@ -808,7 +804,6 @@ def parse_master_index(indexpath, treedir):
                         if noindexlist.check(dirname2):
                             continue
                         file = File(ent.name, dir)
-                        file.putkey('desc', '')
                     file.putkey('filesize', str(sta.st_size))
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
