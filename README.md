@@ -19,6 +19,10 @@ In normal Archive operation, this is invoked from the build-indexes script.
 - --v: If set, print verbose output.
 - --exclude: If set, files without index entries are excluded from index listings. (Normally *not* set.)
 
+## Testing
+
+Type `python3 tests.py` to run tests on the low-level string-escaping and templating code. It's not an end-to-end test. For that, you pretty much have to run the script and see what it generates. Compare it to what the previous version generated, that's a good trick.
+
 ## History
 
 I wrote the first version of this program in 1999-ish. It was built around the original Index files, which were hand-written by Volker Blasius (the original Archive curator) for human consumption. Their format was not particularly convenient for parsing, but I parsed them anyway.
