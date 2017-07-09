@@ -20,6 +20,7 @@ class TestEscapeFunctions(unittest.TestCase):
         self.assertEqual(escape_htmldesc_string('<http://foo>'), '<a href="http://foo">http://foo</a>')
         self.assertEqual(escape_htmldesc_string('<http://foo'), '&lt;http://foo')
         self.assertEqual(escape_htmldesc_string('<http://foo> <https://bar/b> <x>'), '<a href="http://foo">http://foo</a> <a href="https://bar/b">https://bar/b</a> &lt;x&gt;')
+        self.assertEqual(escape_htmldesc_string('<http://foo?bar&baz>'), '<a href="http://foo?bar&amp;baz">http://foo?bar&amp;baz</a>')
         ### escape_htmldesc_string currently does not escape & or &...;
         ### sequences. Add tests when it does.
 

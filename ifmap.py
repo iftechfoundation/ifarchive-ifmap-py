@@ -449,7 +449,10 @@ def escape_htmldesc_string(val):
     def thunk(match):
         if match.group(1) is not None:
             url = match.group(2)
-            return '<a href="%s">%s</a>' % (url, url,)
+            # We HTML-escape the URL but we don't URL-escape it.
+            # (Really we should percent-escape " characters.)
+            urlesc = escape_html_string(url)
+            return '<a href="%s">%s</a>' % (urlesc, urlesc,)
         else:
             ch = match.group(3)
             if ch == '<':
