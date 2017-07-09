@@ -1,7 +1,7 @@
 <file>
-<name>{namexml}</name>
+<name>{name|html}</name>
 <directory>{dir}</directory>
-<path>{dir}/{namexml}</path>
+<path>{dir}/{name|html}</path>
 {?filesize}<size>{filesize}</size>{/}
 {?date}<date>{datestr}</date>
 <rawdate>{date}</rawdate>

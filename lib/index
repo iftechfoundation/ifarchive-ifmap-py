@@ -5,9 +5,9 @@ XML-File-Template: xmlfile.xml
 Dir-List-Template: dirlist.html
 Dir-List-Entry: <li class="Par{parity}"><a href="{xdir}.html">{dir}</a>
 Date-List-Template: datelist.html
-Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="../{dir}/{nameurl}">{dir}/{name}</a>
+Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="../{dir}/{name|url}">{dir}/{name|html}</a>
 Subdir-List-Entry: <li class="Par{parity}"><a href="{xdir}.html">{dir}</a>
-File-List-Entry: <dt class="Par{parity}"><a href={?xlinkdir}{xlinkdir}.html{:}"../{dir}/{nameurl}"{/}>{name}</a>{?date} <span class="Date">[{datestr}]</span>{/}<dd class="Par{parity}">{desc}
+File-List-Entry: <dt class="Par{parity}"><a href={?xlinkdir}{xlinkdir}.html{:}"../{dir}/{name|url}"{/}>{name|html}</a>{?date} <span class="Date">[{datestr}]</span>{/}<dd class="Par{parity}">{desc}
 
 <!DOCTYPE html>
 <html>
