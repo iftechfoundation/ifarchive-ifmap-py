@@ -56,10 +56,37 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('One\nαβγδε\n<&>“”\n', {}), 'One\nαβγδε\n<&>“”\n')
         self.assertEqual(self.substitute('escape {{}!', {}), 'escape {!')
         self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
+        self.assertEqual(self.substitute('foo={bar}', { 'bar':'αβγδε' }), 'foo=αβγδε')
+        self.assertEqual(self.substitute('foo={bar}', { 'bar':'' }), 'foo=')
         self.assertEqual(self.substitute('foo={bar}', { 'bar':123 }), 'foo=123')
         self.assertEqual(self.substitute('foo={bar}', { 'bar':True }), 'foo=True')
         self.assertEqual(self.substitute('foo={bar}', { 'bar':False }), 'foo=False')
-        self.assertEqual(self.substitute('foo={bar}', { 'bar':'' }), 'foo=')
+        self.assertEqual(self.substitute('foo={bar}', { 'bar':(lambda outfl: outfl.write('xyzzy')) }), 'foo=xyzzy')
+        
+    def test_conditionals(self):
+        map = {
+            'str': 'string',
+            'empty': '',
+            'zero': 0,
+            'int': 987,
+            'true': True,
+            'false': False,
+            'func': (lambda outfl: outfl.write('function')),
+        }
+        self.assertEqual(self.substitute('{str} {int} {func}', map), 'string 987 function')
+        self.assertEqual(self.substitute('{?str}yes{/}', map), 'yes')
+        self.assertEqual(self.substitute('{?str}yes{:}no{/}', map), 'yes')
+
+        self.assertEqual(self.substitute('{?int}{str}{:}{zero}{/}', map), 'string')
+        self.assertEqual(self.substitute('{?empty}{empty}{:}is-empty{/}', map), 'is-empty')
+        self.assertEqual(self.substitute('{?missing}{missing}{:}is-missing{/}', map), 'is-missing')
+
+        self.assertEqual(self.substitute('{?empty}yes{:}no{/}', map), 'no')
+        self.assertEqual(self.substitute('{?missing}yes{:}no{/}', map), 'no')
+        self.assertEqual(self.substitute('{?int}yes{:}no{/}', map), 'yes')
+        self.assertEqual(self.substitute('{?zero}yes{:}no{/}', map), 'no')
+        self.assertEqual(self.substitute('{?true}yes{:}no{/}', map), 'yes')
+        self.assertEqual(self.substitute('{?false}yes{:}no{/}', map), 'no')
     
 if __name__ == '__main__':
     unittest.main()
