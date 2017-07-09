@@ -11,7 +11,15 @@ from ifmap import is_string_nonwhite
 from ifmap import Template
 
 class TestEscapeFunctions(unittest.TestCase):
-    
+
+    def setUp(self):
+        # This sets up global Template state, but it's harmless if we
+        # do it more than once.
+        Template.addfilter('html', escape_html_string)
+        Template.addfilter('url', escape_url_string)
+        Template.addfilter('upper', lambda val:val.upper())
+        Template.addfilter('lower', lambda val:val.lower())
+        
     def test_escape_html_string(self):
         self.assertEqual(escape_html_string('foo'), 'foo')
         self.assertEqual(escape_html_string('foo<i>&'), 'foo&lt;i&gt;&amp;')
@@ -94,7 +102,16 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag1':True }), 'yes-1/no-2.')
         self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag2':True }), 'no-1/yes-2.')
         self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag1':True, 'flag2':True }), 'yes-1/yes-2.')
-    
+
+    def test_filters(self):
+        self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
+        self.assertEqual(self.substitute('foo={bar|upper}', { 'bar':'xxx' }), 'foo=XXX')
+        self.assertEqual(self.substitute('foo={bar|lower}', { 'bar':'XXX' }), 'foo=xxx')
+        self.assertEqual(self.substitute('foo={bar|upper|lower}', { 'bar':'XyZw' }), 'foo=xyzw')
+        self.assertEqual(self.substitute('foo={bar|upper}', { 'bar':123 }), 'foo=123')
+        self.assertEqual(self.substitute('foo={bar|html|upper}', { 'bar':'x&y' }), 'foo=X&AMP;Y')
+        self.assertEqual(self.substitute('foo={bar|upper|html}', { 'bar':'x&y' }), 'foo=X&amp;Y')
+
 if __name__ == '__main__':
     unittest.main()
     
