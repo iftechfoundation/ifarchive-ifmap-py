@@ -13,8 +13,8 @@
 </symlink>
 {/}
 {?islinkdir}<symlink type="dir">
-<name>{linkdir}</name>
-<xdir>{xlinkdir}</xdir>
+<name>{linkdir|html}</name>
+<xdir>{linkdir|xify|html}</xdir>
 </symlink>
 {/}
 {?hasxmldesc}<description>

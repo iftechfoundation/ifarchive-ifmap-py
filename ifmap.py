@@ -810,7 +810,6 @@ def parse_master_index(indexpath, treedir):
                         file.putkey('islink', True)
                         file.putkey('islinkdir', True)
                         file.putkey('linkdir', targetname)
-                        file.putkey('xlinkdir', xify_dirname(targetname))
 
                     continue
                         
@@ -837,13 +836,11 @@ def parse_master_index(indexpath, treedir):
                     file = dir.files.get(ent.name)
                     if file is not None:
                         file.putkey('linkdir', dirname2)
-                        file.putkey('xlinkdir', xify_dirname(dirname2))
                     if parentlist and parentdir:
                         parentname = os.path.join(parentdir, ent.name)
                         parentfile = parentlist.get(parentname)
                         if parentfile is not None:
                             parentfile.putkey('linkdir', dirname2)
-                            parentfile.putkey('xlinkdir', xify_dirname(dirname2))
                     scan_directory(dirname2, dir.files, ent.name)
                     continue
                             
@@ -878,7 +875,7 @@ def check_missing_files(dirmap):
     """
     for dir in dirmap.values():
         for file in dir.files.values():
-            if file.getkey('date') is None and file.getkey('xlinkdir') is None and file.getkey('islink') is None:
+            if file.getkey('date') is None and file.getkey('linkdir') is None and file.getkey('islink') is None:
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.name))
 
 def parity_flip(map):
