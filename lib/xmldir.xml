@@ -1,7 +1,7 @@
 <directory>
 <name>{dir|html}</name>
 <xdir>{dir|xify|html}</xdir>
-<parent>{?parentdir}{parentdir}{/}</parent>
+<parent>{?parentdir}{parentdir|html}{/}</parent>
 <filecount>{?count}{count}{:}0{/}</filecount>
 <subdircount>{?subdircount}{subdircount}{:}0{/}</subdircount>
 {?hasxmldesc}{?xmlheader}

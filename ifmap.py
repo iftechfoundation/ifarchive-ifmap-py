@@ -520,8 +520,7 @@ class Directory:
         else:
             parentdirname = dirname[0:pos]
             self.parentdirname = parentdirname
-            self.putkey('parentdir', escape_html_string(parentdirname))
-            self.putkey('xparentdir', escape_html_string(xify_dirname(parentdirname)))
+            self.putkey('parentdir', parentdirname)
 
         ls = []
         val = ''
