@@ -967,6 +967,7 @@ def generate_output_indexes(dirmap):
 
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
+    dirlinkelement_body = plan.get('Dir-Link-Element', '')
     
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
@@ -974,13 +975,14 @@ def generate_output_indexes(dirmap):
         def dirlinks_thunk(outfl):
             els = dir.dir.split('/')
             val = ''
+            first = True
             for el in els:
-                if not val:
+                if first:
                     val = el
                 else:
-                    outfl.write('/')
                     val = val + '/' + el
-                outfl.write('<a href="%s.html">%s</a>' % (escape_url_string(xify_dirname(val)), escape_html_string(el),))
+                Template.substitute(dirlinkelement_body, { 'dir':val, 'name':el, 'first':first }, outfl=outfl)
+                first = False
             
         def filelist_thunk(outfl):
             filelist = list(dir.files.values())
