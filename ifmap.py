@@ -972,6 +972,9 @@ def generate_output_datelist(dirmap):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
+    filename = plan.get('Main-Template')
+    main_body = read_lib_file(filename, '<html>Missing main template!</html>')
+
     filename = plan.get('Top-Level-Template')
     toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
 
@@ -1005,7 +1008,7 @@ def generate_output_indexes(dirmap):
             itermap['header'] = toplevel_body
         
         outfl = open(filename, 'w', encoding='utf-8')
-        Template.substitute(plan.body, ChainMap(itermap, dir.submap), outfl=outfl)
+        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=outfl)
         outfl.close()
 
 def generate_output_xml(dirmap):
