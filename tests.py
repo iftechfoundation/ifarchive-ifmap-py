@@ -107,6 +107,8 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
         self.assertEqual(self.substitute('foo={bar|upper}', { 'bar':'xxx' }), 'foo=XXX')
         self.assertEqual(self.substitute('foo={bar|lower}', { 'bar':'XXX' }), 'foo=xxx')
+        self.assertEqual(self.substitute('foo={bar|upper}, {bar|lower}', { 'bar':'Xy' }), 'foo=XY, xy')
+        self.assertEqual(self.substitute('foo={bar|lower}', { 'bar':'XXX' }), 'foo=xxx')
         self.assertEqual(self.substitute('foo={bar|upper|lower}', { 'bar':'XyZw' }), 'foo=xyzw')
         self.assertEqual(self.substitute('foo={bar|upper}', { 'bar':123 }), 'foo=123')
         self.assertEqual(self.substitute('foo={bar|html|upper}', { 'bar':'x&y' }), 'foo=X&AMP;Y')
