@@ -74,8 +74,10 @@ class TestSubstitutions(unittest.TestCase):
             'func': (lambda outfl: outfl.write('function')),
         }
         self.assertEqual(self.substitute('{str} {int} {func}', map), 'string 987 function')
+        
         self.assertEqual(self.substitute('{?str}yes{/}', map), 'yes')
         self.assertEqual(self.substitute('{?str}yes{:}no{/}', map), 'yes')
+        self.assertEqual(self.substitute('{?str}yes-1{/} {?missing}yes-2{/}.', map), 'yes-1 .')
 
         self.assertEqual(self.substitute('{?int}{str}{:}{zero}{/}', map), 'string')
         self.assertEqual(self.substitute('{?empty}{empty}{:}is-empty{/}', map), 'is-empty')
@@ -87,6 +89,11 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('{?zero}yes{:}no{/}', map), 'no')
         self.assertEqual(self.substitute('{?true}yes{:}no{/}', map), 'yes')
         self.assertEqual(self.substitute('{?false}yes{:}no{/}', map), 'no')
+        
+        self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', {}), 'no-1/no-2.')
+        self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag1':True }), 'yes-1/no-2.')
+        self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag2':True }), 'no-1/yes-2.')
+        self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag1':True, 'flag2':True }), 'yes-1/yes-2.')
     
 if __name__ == '__main__':
     unittest.main()
