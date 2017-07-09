@@ -522,19 +522,6 @@ class Directory:
             self.parentdirname = parentdirname
             self.putkey('parentdir', parentdirname)
 
-        ls = []
-        val = ''
-        els = dirname.split('/')
-        for el in els:
-            if not val:
-                val = el
-            else:
-                val = val + '/' + el
-            if ls:
-                ls.append('/')
-            ls.append('<a href="%s.html">%s</a>' % (escape_url_string(xify_dirname(val)), escape_html_string(el),))
-        self.putkey('xdirlinks', ''.join(ls))
-
         # To be filled in later
         self.files = {}
         self.subdirs = {}
@@ -984,6 +971,17 @@ def generate_output_indexes(dirmap):
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
         
+        def dirlinks_thunk(outfl):
+            els = dir.dir.split('/')
+            val = ''
+            for el in els:
+                if not val:
+                    val = el
+                else:
+                    outfl.write('/')
+                    val = val + '/' + el
+                outfl.write('<a href="%s.html">%s</a>' % (escape_url_string(xify_dirname(val)), escape_html_string(el),))
+            
         def filelist_thunk(outfl):
             filelist = list(dir.files.values())
             filelist.sort(key=lambda file:file.name.lower())
@@ -1002,7 +1000,7 @@ def generate_output_indexes(dirmap):
                 Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
                 outfl.write('\n')
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk }
+        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk }
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body
