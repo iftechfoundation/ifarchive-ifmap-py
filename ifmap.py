@@ -789,7 +789,7 @@ def parse_master_index(indexpath, treedir):
                         file = dir.files.get(ent.name)
                         if file is None:
                             file = File(ent.name, dir)
-                            file.putkey('desc', 'Symlink to '+targetname) ### escape?
+                            file.complete(['Symlink to '+targetname])
                         file.putkey('islink', True)
                         file.putkey('islinkdir', True)
                         file.putkey('linkdir', targetname)
