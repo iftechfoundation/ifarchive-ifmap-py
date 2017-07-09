@@ -399,9 +399,12 @@ def bracket_count(val):
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
 html_entities = {
+    # Newlines and tabs are not encoded.
+    '\n': '\n', '\t': '\t',
+    # The classic three HTML characters that must be escaped.
     '&': '&amp;', '<': '&lt;', '>': '&gt;',
-    # could add more classic accented characters, but not really important
-    # actually, if we do, we'd have to distinguish HTML escaping from
+    # We could add more classic accented characters, but not really important.
+    # Actually, if we do, we'd have to distinguish HTML escaping from
     # XML escaping. So let's not.
 }
 
