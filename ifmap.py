@@ -879,6 +879,9 @@ def generate_output_dirlist(dirmap):
 
     dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
     
+    filename = plan.get('General-Footer')
+    general_footer = read_lib_file(filename, '')
+
     def dirlist_thunk(outfl):
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
@@ -888,7 +891,7 @@ def generate_output_dirlist(dirmap):
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
             outfl.write('\n')
             
-    itermap = { '_dirs':dirlist_thunk }
+    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
     outfl = open(filename, 'w', encoding='utf-8')
@@ -925,6 +928,9 @@ def generate_output_datelist(dirmap):
 
     datelist_entry = plan.get('Date-List-Entry', '<li>{name}')
 
+    filename = plan.get('General-Footer')
+    general_footer = read_lib_file(filename, '')
+
     curtime = int(time.time())
     
     for (intkey, intlen, intname) in intervals:
@@ -943,7 +949,7 @@ def generate_output_datelist(dirmap):
                 Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
                 
-        itermap = { '_files':filelist_thunk }
+        itermap = { '_files':filelist_thunk, 'footer':general_footer }
         if intname:
             itermap['interval'] = intname
             
@@ -959,6 +965,9 @@ def generate_output_indexes(dirmap):
 
     filename = plan.get('Top-Level-Template')
     toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
+
+    filename = plan.get('General-Footer')
+    general_footer = read_lib_file(filename, '')
 
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
@@ -997,7 +1006,7 @@ def generate_output_indexes(dirmap):
                 Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
                 outfl.write('\n')
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk }
+        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer }
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body
