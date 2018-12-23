@@ -972,8 +972,10 @@ def generate_output_datelist(dirmap):
         else:
             filename = os.path.join(opts.destdir, 'date.html')
 
+        relroot = '..'
+        
         def filelist_thunk(outfl):
-            itermap = {}
+            itermap = { 'relroot':relroot }
             for file in filelist:
                 parity_flip(itermap)
                 if intlen:
@@ -982,7 +984,6 @@ def generate_output_datelist(dirmap):
                 Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
                 
-        relroot = '..'
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
         
         itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
@@ -1013,6 +1014,8 @@ def generate_output_indexes(dirmap):
     for dir in dirmap.values():
         filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
         
+        relroot = '..'
+        
         def dirlinks_thunk(outfl):
             els = dir.dir.split('/')
             val = ''
@@ -1028,7 +1031,7 @@ def generate_output_indexes(dirmap):
         def filelist_thunk(outfl):
             filelist = list(dir.files.values())
             filelist.sort(key=lambda file:file.name.lower())
-            itermap = {}
+            itermap = { 'relroot':relroot }
             for file in filelist:
                 parity_flip(itermap)
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
@@ -1043,7 +1046,6 @@ def generate_output_indexes(dirmap):
                 Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
                 outfl.write('\n')
 
-        relroot = '..'
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
