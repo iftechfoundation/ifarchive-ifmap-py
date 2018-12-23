@@ -1059,6 +1059,12 @@ def generate_output_indexes(dirmap):
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
 
+        filename = os.path.join(opts.destdir, dir.dir, 'index.html')
+        writer = SafeWriter(tempname, filename)
+        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
+        writer.resolve()
+
+
 def generate_output_xml(dirmap):
     """Write out the Master-Index.xml file.
     """
@@ -1100,6 +1106,11 @@ def generate_output(dirmap):
     """
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
+        
+    dirlist = list(dirmap.values())
+    for dir in dirlist:
+        dirname = os.path.join(opts.destdir, dir.dir)
+        os.makedirs(dirname, exist_ok=True)
 
     if opts.verbose:
         print('Generating output...')
