@@ -920,7 +920,10 @@ def generate_output_dirlist(dirmap):
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
             outfl.write('\n')
             
-    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer }
+    relroot = '..'
+    general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
+
+    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
     tempname = os.path.join(opts.destdir, '__temp')
@@ -979,7 +982,10 @@ def generate_output_datelist(dirmap):
                 Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
                 
-        itermap = { '_files':filelist_thunk, 'footer':general_footer }
+        relroot = '..'
+        general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
+        
+        itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
         if intname:
             itermap['interval'] = intname
             
@@ -1036,11 +1042,15 @@ def generate_output_indexes(dirmap):
                 parity_flip(itermap)
                 Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
                 outfl.write('\n')
+
+        relroot = '..'
+        general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
+        toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer }
+        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
-            itermap['header'] = toplevel_body
+            itermap['header'] = toplevel_body_thunk
         
         tempname = os.path.join(opts.destdir, '__temp')
         writer = SafeWriter(tempname, filename)
