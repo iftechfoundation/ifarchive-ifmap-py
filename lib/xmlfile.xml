@@ -8,6 +8,8 @@
 {/}
 {?md5}<md5>{md5}</md5>
 {/}
+{?sha512}<sha512>{sha512}</sha512>
+{/}
 {?islinkfile}<symlink type="file">
 <path>{linkpath}</path>
 </symlink>
