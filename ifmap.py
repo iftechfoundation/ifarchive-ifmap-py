@@ -349,7 +349,28 @@ class FileHasher:
             accum_sha512.update(dat)
         fl.close()
         return (accum_md5.hexdigest(), accum_sha512.hexdigest())
-        
+
+class SafeWriter:
+    """SafeWriter: a class which can write a file atomically.
+
+    This implements a simple pattern: you open a temporary file for
+    writing, write data to it, close the file, and then move it
+    to its final location.
+    """
+
+    def __init__(self, tempname, finalname):
+        self.tempname = tempname
+        self.finalname = finalname
+        self.fl = open(tempname, 'w', encoding='utf-8')
+
+    def stream(self):
+        return self.fl
+
+    def resolve(self):
+        self.fl.close()
+        self.fl = None
+        os.replace(self.tempname, self.finalname)
+
 def read_lib_file(filename, default=''):
     """Read a simple text file from the lib directory. Return it as a
     string.
@@ -902,9 +923,10 @@ def generate_output_dirlist(dirmap):
     itermap = { '_dirs':dirlist_thunk, 'footer':general_footer }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
-    outfl = open(filename, 'w', encoding='utf-8')
-    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=outfl)
-    outfl.close()
+    tempname = os.path.join(opts.destdir, '__temp')
+    writer = SafeWriter(tempname, filename)
+    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    writer.resolve()
     
 def generate_output_datelist(dirmap):
     """Write out the date.html indexes.
@@ -961,9 +983,10 @@ def generate_output_datelist(dirmap):
         if intname:
             itermap['interval'] = intname
             
-        outfl = open(filename, 'w', encoding='utf-8')
-        Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=outfl)
-        outfl.close()
+        tempname = os.path.join(opts.destdir, '__temp')
+        writer = SafeWriter(tempname, filename)
+        Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+        writer.resolve()
     
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
@@ -1019,9 +1042,10 @@ def generate_output_indexes(dirmap):
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body
         
-        outfl = open(filename, 'w', encoding='utf-8')
-        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=outfl)
-        outfl.close()
+        tempname = os.path.join(opts.destdir, '__temp')
+        writer = SafeWriter(tempname, filename)
+        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
+        writer.resolve()
 
 def generate_output_xml(dirmap):
     """Write out the Master-Index.xml file.
@@ -1054,9 +1078,10 @@ def generate_output_xml(dirmap):
     itermap = { '_dirs':dirlist_thunk }
     
     filename = os.path.join(opts.destdir, 'Master-Index.xml')
-    outfl = open(filename, 'w', encoding='utf-8')
-    Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=outfl)
-    outfl.close()
+    tempname = os.path.join(opts.destdir, '__temp')
+    writer = SafeWriter(tempname, filename)
+    Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    writer.resolve()
 
 def generate_output(dirmap):
     """Write out all the index files.
