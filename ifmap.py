@@ -273,16 +273,19 @@ class NoIndexEntry:
         return opts.excludemissing
     
 class FileHasher:
-    """FileHasher: A module which can extract the MD5 hashes of files.
+    """FileHasher: A module which can extract hashes of files.
 
-    Since MD5 hashing is this script's slowest task, we keep a cache of
+    Since hashing is this script's slowest task, we keep a cache of
     checksums. (In the indexes directory, since we know that's writable.)
     The cache file has a very simple tab-separated format:
     
-       size mtime md5 filename
-       
+       size mtime md5 sha512 filename
+
     We only use a cache entry if the size and mtime both match. (So if a
     file is updated, we'll recalculate.)
+
+    The filename "md5-cache.txt" is misleading; we store both MD5
+    and SHA2-512 checksums.
 
     We only ever append to the cache file. So if a file is updated, we
     wind up with redundant lines in the cache. That's fine; the latest
@@ -290,7 +293,7 @@ class FileHasher:
     the cache file every couple of years to tidy up.
     """
     def __init__(self):
-        # Maps filenames to (size, timestamp, md5)
+        # Maps filenames to (size, timestamp, md5, sha512)
         self.cache = {}
 
         # Create the output directory and the cache file if they don't
@@ -304,7 +307,7 @@ class FileHasher:
             fl.close()
         
         fl = open(self.cachefile, encoding='utf-8')
-        pattern = re.compile('^([0-9]+)\s([0-9]+)\s([0-9a-f]+)\s(.*)$')
+        pattern = re.compile('^([0-9]+)\s([0-9]+)\s([0-9a-f]+)\s([0-9a-f]+)\s(.*)$')
         while True:
             ln = fl.readline()
             if not ln:
@@ -315,34 +318,37 @@ class FileHasher:
                 size = int(match.group(1))
                 timestamp = int(match.group(2))
                 md5 = match.group(3)
-                filename = match.group(4)
-                self.cache[filename] = (size, timestamp, md5)
+                sha512 = match.group(4)
+                filename = match.group(5)
+                self.cache[filename] = (size, timestamp, md5, sha512)
         fl.close()
 
-    def get_md5(self, filename, size, timestamp):
+    def get_hashes(self, filename, size, timestamp):
         if filename in self.cache:
-            (cachesize, cachetimestamp, md5) = self.cache[filename]
+            (cachesize, cachetimestamp, md5, sha512) = self.cache[filename]
             if size == cachesize and timestamp == cachetimestamp:
-                return md5
+                return (md5, sha512)
         if opts.verbose:
-            print('Computing md5 for %s' % (filename,))
-        md5 = self.calculate_md5(filename)
-        self.cache[filename] = (size, timestamp, md5)
+            print('Computing hashes for %s' % (filename,))
+        (md5, sha512) = self.calculate_hashes(filename)
+        self.cache[filename] = (size, timestamp, md5, sha512)
         fl = open(self.cachefile, 'a', encoding='utf-8')
-        fl.write('%d\t%d\t%s\t%s\n' % (size, timestamp, md5, filename))
+        fl.write('%d\t%d\t%s\t%s\t%s\n' % (size, timestamp, md5, sha512, filename))
         fl.close()
-        return md5
+        return (md5, sha512)
             
-    def calculate_md5(self, filename):
-        accum = hashlib.md5()
+    def calculate_hashes(self, filename):
+        accum_md5 = hashlib.md5()
+        accum_sha512 = hashlib.sha512()
         fl = open(filename, 'rb')
         while True:
             dat = fl.read(1024)
             if not dat:
                 break
-            accum.update(dat)
+            accum_md5.update(dat)
+            accum_sha512.update(dat)
         fl.close()
-        return accum.hexdigest()
+        return (accum_md5.hexdigest(), accum_sha512.hexdigest())
         
 def read_lib_file(filename, default=''):
     """Read a simple text file from the lib directory. Return it as a
@@ -808,7 +814,9 @@ def parse_master_index(indexpath, treedir):
                     file.putkey('date', str(int(sta.st_mtime)))
                     tmdat = time.localtime(sta.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    file.putkey('md5', hasher.get_md5(pathname, sta.st_size, int(sta.st_mtime)))
+                    hash_md5, hash_sha512 = hasher.get_hashes(pathname, sta.st_size, int(sta.st_mtime))
+                    file.putkey('md5', hash_md5)
+                    file.putkey('sha512', hash_sha512)
                     continue
 
                 if ent.is_dir():
