@@ -418,7 +418,10 @@ def xify_dirname(val):
     We acknowledge that this is ugly and stupid. It's deprecated; we now
     point people to dir/index.html indexes which don't use the X trick.
     But because this hack still exists in the templates, we need a global
-    switch to make it work (add Xs) or not work (be no-op).
+    switch. We generate Xdir.html with xify_mode on, and dir/index.html
+    with xify_mode off.
+    (In both cases the template will append ".html" to get the actual
+    filename.)
     """
     if xify_mode:
         return val.replace('/', 'X')
