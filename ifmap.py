@@ -417,16 +417,18 @@ def xify_dirname(val):
     "if-archiveXgames", for example.
     We acknowledge that this is ugly and stupid. It's deprecated; we now
     point people to dir/index.html indexes which don't use the X trick.
-    But because this hack still exists in the templates, we need a global
-    switch. We generate Xdir.html with xify_mode on, and dir/index.html
-    with xify_mode off.
-    (In both cases the template will append ".html" to get the actual
-    filename.)
+    """
+    return val.replace('/', 'X')
+
+def indexuri_dirname(val):
+    """Convert a directory name to the URI for its index file.
+    The global xify_mode switch determines whether we use the X trick
+    (see above) or not.
     """
     if xify_mode:
-        return val.replace('/', 'X')
+        return val.replace('/', 'X') + '.html'
     else:
-        return val + '/index'
+        return val + '/'
 
 def bracket_count(val):
     """Check the running bracket balance of a string. This does not
@@ -1172,6 +1174,7 @@ if __name__ == '__main__':
     Template.addfilter('html', escape_html_string)
     Template.addfilter('url', escape_url_string)
     Template.addfilter('xify', xify_dirname)
+    Template.addfilter('indexuri', indexuri_dirname)
     
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
     
