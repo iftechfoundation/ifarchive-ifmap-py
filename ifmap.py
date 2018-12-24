@@ -1047,7 +1047,8 @@ def generate_output_indexes(dirmap):
                     val = el
                 else:
                     val = val + '/' + el
-                Template.substitute(dirlinkelement_body, { 'dir':val, 'name':el, 'first':first }, outfl=outfl)
+                itermap = { 'dir':val, 'name':el, 'first':first, 'relroot':relroot }
+                Template.substitute(dirlinkelement_body, itermap, outfl=outfl)
                 first = False
             
         def filelist_thunk(outfl):

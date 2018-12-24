@@ -10,6 +10,6 @@ Date-List-Template: datelist.html
 Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="{relroot}/{dir|url}/{name|url}">{dir|html}/{name|html}</a>
 Subdir-List-Entry: <li class="Par{parity}"><a href="{relroot}/indexes/{dir|indexuri|url}">{dir|html}</a>
 File-List-Entry: <dt class="Par{parity}"><a href={?linkdir}{linkdir|indexuri|url}{:}"{relroot}/{dir|url}/{name|url}"{/}>{name|html}</a>{?date} <span class="Date">[{datestr}]</span>{/}<dd class="Par{parity}">{?hasdesc}{desc}{/}
-Dir-Link-Element: {?first}{:}/{/}<a href="{dir|indexuri|url}">{name|html}</a>
+Dir-Link-Element: {?first}{:}/{/}<a href="{relroot}/indexes/{dir|indexuri|url}">{name|html}</a>
 
 (This space intentionally left blank.)
