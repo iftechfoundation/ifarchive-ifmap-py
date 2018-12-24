@@ -943,7 +943,7 @@ def generate_output_dirlist(dirmap):
     relroot = '..'
     general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
 
-    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
+    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
 
     filename = os.path.join(opts.destdir, 'dirlist.html')
     tempname = os.path.join(opts.destdir, '__temp')
@@ -1006,7 +1006,7 @@ def generate_output_datelist(dirmap):
                 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
+        itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
         if intname:
             itermap['interval'] = intname
             
