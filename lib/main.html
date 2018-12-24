@@ -35,14 +35,14 @@
 <div class="Body">
 
 {?subdircount}
-<h3 class="ListHeader" id="subdirheader">{subdircount} Subdirectories</h3>
+<h3 class="ListHeader" id="subdirheader">{subdircount} Subdirector{subdircount|plural_ies}</h3>
 <ul id="subdirlist">
 {_subdirs}
 </ul>
 {/}
 
 {?count} 
-<h3 class="ListHeader" id="itemheader">{count} Items</h3>
+<h3 class="ListHeader" id="itemheader">{count} Item{count|plural_s}</h3>
 <dl id="itemlist">
 {_files}
 </dl>

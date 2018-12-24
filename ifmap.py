@@ -455,6 +455,18 @@ html_entities = {
     # XML escaping. So let's not.
 }
 
+def pluralize_s(val):
+    if val == 1 or val == '1':
+        return ''
+    else:
+        return 's'
+
+def pluralize_ies(val):
+    if val == 1 or val == '1':
+        return 'y'
+    else:
+        return 'ies'
+
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
@@ -1175,6 +1187,8 @@ if __name__ == '__main__':
     Template.addfilter('url', escape_url_string)
     Template.addfilter('xify', xify_dirname)
     Template.addfilter('indexuri', indexuri_dirname)
+    Template.addfilter('plural_s', pluralize_s)
+    Template.addfilter('plural_ies', pluralize_ies)
     
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
     
