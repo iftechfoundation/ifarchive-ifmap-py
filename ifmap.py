@@ -409,14 +409,21 @@ def relroot_for_dirname(val):
     num = val.count('/')
     return '../..' + num * '/..'
 
+xify_mode = True
+
 def xify_dirname(val):
     """Convert a directory name to an X-string, as used in the index.html
     filenames. The "if-archive/games" directory is mapped to
     "if-archiveXgames", for example.
     We acknowledge that this is ugly and stupid. It's deprecated; we now
     point people to dir/index.html indexes which don't use the X trick.
+    But because this hack still exists in the templates, we need a global
+    switch to make it work (add Xs) or not work (be no-op).
     """
-    return val.replace('/', 'X')
+    if xify_mode:
+        return val.replace('/', 'X')
+    else:
+        return val + '/index'
 
 def bracket_count(val):
     """Check the running bracket balance of a string. This does not
@@ -1006,6 +1013,8 @@ def generate_output_datelist(dirmap):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
+    global xify_mode
+    
     filename = plan.get('Main-Template')
     main_body = read_lib_file(filename, '<html>Missing main template!</html>')
 
@@ -1048,7 +1057,7 @@ def generate_output_indexes(dirmap):
         def subdirlist_thunk(outfl):
             dirlist = list(dir.subdirs.values())
             dirlist.sort(key=lambda dir:dir.dir.lower())
-            itermap = {}
+            itermap = { 'relroot':relroot }
             for subdir in dirlist:
                 parity_flip(itermap)
                 Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
@@ -1063,12 +1072,14 @@ def generate_output_indexes(dirmap):
             itermap['header'] = toplevel_body_thunk
 
         # Write out the Xdir.html version
+        xify_mode = True
         tempname = os.path.join(opts.destdir, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
 
         # Write out the dir/index.html version
+        xify_mode = False
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
         filename = os.path.join(opts.destdir, dir.dir, 'index.html')
@@ -1116,6 +1127,8 @@ def generate_output_xml(dirmap):
 def generate_output(dirmap):
     """Write out all the index files.
     """
+    global xify_mode
+    
     if not os.path.exists(opts.destdir):
         os.mkdir(opts.destdir)
         
@@ -1126,10 +1139,12 @@ def generate_output(dirmap):
 
     if opts.verbose:
         print('Generating output...')
-            
+
+    xify_mode = True
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
+    xify_mode = True
     generate_output_xml(dirmap)
 
 
