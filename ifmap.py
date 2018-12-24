@@ -1071,7 +1071,7 @@ def generate_output_indexes(dirmap):
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'relroot':relroot }
+        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body_thunk
