@@ -402,11 +402,19 @@ def expandtabs(val, colwidth=8):
         spaces = 8 - (pos & 7)
         val = val[0:pos] + (' '*spaces) + val[pos+1:]
 
+def relroot_for_dirname(val):
+    """For a directory, return the relative URL which returns to the
+    root. "if-archive/games" maps to "../../..".
+    """
+    num = val.count('/')
+    return '../..' + num * '/..'
+
 def xify_dirname(val):
     """Convert a directory name to an X-string, as used in the index.html
     filenames. The "if-archive/games" directory is mapped to
     "if-archiveXgames", for example.
-    We acknowledge that this is ugly and stupid.
+    We acknowledge that this is ugly and stupid. It's deprecated; we now
+    point people to dir/index.html indexes which don't use the X trick.
     """
     return val.replace('/', 'X')
 
@@ -1053,12 +1061,16 @@ def generate_output_indexes(dirmap):
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body_thunk
-        
+
+        # Write out the Xdir.html version
         tempname = os.path.join(opts.destdir, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
 
+        # Write out the dir/index.html version
+        relroot = relroot_for_dirname(dir.dir)
+        itermap['relroot'] = relroot
         filename = os.path.join(opts.destdir, dir.dir, 'index.html')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
