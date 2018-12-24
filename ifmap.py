@@ -1148,7 +1148,6 @@ def generate_output(dirmap):
 
     xify_mode = False
     generate_output_dirlist(dirmap)
-    xify_mode = True
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
     xify_mode = True
