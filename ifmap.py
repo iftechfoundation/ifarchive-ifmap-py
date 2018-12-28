@@ -841,7 +841,7 @@ def parse_master_index(indexpath, treedir):
                         file.putkey('islinkfile', True)
                         file.putkey('linkpath', linkname) ### canonicalize?
                         file.putkey('date', str(int(sta2.st_mtime)))
-                        tmdat = time.localtime(sta2.st_mtime)
+                        tmdat = time.gmtime(sta2.st_mtime)
                         file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
                     elif ent.is_dir(follow_symlinks=True):
                         targetname = os.path.normpath(os.path.join(dirname, linkname))
@@ -865,7 +865,7 @@ def parse_master_index(indexpath, treedir):
                         file = File(ent.name, dir)
                     file.putkey('filesize', str(sta.st_size))
                     file.putkey('date', str(int(sta.st_mtime)))
-                    tmdat = time.localtime(sta.st_mtime)
+                    tmdat = time.gmtime(sta.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
                     hash_md5, hash_sha512 = hasher.get_hashes(pathname, sta.st_size, int(sta.st_mtime))
                     file.putkey('md5', hash_md5)
