@@ -1,6 +1,6 @@
 # ifmap.py -- the index generator tool for the IF Archive
 
-- Copyright 2017 by the Interactive Fiction Technology Foundation
+- Copyright 2017-18 by the Interactive Fiction Technology Foundation
 - Distributed under the MIT license
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
@@ -42,3 +42,4 @@ I wrote the original program in C because it was portable and I didn't know Pyth
 
 I finally ported it all to Python in July of 2017. It's now got less than half the lines of code, it's infinitely more readable, and it's faster. (Not because Python is faster, but because I added an MD5-caching feature.)
 
+December 2018: Added SHA512 checksums to the output (and to md5-cache.txt, which is now misnamed). Updated the script to generate foo/bar/index.html indexes as well as fooXbar.html indexes.
