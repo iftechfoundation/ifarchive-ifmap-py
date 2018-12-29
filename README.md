@@ -19,9 +19,20 @@ In normal Archive operation, this is invoked from the build-indexes script.
 - --v: If set, print verbose output.
 - --exclude: If set, files without index entries are excluded from index listings. (Normally *not* set.)
 
+The `--index`, `--tree`, and `--dest` arguments are sort of redundant. If you don't use the standard arrangement (BASE/if-archive/Master-Index, BASE, BASE/indexes) then the generated indexes won't properly link to anything.
+
 ## Testing
 
-Type `python3 tests.py` to run tests on the low-level string-escaping and templating code. It's not an end-to-end test. For that, you pretty much have to run the script and see what it generates. Compare it to what the previous version generated, that's a good trick.
+Type `python3 tests.py` to run tests on the low-level string-escaping and templating code.
+
+For an end-to-end test, try:
+
+    python3 testdata/set-timestamps.py
+    python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --dest testdata/indexes
+
+If everything works, the generated files in testdata/indexes should match what's in the Git repository. (`git status` should show no changes.)
+
+The `set-timestamps.py` script is needed because `ifmap.py` looks at the timestamps and writes them into the index files, but a freshly-checked-out Git repository has all new timestamps.
 
 ## History
 
