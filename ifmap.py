@@ -467,6 +467,9 @@ def pluralize_ies(val):
     else:
         return 'ies'
 
+def slash_add_wbr(val):
+    return val.replace('/', '/<wbr>')
+    
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
@@ -1184,6 +1187,7 @@ if __name__ == '__main__':
     noindexlist = NoIndexEntry()
     
     Template.addfilter('html', escape_html_string)
+    Template.addfilter('slashwbr', slash_add_wbr)
     Template.addfilter('url', escape_url_string)
     Template.addfilter('xify', xify_dirname)
     Template.addfilter('indexuri', indexuri_dirname)
