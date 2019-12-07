@@ -1,12 +1,12 @@
 # ifmap.py -- the index generator tool for the IF Archive
 
-- Copyright 2017-18 by the Interactive Fiction Technology Foundation
+- Copyright 2017-19 by the Interactive Fiction Technology Foundation
 - Distributed under the MIT license
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
 This program has one core task: to look through all the files in the IF Archive, combine that with the contents of the Master-Index file, and generate all the index.html files in the indexes subdirectory.
 
-(The Master-Index file is created by sewing together all the Index files in all the directories of the Archive. A different script does that job.)
+(The Master-Index file is created by sewing together all the Index files in all the directories of the Archive. That's done by the make-master-index.py script, also included in this repo.)
 
 ## Arguments
 
