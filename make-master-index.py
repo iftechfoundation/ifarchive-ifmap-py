@@ -7,12 +7,11 @@ and concatenating them together.
 
     cd /var/ifarchive/htdocs
     ls -lRn if-archive > if-archive/ls-lR
-    /var/ifarchive/bin/make-master-index.py < if-archive/ls-lR > if-archive/Master-Index
+    /var/ifarchive/bin/make-master-index.py if-archive/ls-lR > if-archive/Master-Index
 
 """
 
 import sys
-import fileinput
 import re
 
 rootdir = '/var/ifarchive/htdocs'
@@ -21,7 +20,9 @@ dirre = re.compile('^if-archive.*:$')
 
 currentdir = None
 
-for line in fileinput.input('-'):
+lsfile = open(sys.argv[1], encoding='utf-8')
+
+for line in lsfile.readlines():
     res = dirre.match(line)
     if (res != None):
         line = line.strip()
@@ -41,3 +42,4 @@ for line in fileinput.input('-'):
             print(str, end='')
             str = None
             
+lsfile.close()
