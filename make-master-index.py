@@ -33,13 +33,16 @@ for line in lsfile.readlines():
         if (line[-6 : ] == ' Index' and currentdir != None):
             basename = (currentdir + ':')
             print()
-            print(basename)
-            print('-' * len(basename))
+            print('# ' + basename)
             filename = (rootdir + '/' + currentdir + '/Index')
-            fl = open(filename, 'r')
-            str = fl.read()
+            fl = open(filename, 'r', encoding='utf-8')
+            for subln in fl.readlines():
+                if subln.startswith('#'):
+                    subln = '#'+subln
+                print(subln, end='')
             fl.close()
-            print(str, end='')
             str = None
+            print()
+            print('------------------------------------------------------')
             
 lsfile.close()
