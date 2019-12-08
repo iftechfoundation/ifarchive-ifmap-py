@@ -432,8 +432,9 @@ def indexuri_dirname(val):
 
 def bracket_count(val):
     """Check the running bracket balance of a string. This does not
-    distinguish between square brackets and parentheses. I can't remember
-    why we need this.
+    distinguish between square brackets and parentheses.
+    This function is needed because indentation inside brackets should
+    not specify a list, but indentation outside brackets (usually) does.
     """
     count = 0
     for ch in val:
