@@ -536,6 +536,8 @@ class Directory:
     def putkey(self, key, val):
         self.submap[key] = val
 
+metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
+
 class File:
     """File: one file in the big directory map.
     (There is no global file list. You have to look at dir.files for each
@@ -568,7 +570,15 @@ class File:
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
 
-            ### take off metadata?
+            # Remove metadata lines before generating XML.
+            pos = 0
+            for ln in desclines:
+                if not ln.strip():
+                    break
+                if not (metadata_pattern.match(ln) or ln.startswith('    ')):
+                    break
+                pos += 1
+            val = '\n'.join(desclines[pos:])
             descstr = val.rstrip() + '\n'
             descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
