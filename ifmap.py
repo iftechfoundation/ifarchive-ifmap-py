@@ -8,6 +8,7 @@ import time
 import hashlib
 from collections import ChainMap
 import optparse
+import markdown
 
 ROOTNAME = 'if-archive'
 
@@ -685,11 +686,8 @@ def parse_master_index(indexpath, treedir):
                     dir.putkey('hasdesc', anyheader)
                     dir.putkey('hasxmldesc', anyheader)
                     if anyheader:
-                        # For HTML, we escape (and linkify <urls>); then
-                        # we convert blank lines to <p>, and end with <p>.
-                        ### Markdown, no metadata
-                        val = escape_htmldesc_string(headerstr)
-                        val = val.replace('\n\n', '\n<p>\n') + '<p>\n'
+                        # Convert Markdown to HTML.
+                        val = converter.convert(headerstr)
                         dir.putkey('header', val)
                         # For XML, we just escape.
                         val = escape_html_string(headerstr)
@@ -1142,6 +1140,9 @@ if __name__ == '__main__':
     Template.addfilter('indexuri', indexuri_dirname)
     Template.addfilter('plural_s', pluralize_s)
     Template.addfilter('plural_ies', pluralize_ies)
+
+    converter = markdown.Markdown(extensions = [])
+    convertermeta = markdown.Markdown(extensions = ['meta'])
     
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
     
