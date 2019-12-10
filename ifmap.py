@@ -585,6 +585,7 @@ class File:
 
         self.name = filename
         self.path = parentdir.dir+'/'+filename
+        self.metadata = {}
 
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
@@ -597,25 +598,14 @@ class File:
         # Take the accumulated description text and stick it into our
         # File object.
         if desclines:
-            ### Markdown
-            htmllines = []
-            for ln in desclines:
-                if ln.startswith(' '):
-                    ln = '&nbsp;&nbsp;' + escape_htmldesc_string(ln.lstrip())
-                    if htmllines:
-                        ln = '<br>' + ln
-                else:
-                    ln = escape_htmldesc_string(ln)
-                htmllines.append(ln)
-            filestr = ''
-            if htmllines:
-                filestr = '\n'.join(htmllines)
-                filestr = filestr.rstrip() + '\n'
+            val = '\n'.join(desclines)
+            filestr = convertermeta.convert(val)
+            self.metadata = dict(convertermeta.Meta)
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
-        
-            descstr = '\n'.join(desclines)
-            descstr = descstr.rstrip() + '\n'
+
+            ### take off metadata?
+            descstr = val.rstrip() + '\n'
             descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
