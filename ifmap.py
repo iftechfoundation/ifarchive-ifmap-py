@@ -388,20 +388,6 @@ def is_string_nonwhite(val):
     """
     return bool(val.strip())
     
-def expandtabs(val, colwidth=8):
-    """Expand tabs in a string, using a given tab column width.
-    (This is fast if val contains no tabs. It's not super-efficient
-    if val contains a lot of tabs, but in fact our files contain
-    very few tabs, so that's okay.)
-    """
-    start = 0
-    while True:
-        pos = val.find('\t', start)
-        if pos < 0:
-            return val
-        spaces = 8 - (pos & 7)
-        val = val[0:pos] + (' '*spaces) + val[pos+1:]
-
 def relroot_for_dirname(val):
     """For a directory, return the relative URL which returns to the
     root. "if-archive/games" maps to "../../..".
@@ -429,20 +415,6 @@ def indexuri_dirname(val):
         return val.replace('/', 'X') + '.html'
     else:
         return val + '/'
-
-def bracket_count(val):
-    """Check the running bracket balance of a string. This does not
-    distinguish between square brackets and parentheses.
-    This function is needed because indentation inside brackets should
-    not specify a list, but indentation outside brackets (usually) does.
-    """
-    count = 0
-    for ch in val:
-        if ch == '[' or ch == '(':
-            count += 1
-        if ch == ']' or ch == ')':
-            count -= 1
-    return count
 
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
@@ -665,16 +637,15 @@ def parse_master_index(indexpath, treedir):
     dir = Directory(ROOTNAME, dirmap=dirmap)
 
     if indexpath:
-        dirname_pattern = re.compile('^%s.*:$' % (re.escape(ROOTNAME),))
+        dirname_pattern = re.compile('^#[ ]*(%s.*):$' % (re.escape(ROOTNAME),))
+        filename_pattern = re.compile('^##[^#]')
         dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
-        indent_pattern = re.compile('^([ ]*)(.*)$')
         
         dir = None
         file = None
         filedesclines = None
         inheader = True
         headerlines = None
-        brackets = 0
         
         infl = open(indexpath, encoding='utf-8')
 
@@ -684,11 +655,12 @@ def parse_master_index(indexpath, treedir):
             if not ln:
                 done = True
                 ln = None
+                match = None
             else:
                 ln = ln.rstrip()
-                ln = expandtabs(ln)
+                match = dirname_pattern.match(ln)
 
-            if done or dirname_pattern.match(ln):
+            if done or match:
                 # End of a directory block or end of file.
                 # Finish constructing the dir entry.
 
@@ -714,6 +686,7 @@ def parse_master_index(indexpath, treedir):
                     if anyheader:
                         # For HTML, we escape (and linkify <urls>); then
                         # we convert blank lines to <p>, and end with <p>.
+                        ### Markdown
                         val = escape_htmldesc_string(headerstr)
                         val = val.replace('\n\n', '\n<p>\n') + '<p>\n'
                         dir.putkey('header', val)
@@ -724,7 +697,8 @@ def parse_master_index(indexpath, treedir):
 
                 if not done:
                     # Beginning of a directory block.
-                    dirname = ln[0:-1]  # delete trailing colon
+                    assert(match is not None)
+                    dirname = match.group(1)
                     if opts.verbose:
                         print('Starting  %s...' % (dirname,))
                     dir = Directory(dirname, dirmap=dirmap)
@@ -744,26 +718,18 @@ def parse_master_index(indexpath, treedir):
             if dashline_pattern.match(ln):
                 continue
 
-            match = indent_pattern.match(ln)
-            indent = len(match.group(1))
-            bx = match.group(2)
+            bx = ln
 
             if inheader:
-                # The header ends when we find the line
-                #       "Index   this file"
-                # (Spacing and capitalization of the "this file" part
-                # may vary.)
-                if bx.startswith('Index'):
-                    val = bx[5:].strip().lower()
-                    if val.startswith('this file'):
-                        inheader = False
-                        continue
+                if not filename_pattern.match(bx):
+                    # Further header lines become part of headerlines.
+                    headerlines.append(bx)
+                    continue
 
-                # Further header lines become part of headerlines.
-                headerlines.append(bx)
-                continue
+                # The header ends when we find a line starting with "##".
+                inheader = False
 
-            if indent == 0 and bx:
+            if filename_pattern.match(bx):
                 # Start of a new file block.
 
                 if file:
@@ -774,34 +740,15 @@ def parse_master_index(indexpath, treedir):
                 # Set up the new file, including a fresh filedesclines
                 # accumulator.
 
-                pos = bx.find(' ')
-                if pos >= 0:
-                    filename = bx[0:pos]
-                    bx = bx[pos:]
-                    match = indent_pattern.match(bx)
-                    firstindent = pos + len(match.group(1))
-                    bx = match.group(2)
-                    brackets = bracket_count(bx)
-                    filedesclines = [ bx ]
-                else:
-                    filename = bx
-                    bx = ''
-                    firstindent = -1
-                    filedesclines = []
+                filename = bx[2:].strip()
+                bx = ''
+                filedesclines = []
                     
                 file = File(filename, dir)
 
             else:
                 # Continuing a file block.
-                if bx:
-                    if firstindent < 0:
-                        firstindent = indent
-                        brackets = 0
-                    prefix = ''
-                    if (firstindent != indent) and (brackets == 0):
-                        prefix = ' '*(indent-firstindent)
-                    filedesclines.append(prefix+bx)
-                    brackets += bracket_count(bx)
+                filedesclines.append(bx)
 
         # Finished reading Master-Index.
         infl.close()
