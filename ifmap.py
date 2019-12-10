@@ -447,8 +447,6 @@ def slash_add_wbr(val):
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
-    This does not do the fancy <url> detection you'll see in
-    escape_htmldesc_string, below.
     """
     res = []
     pos = 0
@@ -466,40 +464,6 @@ def escape_html_string(val):
                 res.append('&#x%X;' % (ord(ch),))
             pos += 1
     return ''.join(res)
-
-escape_html_pattern = re.compile('(<(http(?:s)?:[^>]+)>)|([<>])')
-
-def escape_htmldesc_string(val):
-    """Apply the basic HTML &-escapes to a string. Also detect strings
-    of the form <http://...> and automagically linkify them. We use
-    this for the file/dir description blocks in HTML index files (but
-    not XML).
-
-    ### For backwards compatibility with the old ifmap, this does not
-    convert & to &amp;! This is because our Index files contain literal
-    Unicode sequences (like &ouml;) which we want to preserve in the
-    HTML output. It would be better to change the Index files to UTF-8
-    and then add &amp; to the escaping list. (In the pattern above and
-    the function below.)
-    """
-    def thunk(match):
-        if match.group(1) is not None:
-            url = match.group(2)
-            # We HTML-escape the URL but we don't URL-escape it.
-            # (Really we should percent-escape " characters.)
-            urlesc = escape_html_string(url)
-            return '<a href="%s">%s</a>' % (urlesc, urlesc,)
-        else:
-            ch = match.group(3)
-            if ch == '<':
-                return '&lt;'
-            elif ch == '>':
-                return '&gt;'
-            #elif ch == '&':
-            #    return '&amp;'
-            else:
-                return ch
-    return escape_html_pattern.sub(thunk, val)
 
 urlable_pattern = re.compile('[+-;@-z]+')
 
