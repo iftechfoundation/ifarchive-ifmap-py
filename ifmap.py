@@ -596,6 +596,7 @@ class File:
         # Take the accumulated description text and stick it into our
         # File object.
         if desclines:
+            ### Markdown
             htmllines = []
             for ln in desclines:
                 if ln.startswith(' '):
@@ -686,7 +687,7 @@ def parse_master_index(indexpath, treedir):
                     if anyheader:
                         # For HTML, we escape (and linkify <urls>); then
                         # we convert blank lines to <p>, and end with <p>.
-                        ### Markdown
+                        ### Markdown, no metadata
                         val = escape_htmldesc_string(headerstr)
                         val = val.replace('\n\n', '\n<p>\n') + '<p>\n'
                         dir.putkey('header', val)
