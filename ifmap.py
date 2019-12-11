@@ -11,6 +11,7 @@ import optparse
 import markdown
 
 ROOTNAME = 'if-archive'
+DESTDIR = None
 
 popt = optparse.OptionParser(usage='ifmap.py')
 
@@ -24,8 +25,8 @@ popt.add_option('--tree',
                 action='store', dest='treedir',
                 help='pathname of directory containing archive files')
 popt.add_option('--dest',
-                action='store', dest='destdir',
-                help='pathname of directory to write index files')
+                action='store', dest='destdir', default='indexes',
+                help='directory to write index files (relative to --tree; default "indexes")')
 popt.add_option('--exclude',
                 action='store_true', dest='excludemissing',
                 help='files without index entries are excluded from index listings')
@@ -277,16 +278,12 @@ class FileHasher:
     """FileHasher: A module which can extract hashes of files.
 
     Since hashing is this script's slowest task, we keep a cache of
-    checksums. (In the indexes directory, since we know that's writable.)
-    The cache file has a very simple tab-separated format:
+    checksums. The cache file has a very simple tab-separated format:
     
        size mtime md5 sha512 filename
 
     We only use a cache entry if the size and mtime both match. (So if a
     file is updated, we'll recalculate.)
-
-    The filename "md5-cache.txt" is misleading; we store both MD5
-    and SHA2-512 checksums.
 
     We only ever append to the cache file. So if a file is updated, we
     wind up with redundant lines in the cache. That's fine; the latest
@@ -297,11 +294,8 @@ class FileHasher:
         # Maps filenames to (size, timestamp, md5, sha512)
         self.cache = {}
 
-        # Create the output directory and the cache file if they don't
-        # exist.
-        if not os.path.exists(opts.destdir):
-            os.mkdir(opts.destdir)
-        self.cachefile = os.path.join(opts.destdir, 'md5-cache.txt')
+        # Create the cache file if it doesn't exist.
+        self.cachefile = os.path.join(opts.treedir, 'checksum-cache.txt')
 
         if not os.path.exists(self.cachefile):
             fl = open(self.cachefile, 'w', encoding='utf-8')
@@ -871,8 +865,8 @@ def generate_output_dirlist(dirmap):
 
     itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
 
-    filename = os.path.join(opts.destdir, 'dirlist.html')
-    tempname = os.path.join(opts.destdir, '__temp')
+    filename = os.path.join(DESTDIR, 'dirlist.html')
+    tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
     writer.resolve()
@@ -914,9 +908,9 @@ def generate_output_datelist(dirmap):
     
     for (intkey, intlen, intname) in intervals:
         if intkey:
-            filename = os.path.join(opts.destdir, 'date_%d.html' % (intkey,))
+            filename = os.path.join(DESTDIR, 'date_%d.html' % (intkey,))
         else:
-            filename = os.path.join(opts.destdir, 'date.html')
+            filename = os.path.join(DESTDIR, 'date.html')
 
         relroot = '..'
         
@@ -936,7 +930,7 @@ def generate_output_datelist(dirmap):
         if intname:
             itermap['interval'] = intname
             
-        tempname = os.path.join(opts.destdir, '__temp')
+        tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
         writer.resolve()
@@ -960,7 +954,7 @@ def generate_output_indexes(dirmap):
     dirlinkelement_body = plan.get('Dir-Link-Element', '')
     
     for dir in dirmap.values():
-        filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
+        filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
         
         relroot = '..'
         
@@ -1005,7 +999,7 @@ def generate_output_indexes(dirmap):
 
         # Write out the Xdir.html version
         xify_mode = True
-        tempname = os.path.join(opts.destdir, '__temp')
+        tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
@@ -1014,7 +1008,7 @@ def generate_output_indexes(dirmap):
         xify_mode = False
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
-        filename = os.path.join(opts.destdir, dir.dir, 'index.html')
+        filename = os.path.join(DESTDIR, dir.dir, 'index.html')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
@@ -1050,8 +1044,8 @@ def generate_output_xml(dirmap):
         
     itermap = { '_dirs':dirlist_thunk }
     
-    filename = os.path.join(opts.destdir, 'Master-Index.xml')
-    tempname = os.path.join(opts.destdir, '__temp')
+    filename = os.path.join(DESTDIR, 'Master-Index.xml')
+    tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
     Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
     writer.resolve()
@@ -1061,12 +1055,12 @@ def generate_output(dirmap):
     """
     global xify_mode
     
-    if not os.path.exists(opts.destdir):
-        os.mkdir(opts.destdir)
+    if not os.path.exists(DESTDIR):
+        os.mkdir(DESTDIR)
         
     dirlist = list(dirmap.values())
     for dir in dirlist:
-        dirname = os.path.join(opts.destdir, dir.dir)
+        dirname = os.path.join(DESTDIR, dir.dir)
         os.makedirs(dirname, exist_ok=True)
 
     if opts.verbose:
@@ -1089,9 +1083,7 @@ if __name__ == '__main__':
 
     if not opts.libdir:
         raise Exception('--src argument required')
-    if not opts.destdir:
-        raise Exception('--dest argument required')
-    
+
     plan = ParamFile(os.path.join(opts.libdir, 'index'))
     
     hasher = FileHasher()
@@ -1108,6 +1100,11 @@ if __name__ == '__main__':
     converter = markdown.Markdown(extensions = [])
     convertermeta = markdown.Markdown(extensions = ['meta'])
     
+    if not opts.treedir:
+        DESTDIR = os.path.join('.', opts.destdir)
+    else:
+        DESTDIR = os.path.join(opts.treedir, opts.destdir)
+        
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
     
     check_missing_files(dirmap)

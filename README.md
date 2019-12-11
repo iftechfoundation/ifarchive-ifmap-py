@@ -14,12 +14,12 @@ In normal Archive operation, this is invoked from the build-indexes script.
 
 - --index FILE: pathname of Master-Index. (Normally /var/ifarchive/htdocs/if-archive/Master-Index.)
 - --src DIR: Pathname of the directory full of HTML templates which control the appearance of the index files. (Normally /var/ifarchive/lib/ifmap.)
-- --dest DIR: Pathname of the indexes directory, where the index files are written. (Normally /var/ifarchive/htdocs/indexes.)
+- --dest DIR: Firectory to write index files (relative to --tree; default "indexes")
 - --tree DIR: Pathname of the root directory which the Archive serves. (Normally /var/ifarchive/htdocs.)
 - --v: If set, print verbose output.
 - --exclude: If set, files without index entries are excluded from index listings. (Normally *not* set.)
 
-The `--index`, `--tree`, and `--dest` arguments are sort of redundant. If you don't use the standard arrangement (BASE/if-archive/Master-Index, BASE, BASE/indexes) then the generated indexes won't properly link to anything.
+The `--dest` argument exists only for development testing. If you use any value other than the default ("indexes"), the generated indexes won't properly link to anything.
 
 ## Testing
 
@@ -28,7 +28,7 @@ Type `python3 tests.py` to run tests on the low-level string-escaping and templa
 For an end-to-end test, try:
 
     python3 testdata/set-timestamps.py
-    python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --dest testdata/indexes
+    python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata
 
 If everything works, the generated files in testdata/indexes should match what's in the Git repository. (`git status` should show no changes.)
 
@@ -43,3 +43,7 @@ I wrote the original program in C because it was portable and I didn't know Pyth
 I finally ported it all to Python in July of 2017. It's now got less than half the lines of code, it's infinitely more readable, and it's faster. (Not because Python is faster, but because I added an MD5-caching feature.)
 
 December 2018: Added SHA512 checksums to the output (and to md5-cache.txt, which is now misnamed). Updated the script to generate foo/bar/index.html indexes as well as fooXbar.html indexes.
+
+December 2019: Renamed md5-cache.txt to checksum-cache.txt and moved it to the archive root. Simplified the arguments a bit (--dest is usually not needed).
+
+
