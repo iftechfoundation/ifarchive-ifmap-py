@@ -19,7 +19,7 @@ In normal Archive operation, this is invoked from the build-indexes script.
 - --v: If set, print verbose output.
 - --exclude: If set, files without index entries are excluded from index listings. (Normally *not* set.)
 
-The `--index` and `--tree` arguments are sort of redundant. If you don't use the standard arrangement (BASE/if-archive/Master-Index, BASE) then the generated indexes won't properly link to anything.
+The `--dest` argument exists only for development testing. If you use any value other than the default ("indexes"), the generated indexes won't properly link to anything.
 
 ## Testing
 
