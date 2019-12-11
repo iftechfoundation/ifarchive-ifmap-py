@@ -43,3 +43,5 @@ I wrote the original program in C because it was portable and I didn't know Pyth
 I finally ported it all to Python in July of 2017. It's now got less than half the lines of code, it's infinitely more readable, and it's faster. (Not because Python is faster, but because I added an MD5-caching feature.)
 
 December 2018: Added SHA512 checksums to the output (and to md5-cache.txt, which is now misnamed). Updated the script to generate foo/bar/index.html indexes as well as fooXbar.html indexes.
+
+December 2019: We now perform almost-atomic update of the indexes directory. (Create an indexes-new directory, do two renames, remove the indexes-old directory.)

@@ -293,10 +293,7 @@ class FileHasher:
         # Maps filenames to (size, timestamp, md5, sha512)
         self.cache = {}
 
-        # Create the output directory and the cache file if they don't
-        # exist.
-        if not os.path.exists(opts.destdir):
-            os.mkdir(opts.destdir)
+        # Create the cache file if it doesn't exist.
         self.cachefile = os.path.join(opts.treedir, 'checksum-cache.txt')
 
         if not os.path.exists(self.cachefile):
