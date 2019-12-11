@@ -1,23 +1,24 @@
 
-if-archive/art:
---------------------------
+# if-archive/art:
 
-                         Files from an art show:
-                        <http://example.com/art/>
+Files from an art show:
+<http://example.com/art/>
 
---------------------------------------------------------------------------------
+## concept.txt
 
-Index           this file
+The concept statement of the art show:
 
-concept.txt     The concept statement of the art show:
-                a description.
+A description paragraph.
 
-contents.txt    A table of contents
-                  Entry 1
-                  Entry 2
-                  Entry 3
+## contents.txt
 
-foo.z5          Foo: An Art Project
-                Release 1 / Serial number 000000
+A table of contents
 
+- Entry 1
+- Entry 2
+- Entry 3
 
+## foo.z5
+
+*Foo*: An Art Project
+Release 1 / Serial number 000000
