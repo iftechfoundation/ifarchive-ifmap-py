@@ -51,13 +51,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>543</size>
+<size>288</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>121831cca68800f35469c3c238a9609e</md5>
+<md5>617e7275be40cffd175fd0158f3b7264</md5>
 
-<sha512>ae33a89f27d2e49345af77674329e59eac824762f76c11a7e9615e409ff288f52f49a2f4faec0cb002f7b64ee44ac8a28528724cf73b7195fb5baf48b4222eac</sha512>
+<sha512>c6774675fd701a90251dee70f6f61e885df147b39e1d5989576791828cab5ecfe1a19ea4aaebad3a150ab6e11e65c22b8a1ba4eb20d46fbee8814ebc939a1d9e</sha512>
 
 
 
@@ -90,8 +90,10 @@ Files from an art show:
 
 
 <description>
+
 The concept statement of the art show:
-a description.
+
+A description paragraph.
 </description>
 </file>
 
@@ -106,10 +108,12 @@ a description.
 
 
 <description>
+
 A table of contents
-  Entry 1
-  Entry 2
-  Entry 3
+
+- Entry 1
+- Entry 2
+- Entry 3
 </description>
 </file>
 
@@ -128,7 +132,8 @@ A table of contents
 
 
 <description>
-Foo: An Art Project
+
+*Foo*: An Art Project
 Release 1 / Serial number 000000
 </description>
 </file>
