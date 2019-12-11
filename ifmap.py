@@ -284,9 +284,6 @@ class FileHasher:
     We only use a cache entry if the size and mtime both match. (So if a
     file is updated, we'll recalculate.)
 
-    The filename "md5-cache.txt" is misleading; we store both MD5
-    and SHA2-512 checksums.
-
     We only ever append to the cache file. So if a file is updated, we
     wind up with redundant lines in the cache. That's fine; the latest
     line is the one that counts. But it might be a good idea to delete
@@ -300,7 +297,7 @@ class FileHasher:
         # exist.
         if not os.path.exists(opts.destdir):
             os.mkdir(opts.destdir)
-        self.cachefile = os.path.join(opts.destdir, 'md5-cache.txt')
+        self.cachefile = os.path.join(opts.treedir, 'checksum-cache.txt')
 
         if not os.path.exists(self.cachefile):
             fl = open(self.cachefile, 'w', encoding='utf-8')
