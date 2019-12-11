@@ -277,8 +277,7 @@ class FileHasher:
     """FileHasher: A module which can extract hashes of files.
 
     Since hashing is this script's slowest task, we keep a cache of
-    checksums. (In the indexes directory, since we know that's writable.)
-    The cache file has a very simple tab-separated format:
+    checksums. The cache file has a very simple tab-separated format:
     
        size mtime md5 sha512 filename
 
