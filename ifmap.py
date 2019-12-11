@@ -10,6 +10,7 @@ from collections import ChainMap
 import optparse
 
 ROOTNAME = 'if-archive'
+DESTDIR = None
 
 popt = optparse.OptionParser(usage='ifmap.py')
 
@@ -23,8 +24,8 @@ popt.add_option('--tree',
                 action='store', dest='treedir',
                 help='pathname of directory containing archive files')
 popt.add_option('--dest',
-                action='store', dest='destdir',
-                help='pathname of directory to write index files')
+                action='store', dest='destdir', default='indexes',
+                help='directory to write index files (relative to --tree; default "indexes")')
 popt.add_option('--exclude',
                 action='store_true', dest='excludemissing',
                 help='files without index entries are excluded from index listings')
@@ -955,8 +956,8 @@ def generate_output_dirlist(dirmap):
 
     itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
 
-    filename = os.path.join(opts.destdir, 'dirlist.html')
-    tempname = os.path.join(opts.destdir, '__temp')
+    filename = os.path.join(DESTDIR, 'dirlist.html')
+    tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
     writer.resolve()
@@ -998,9 +999,9 @@ def generate_output_datelist(dirmap):
     
     for (intkey, intlen, intname) in intervals:
         if intkey:
-            filename = os.path.join(opts.destdir, 'date_%d.html' % (intkey,))
+            filename = os.path.join(DESTDIR, 'date_%d.html' % (intkey,))
         else:
-            filename = os.path.join(opts.destdir, 'date.html')
+            filename = os.path.join(DESTDIR, 'date.html')
 
         relroot = '..'
         
@@ -1020,7 +1021,7 @@ def generate_output_datelist(dirmap):
         if intname:
             itermap['interval'] = intname
             
-        tempname = os.path.join(opts.destdir, '__temp')
+        tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
         writer.resolve()
@@ -1044,7 +1045,7 @@ def generate_output_indexes(dirmap):
     dirlinkelement_body = plan.get('Dir-Link-Element', '')
     
     for dir in dirmap.values():
-        filename = os.path.join(opts.destdir, xify_dirname(dir.dir)+'.html')
+        filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
         
         relroot = '..'
         
@@ -1089,7 +1090,7 @@ def generate_output_indexes(dirmap):
 
         # Write out the Xdir.html version
         xify_mode = True
-        tempname = os.path.join(opts.destdir, '__temp')
+        tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
@@ -1098,7 +1099,7 @@ def generate_output_indexes(dirmap):
         xify_mode = False
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
-        filename = os.path.join(opts.destdir, dir.dir, 'index.html')
+        filename = os.path.join(DESTDIR, dir.dir, 'index.html')
         writer = SafeWriter(tempname, filename)
         Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
         writer.resolve()
@@ -1134,8 +1135,8 @@ def generate_output_xml(dirmap):
         
     itermap = { '_dirs':dirlist_thunk }
     
-    filename = os.path.join(opts.destdir, 'Master-Index.xml')
-    tempname = os.path.join(opts.destdir, '__temp')
+    filename = os.path.join(DESTDIR, 'Master-Index.xml')
+    tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
     Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
     writer.resolve()
@@ -1145,12 +1146,12 @@ def generate_output(dirmap):
     """
     global xify_mode
     
-    if not os.path.exists(opts.destdir):
-        os.mkdir(opts.destdir)
+    if not os.path.exists(DESTDIR):
+        os.mkdir(DESTDIR)
         
     dirlist = list(dirmap.values())
     for dir in dirlist:
-        dirname = os.path.join(opts.destdir, dir.dir)
+        dirname = os.path.join(DESTDIR, dir.dir)
         os.makedirs(dirname, exist_ok=True)
 
     if opts.verbose:
@@ -1173,9 +1174,7 @@ if __name__ == '__main__':
 
     if not opts.libdir:
         raise Exception('--src argument required')
-    if not opts.destdir:
-        raise Exception('--dest argument required')
-    
+
     plan = ParamFile(os.path.join(opts.libdir, 'index'))
     
     hasher = FileHasher()
@@ -1189,6 +1188,11 @@ if __name__ == '__main__':
     Template.addfilter('plural_s', pluralize_s)
     Template.addfilter('plural_ies', pluralize_ies)
     
+    if not opts.treedir:
+        DESTDIR = os.path.join('.', opts.destdir)
+    else:
+        DESTDIR = os.path.join(opts.treedir, opts.destdir)
+        
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
     
     check_missing_files(dirmap)
