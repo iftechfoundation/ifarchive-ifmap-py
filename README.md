@@ -14,12 +14,13 @@ In normal Archive operation, this is invoked from the build-indexes script.
 
 - --index FILE: pathname of Master-Index. (Normally /var/ifarchive/htdocs/if-archive/Master-Index.)
 - --src DIR: Pathname of the directory full of HTML templates which control the appearance of the index files. (Normally /var/ifarchive/lib/ifmap.)
-- --dest DIR: Firectory to write index files (relative to --tree; default "indexes")
 - --tree DIR: Pathname of the root directory which the Archive serves. (Normally /var/ifarchive/htdocs.)
 - --v: If set, print verbose output.
 - --exclude: If set, files without index entries are excluded from index listings. (Normally *not* set.)
+- --dest DIR: Firectory to write index files (relative to --tree; default "indexes")
+- --meta DIR: Firectory to write metadata files (relative to --tree; default "metadata")
 
-The `--dest` argument exists only for development testing. If you use any value other than the default ("indexes"), the generated indexes won't properly link to anything.
+The `--dest` and `--meta` arguments exist only for development testing. If you use any value other than the default ("indexes", "metadata"), the generated indexes won't properly link to anything.
 
 ## Testing
 
