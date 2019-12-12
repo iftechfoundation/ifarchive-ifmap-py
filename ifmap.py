@@ -27,6 +27,9 @@ popt.add_option('--tree',
 popt.add_option('--dest',
                 action='store', dest='destdir', default='indexes',
                 help='directory to write index files (relative to --tree; default "indexes")')
+popt.add_option('--meta',
+                action='store', dest='metadir', default='metadata',
+                help='directory to write metadata files (relative to --tree; default "metadata")')
 popt.add_option('--exclude',
                 action='store_true', dest='excludemissing',
                 help='files without index entries are excluded from index listings')
@@ -1074,6 +1077,25 @@ def generate_output(dirmap):
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap)
 
+def generate_metadata(dirmap):
+    """Write out all the metadata files.
+    """
+    if not opts.treedir:
+        metadir = os.path.join('.', opts.metadir)
+    else:
+        metadir = os.path.join(opts.treedir, opts.metadir)
+
+    if not os.path.exists(metadir):
+        os.mkdir(metadir)
+        
+    dirlist = list(dirmap.values())
+    for dir in dirlist:
+        dirname = os.path.join(metadir, dir.dir)
+        os.makedirs(dirname, exist_ok=True)
+
+    if opts.verbose:
+        print('Generating metadata...')
+
 
 # Begin work!
 # We only do this if we're the executing script. If this is just an imported
@@ -1112,3 +1134,5 @@ if __name__ == '__main__':
     check_missing_files(dirmap)
     
     generate_output(dirmap)
+    generate_metadata(dirmap)
+    
