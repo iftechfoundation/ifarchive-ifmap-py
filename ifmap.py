@@ -721,7 +721,7 @@ def parse_master_index(indexpath, treedir):
             """Internal recursive function.
             """
             if opts.verbose:
-                print('Scanning  %s...' % (dirname,))
+                print('Scanning %s...' % (dirname,))
             dir = dirmap.get(dirname)
             if dir is None:
                 print('Problem: unable to find directory: %s' % (dirname,))
