@@ -560,7 +560,8 @@ class File:
         if desclines:
             val = '\n'.join(desclines)
             filestr = convertermeta.convert(val)
-            self.metadata.update(convertermeta.Meta)
+            for (mkey, mls) in convertermeta.Meta.items():
+                self.metadata[mkey] = ', '.join(mls)
             convertermeta.Meta.clear()
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
