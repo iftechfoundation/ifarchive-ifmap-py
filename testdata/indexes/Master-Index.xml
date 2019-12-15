@@ -26,6 +26,7 @@
 
 
 
+
 </file>
 
 <file>
@@ -41,6 +42,7 @@
 <name>if-archive/comp/files</name>
 <xdir>if-archiveXcompXfiles</xdir>
 </symlink>
+
 
 <description>
 Symlink to if-archive/comp/files
@@ -58,6 +60,7 @@ Symlink to if-archive/comp/files
 <md5>617e7275be40cffd175fd0158f3b7264</md5>
 
 <sha512>c6774675fd701a90251dee70f6f61e885df147b39e1d5989576791828cab5ecfe1a19ea4aaebad3a150ab6e11e65c22b8a1ba4eb20d46fbee8814ebc939a1d9e</sha512>
+
 
 
 
@@ -89,6 +92,7 @@ Files from an art show:
 
 
 
+
 <description>
 
 The concept statement of the art show:
@@ -101,6 +105,7 @@ A description paragraph.
 <name>contents.txt</name>
 <directory>if-archive/art</directory>
 <path>if-archive/art/contents.txt</path>
+
 
 
 
@@ -128,6 +133,7 @@ A table of contents
 <md5>c19cb4e6a3926c266da0343d2d0b5f8e</md5>
 
 <sha512>e977d28b986de1b6d37f5da3893087fd718d778d02feee408dcfc61914fcc75c227e3a58b4d9ea662101e71b92337c3ab743ed4d702434f85e1a690ba63caea5</sha512>
+
 
 
 
@@ -163,6 +169,7 @@ Release 1 / Serial number 000000
 
 
 
+
 </file>
 
 <file>
@@ -176,6 +183,7 @@ Release 1 / Serial number 000000
 <md5>cde894d652c4918acf10b7b5d440f5f7</md5>
 
 <sha512>08131070051ab20d4c30afa6fa7359301d89609ee4f68df1acd6448b08d976da4a5c19d03e01c95b881c3a12bfa1a8263245ffbc844de78c3165ba243ab27bb1</sha512>
+
 
 
 
@@ -207,6 +215,7 @@ Release 1 / Serial number 000000
 
 
 
+
 </file>
 
 <file>
@@ -224,6 +233,7 @@ Release 1 / Serial number 000000
 
 
 
+
 </file>
 
 <file>
@@ -237,6 +247,7 @@ Release 1 / Serial number 000000
 <md5>65b17cb1d1308e8bead96db0f31125b5</md5>
 
 <sha512>9aabba937febaca4450ecc2ea915537d77e58ecdf8d394b52aa8671f28a63ed9d05ee9cc558d425b9933ce4e6c66e695f126548cb14da91232beb9cee586992e</sha512>
+
 
 
 
@@ -264,6 +275,7 @@ Release 1 / Serial number 000000
 <md5>b2f57c0b2f38ff7ad928bbba01e3ecf4</md5>
 
 <sha512>5bca54049e9114f5f3cf22599b0688b9e1db23f81cfe0fe5d12a622209169024e3bc3871667d7fee5f6ae70139dd3bec291c8408ad61c2d5b2bb6adc5adedbe9</sha512>
+
 
 
 
