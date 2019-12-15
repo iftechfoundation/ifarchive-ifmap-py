@@ -1099,8 +1099,26 @@ def generate_metadata(dirmap):
         print('Generating metadata...')
 
     for dir in dirlist:
-        for file in dir.files.values():
-            print('###', file, file.metadata)
+        dirname = os.path.join(metadir, dir.dir)
+        tempname = os.path.join(dirname, '__temp')
+        
+        for filename, file in dir.files.items():
+            filebase = os.path.join(dirname, filename)
+            
+            if not file.metadata:
+                if os.path.exists(filebase+'.txt'):
+                    os.remove(filebase+'.txt')
+                if os.path.exists(filebase+'.json'):
+                    os.remove(filebase+'.json')
+                if os.path.exists(filebase+'.xml'):
+                    os.remove(filebase+'.xml')
+                continue
+            
+            writer = SafeWriter(tempname, filebase+'.txt')
+            writer.stream().write('# %s/%s\n' % (dir.dir, filename,))
+            for key, val in file.metadata.items():
+                writer.stream().write('%s: %s\n' % (key, val,))
+            writer.resolve()
 
 
 # Begin work!
