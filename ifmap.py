@@ -9,6 +9,7 @@ import hashlib
 from collections import ChainMap, OrderedDict
 import optparse
 import markdown
+import json
 
 ROOTNAME = 'if-archive'
 DESTDIR = None
@@ -1120,6 +1121,18 @@ def generate_metadata(dirmap):
                 writer.stream().write('%s: %s\n' % (key, val,))
             writer.resolve()
 
+            writer = SafeWriter(tempname, filebase+'.json')
+            json.dump(file.metadata, writer.stream(), indent=1)
+            writer.stream().write('\n')
+            writer.resolve()
+            
+            writer = SafeWriter(tempname, filebase+'.xml')
+            writer.stream().write('<?xml version="1.0"?>\n')
+            writer.stream().write('<metadata>\n')
+            for key, val in file.metadata.items():
+                writer.stream().write(' <item> <key>%s</key> <value>%s</value> </item>\n' % (escape_html_string(key), escape_html_string(val),))
+            writer.stream().write('</metadata>\n')
+            writer.resolve()
 
 # Begin work!
 # We only do this if we're the executing script. If this is just an imported
