@@ -6,7 +6,7 @@ import os
 import os.path
 import time
 import hashlib
-from collections import ChainMap
+from collections import ChainMap, OrderedDict
 import optparse
 import markdown
 
@@ -548,7 +548,7 @@ class File:
 
         self.name = filename
         self.path = parentdir.dir+'/'+filename
-        self.metadata = {}
+        self.metadata = OrderedDict()
 
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
@@ -566,6 +566,8 @@ class File:
             for (mkey, mls) in convertermeta.Meta.items():
                 self.metadata[mkey] = ', '.join(mls)
             convertermeta.Meta.clear()
+            ### sort metadata?
+            
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
 
@@ -1095,6 +1097,10 @@ def generate_metadata(dirmap):
 
     if opts.verbose:
         print('Generating metadata...')
+
+    for dir in dirlist:
+        for file in dir.files.values():
+            print('###', file, file.metadata)
 
 
 # Begin work!
