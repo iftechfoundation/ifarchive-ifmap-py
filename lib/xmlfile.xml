@@ -19,6 +19,8 @@
 <xdir>{linkdir|xify|html}</xdir>
 </symlink>
 {/}
+{?hasmetadata}<metadata>
+{_metadata}</metadata>{/}
 {?hasxmldesc}<description>
 {xmldesc}</description>{/}
 </file>

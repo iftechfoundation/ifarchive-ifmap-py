@@ -568,6 +568,7 @@ class File:
                 self.metadata[mkey] = ', '.join(mls)
             convertermeta.Meta.clear()
             ### sort metadata?
+            self.putkey('hasmetadata', bool(self.metadata))
             
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
@@ -1042,8 +1043,11 @@ def generate_output_xml(dirmap):
             def filelist_thunk(outfl):
                 filelist = list(dir.files.values())
                 filelist.sort(key=lambda file:file.name.lower())
-                itermap = {}
                 for file in filelist:
+                    def metadata_thunk(outfl):
+                        for key, val in file.metadata.items():
+                            outfl.write(' <item> <key>%s</key> <value>%s</value> </item>\n' % (escape_html_string(key), escape_html_string(val),))
+                    itermap = { '_metadata':metadata_thunk }
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                     outfl.write('\n')
 
