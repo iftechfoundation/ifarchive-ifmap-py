@@ -38,17 +38,23 @@ class IndexMod:
         dir = self.getdir(dirname)
         return dir.getfile(filename)
 
+    def rewrite(self, olddir=None):
+        for (dirname, dir) in self.dirs.items():
+            if dir.isdirty():
+                print('Rewriting %s' % (dir.dirname,))
+                dir.rewrite(olddir)
+        
 filename_pattern = re.compile('^#[^#]')
 
 class IndexDir:
     def __init__(self, dirname, rootdir=None):
         self.dirname = dirname
-        indexpath = os.path.join(rootdir, dirname, 'Index')
+        self.indexpath = os.path.join(rootdir, dirname, 'Index')
 
         self.description = []
         self.files = OrderedDict()
         
-        infl = open(indexpath, encoding='utf-8')
+        infl = open(self.indexpath, encoding='utf-8')
         curfile = None
         
         for ln in infl.readlines():
@@ -67,20 +73,44 @@ class IndexDir:
     def __repr__(self):
         return '<IndexDir %s>' % (self.dirname,)
 
+    def isdirty(self):
+        for file in self.files.values():
+            if file.dirty:
+                return True
+        return False
+
     def getfile(self, filename):
         if filename in self.files:
             return self.files[filename]
-        
+
+        # Create a new IndexFile entry.
         curfile = IndexFile(filename, self)
         self.files[filename] = curfile
         curfile.description.append('\n')
+        curfile.dirty = True
         return curfile
+
+    def rewrite(self, olddir=None):
+        outfl = open(self.indexpath+'.new', 'w', encoding='utf-8')
+        for ln in self.description:
+            outfl.write(ln)
+
+        for (filename, file) in self.files.items():
+            outfl.write('# %s\n' % (file.filename,))
+            for ln in file.description:
+                outfl.write(ln)
+            file.dirty = False
+
+        outfl.close()
+
+        ### olddir
 
 class IndexFile:
     def __init__(self, filename, dir):
         self.filename = filename
         self.dir = dir
         self.description = []
+        self.dirty = False
         
     def __repr__(self):
         return '<IndexFile %s>' % (self.filename,)
