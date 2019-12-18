@@ -1,3 +1,4 @@
+import os
 import os.path
 import re
 from collections import OrderedDict
@@ -91,7 +92,8 @@ class IndexDir:
         return curfile
 
     def rewrite(self, olddir=None):
-        outfl = open(self.indexpath+'.new', 'w', encoding='utf-8')
+        newpath = self.indexpath+'.new'
+        outfl = open(newpath, 'w', encoding='utf-8')
         for ln in self.description:
             outfl.write(ln)
 
@@ -103,7 +105,12 @@ class IndexDir:
 
         outfl.close()
 
-        ### olddir
+        if olddir:
+            val = self.dirname.replace('/', 'X') + 'XIndex'
+            oldpath = os.path.join(olddir, val)
+            os.replace(self.indexpath, oldpath)
+
+        os.replace(newpath, self.indexpath)
 
 class IndexFile:
     def __init__(self, filename, dir):
