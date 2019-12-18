@@ -3,7 +3,9 @@
 """
 This constructs the Master-Index file (the plain text one, not the XML).
 It works by reading the ls-lR listing, extracting all the Index files,
-and concatenating them together.
+and concatenating them together. It adds a # directory header at the top
+of each Index file, and increases the # header depth (of files, etc) by
+one.
 
 Usage: make-master-index.py ls-lR [ htdocs ]
 
