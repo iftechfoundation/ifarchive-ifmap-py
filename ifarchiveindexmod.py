@@ -6,8 +6,25 @@ from collections import OrderedDict
 """ifarchiveindexmod:
 
 This module lets you programmatically modify the metadata in selected Index
-files. It rewrites the files and stores the old versions in /oldindex
-as a backup.
+files.
+
+To use:
+
+  from ifarchiveindexmod import IndexMod
+  # pathname is the directory that contains if-archive and indexes
+  indexmod = IndexMod(pathname)
+
+  ent = indexmod.getfile('if-archive/games/whatever.dat')
+  ent.add_metadata('key', 'value')
+
+  # olddir is a directory where the original Index files will be moved
+  # as a backup.
+  indexmod.rewrite(olddir)
+
+You may add metadata to any number of files before the rewrite() call.
+If you call getfile() for a filename which is not present in its Index
+file, it will be added as a new entry.
+
 """
 
 class IndexMod:
@@ -19,15 +36,25 @@ class IndexMod:
 
         self.dirs = {}
         
-    def getdir(self, dirname):
+    def hasfile(self, pathname):
+        (dirname, filename) = self.split(pathname)
+        if dirname not in self.dirs:
+            return False
+        dir = self.dirs[dirname]
+        return dir.hasfile(filename)
+            
+    def getfile(self, pathname):
+        """Return an IndexFile entry, creating it if necessary.
+        """
+        (dirname, filename) = self.split(pathname)
         if dirname in self.dirs:
             dir = self.dirs[dirname]
         else:
             dir = IndexDir(dirname, rootdir=self.rootdir)
             self.dirs[dirname] = dir
-        return dir
-            
-    def getfile(self, pathname):
+        return dir.getfile(filename)
+
+    def split(self, pathname):
         if pathname.startswith('/'):
             pathname = pathname[1:]
         if not pathname.startswith('if-archive/'):
@@ -35,11 +62,17 @@ class IndexMod:
         (dirname, sep, filename) = pathname.rpartition('/')
         if not (sep and filename):
             raise Exception('%s does not have a file path' % (pathname,))
-
-        dir = self.getdir(dirname)
-        return dir.getfile(filename)
+        return (dirname, filename)
 
     def rewrite(self, olddir=None, dryrun=False):
+        """Write back out all the Index files which have changed.
+        
+        If the olddir argument is provided, the original Index files are
+        moved to that directory (with unique names).
+        
+        If dryrun is True, Index-new files are written (in place) but
+        the original Index files are left untouched.
+        """
         for (dirname, dir) in self.dirs.items():
             if dir.isdirty():
                 print('Rewriting %s' % (dir.dirname,))
@@ -61,7 +94,8 @@ class IndexDir:
 
         self.description = []
         self.files = OrderedDict()
-        
+
+        # Parse the existing Index file.
         infl = open(self.indexpath, encoding='utf-8')
         curfile = None
         curmetaline = None
@@ -118,11 +152,18 @@ class IndexDir:
                 return True
         return False
 
+    def hasfile(self, filename):
+        if filename in self.files:
+            return True
+        return False
+
     def getfile(self, filename):
+        """Return an IndexFile entry, creating it if necessary.
+        """
         if filename in self.files:
             return self.files[filename]
 
-        # Create a new IndexFile entry.
+        # Create a new (dirty) IndexFile entry.
         curfile = IndexFile(filename, self)
         self.files[filename] = curfile
         curfile.description.append('\n')
@@ -130,6 +171,8 @@ class IndexDir:
         return curfile
 
     def rewrite(self, olddir=None, dryrun=False):
+        """Write the Index file back out.
+        """
         newpath = self.indexpath+'-new'
         outfl = open(newpath, 'w', encoding='utf-8')
         for ln in self.description:
