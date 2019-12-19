@@ -175,8 +175,12 @@ class IndexDir:
         """
         newpath = self.indexpath+'-new'
         outfl = open(newpath, 'w', encoding='utf-8')
+        
         for ln in self.description:
             outfl.write(ln)
+        if not self.description or self.description[-1].strip():
+            # Description should end with a blank line.
+            outfl.write('\n')
 
         for (filename, file) in self.files.items():
             outfl.write('# %s\n' % (file.filename,))
@@ -188,8 +192,13 @@ class IndexDir:
                         first = False
                     else:
                         outfl.write('    %s\n' % (val,))
+                        
             for ln in file.description:
                 outfl.write(ln)
+            if not file.description or file.description[-1].strip():
+                # Description should end with a blank line.
+                outfl.write('\n')
+                
             if not dryrun:
                 file.dirty = False
 
