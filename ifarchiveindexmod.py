@@ -40,10 +40,17 @@ class IndexMod:
         self.dirs = {}
         
     def hasfile(self, pathname):
+        """Check whether an Index entry exists for the given pathname.
+        """
         (dirname, filename) = self.split(pathname)
-        if dirname not in self.dirs:
-            return False
-        dir = self.dirs[dirname]
+        if dirname in self.dirs:
+            dir = self.dirs[dirname]
+        else:
+            try:
+                dir = IndexDir(dirname, rootdir=self.rootdir)
+            except FileNotFoundError:
+                return False
+            self.dirs[dirname] = dir
         return dir.hasfile(filename)
             
     def getfile(self, pathname):
@@ -58,6 +65,10 @@ class IndexMod:
         return dir.getfile(filename)
 
     def split(self, pathname):
+        """Split a pathname into (dirname, filename).
+        The "if-archive/" (or "/if-archive/") on the front of the pathname
+        is optional.
+        """
         if pathname.startswith('/'):
             pathname = pathname[1:]
         if not pathname.startswith('if-archive/'):
