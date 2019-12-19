@@ -8,6 +8,9 @@ from collections import OrderedDict
 This module lets you programmatically modify the metadata in selected Index
 files.
 
+(It does not currently allow you to create a completely new Index file.
+Do that by hand.)
+
 To use:
 
   from ifarchiveindexmod import IndexMod
