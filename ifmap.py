@@ -565,7 +565,7 @@ class File:
             val = '\n'.join(desclines)
             filestr = convertermeta.convert(val)
             for (mkey, mls) in convertermeta.Meta.items():
-                self.metadata[mkey] = ', '.join(mls)
+                self.metadata[mkey] = list(mls)
             convertermeta.Meta.clear()
             ### sort metadata?
             self.putkey('hasmetadata', bool(self.metadata))
@@ -1045,8 +1045,11 @@ def generate_output_xml(dirmap):
                 filelist.sort(key=lambda file:file.name.lower())
                 for file in filelist:
                     def metadata_thunk(outfl):
-                        for key, val in file.metadata.items():
-                            outfl.write(' <item> <key>%s</key> <value>%s</value> </item>\n' % (escape_html_string(key), escape_html_string(val),))
+                        for key, valls in file.metadata.items():
+                            outfl.write(' <item><key>%s</key>\n' % (escape_html_string(key),))
+                            for val in valls:
+                                outfl.write('  <value>%s</value>\n' % (escape_html_string(val),))
+                            outfl.write(' </item>\n')
                     itermap = { '_metadata':metadata_thunk }
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                     outfl.write('\n')
@@ -1121,8 +1124,9 @@ def generate_metadata(dirmap):
             
             writer = SafeWriter(tempname, filebase+'.txt')
             writer.stream().write('# %s/%s\n' % (dir.dir, filename,))
-            for key, val in file.metadata.items():
-                writer.stream().write('%s: %s\n' % (key, val,))
+            for key, valls in file.metadata.items():
+                for val in valls:
+                    writer.stream().write('%s: %s\n' % (key, val,))
             writer.resolve()
 
             writer = SafeWriter(tempname, filebase+'.json')
@@ -1133,8 +1137,11 @@ def generate_metadata(dirmap):
             writer = SafeWriter(tempname, filebase+'.xml')
             writer.stream().write('<?xml version="1.0"?>\n')
             writer.stream().write('<metadata>\n')
-            for key, val in file.metadata.items():
-                writer.stream().write(' <item> <key>%s</key> <value>%s</value> </item>\n' % (escape_html_string(key), escape_html_string(val),))
+            for key, valls in file.metadata.items():
+                writer.stream().write(' <item><key>%s</key>\n' % (escape_html_string(key),))
+                for val in valls:
+                    writer.stream().write('  <value>%s</value>\n' % (escape_html_string(val),))
+                writer.stream().write(' </item>\n')
             writer.stream().write('</metadata>\n')
             writer.resolve()
 
