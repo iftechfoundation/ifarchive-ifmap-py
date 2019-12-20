@@ -24,7 +24,7 @@ import re
 
 lspath = sys.argv[1]
 rootdir = '/var/ifarchive/htdocs'
-if len(sys.argv) >= 2:
+if len(sys.argv) >= 3:
     rootdir = sys.argv[2]
 
 dirre = re.compile('^if-archive.*:$')
