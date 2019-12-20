@@ -45,6 +45,7 @@ I finally ported it all to Python in July of 2017. It's now got less than half t
 
 December 2018: Added SHA512 checksums to the output (and to md5-cache.txt, which is now misnamed). Updated the script to generate foo/bar/index.html indexes as well as fooXbar.html indexes.
 
-December 2019: Renamed md5-cache.txt to checksum-cache.txt and moved it to the archive root. Simplified the arguments a bit (--dest is usually not needed).
+December 2019: Renamed md5-cache.txt to checksum-cache.txt and moved it to the archive root. Simplified the arguments a bit (--dest is usually not needed). Updated everything to use the new Markdown-based Index format.
+
 
 
