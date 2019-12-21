@@ -70,6 +70,10 @@ class Template:
     {?foo}if-yes{/}: If map['foo'] exists, substitute the if-yes part.
     {?foo}if-yes{:}if-no{/}: If map['foo'] exists, substitute the if-yes
         part; otherwise the if-no part.
+    {[bar}repeat-{bar:value}...{]}: Repeat through map['bar'], which
+        must be a list/tuple. The body will be repeated with {bar:value}
+        substituted in. Filters may be used. {bar:first} will be true
+        on the first iteration.
 
     If-then tags can be nested. {foo} is an error if the foo tag is
     missing or its value is None.
@@ -211,10 +215,13 @@ class Template:
                     elif type(val) in (list, tuple):
                         subls = self.ls[pos+1 : pos+tag.args[0]]
                         subtemplate = Template(subls)
-                        submap = ChainMap({}, map)
+                        valuekey = tag.value+':value'
+                        firstkey = tag.value+':first'
+                        submap = ChainMap({ firstkey:True }, map)
                         for subval in val:
-                            submap[tag.value+':value'] = subval
+                            submap[valuekey] = subval
                             subtemplate.subst(submap, outfl=outfl)
+                            submap[firstkey] = False
                     else:
                         outfl.write('[NOT-REPEATABLE]')
                         print('Problem: unrepeatable tag type: %s=%r' % (tag.value, val))
