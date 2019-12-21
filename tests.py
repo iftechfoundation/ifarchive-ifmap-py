@@ -108,6 +108,7 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('foo={bar}', { 'bar':subfunc }), 'foo=bar=TEXT')
 
 class TestParamFile(unittest.TestCase):
+    
     def test_simple_paramfile(self):
         params = ParamFile('testdata/simple-params')
         self.assertEqual(params.body, 'This space is a thing.\n')
@@ -115,6 +116,15 @@ class TestParamFile(unittest.TestCase):
         self.assertEqual(params.map['Main-Template'], 'main.html')
         self.assertEqual(params.map['Top-Level-Template'], 'αβγδε.html')
 
+    
+    def test_extra_paramfile(self):
+        params = ParamFile('testdata/extra-params')
+        self.assertEqual(params.body, '    Okay, this is the body.\nαβγδε In Greek.\n\nAnother.\n')
+        self.assertEqual(len(params.map), 3)
+        self.assertEqual(params.map['foo'], 'Line foo')
+        self.assertEqual(params.map['bar'], 'Line bar\nmore bar\nwith stuff')
+        self.assertEqual(params.map['baz'], 'BAZ')
+        
 if __name__ == '__main__':
     unittest.main()
     

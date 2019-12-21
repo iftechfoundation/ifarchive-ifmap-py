@@ -209,20 +209,29 @@ class ParamFile:
         self.filename = filename
         self.map = {}
         self.body = ''
+        lastkey = None
         
         fl = open(filename, encoding='utf-8')
         while True:
             ln = fl.readline()
             if not ln:
                 break
-            ln = ln.strip()
+            ln = ln.rstrip()
             if not ln:
                 break
+            if ln.startswith('    '):
+                if not lastkey:
+                    print('Problem: header line start with continuation: %s' % (ln,))
+                    continue
+                self.map[lastkey] = self.map[lastkey] + '\n' + ln.strip()
+                continue
             key, dummy, val = ln.partition(':')
             if not dummy:
                 print('Problem: no colon in header line: %s' % (ln,))
                 continue
-            self.map[key.strip()] = val.strip()
+            key = key.strip()
+            lastkey = key
+            self.map[key] = val.strip()
 
         self.body = fl.read()
         fl.close()
