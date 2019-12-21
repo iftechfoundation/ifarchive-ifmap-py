@@ -220,7 +220,7 @@ class ParamFile:
                 break
             key, dummy, val = ln.partition(':')
             if not dummy:
-                print('Problem: no colon in header line: %d' % (ln,))
+                print('Problem: no colon in header line: %s' % (ln,))
                 continue
             self.map[key.strip()] = val.strip()
 
