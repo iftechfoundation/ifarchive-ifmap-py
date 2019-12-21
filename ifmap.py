@@ -95,8 +95,13 @@ class Template:
             template = Template(body)
             Template.cache[body] = template
         template.subst(map, outfl)
+        return template
     
     def __init__(self, body):
+        if type(body) is list:
+            self.ls = body
+            return
+        
         self.ls = []
         pos = 0
         while True:
@@ -121,6 +126,10 @@ class Template:
                 tag = TemplateTag('{')
             elif val.startswith('?'):
                 tag = TemplateTag(val[1:], 'if')
+            elif val.startswith('['):
+                tag = TemplateTag(val[1:], 'repeat')
+            elif val == ']':
+                tag = TemplateTag(None, 'endrepeat')
             else:
                 args = None
                 if '|' in val:
@@ -129,7 +138,20 @@ class Template:
                     val = args.pop(0)
                 tag = TemplateTag(val, 'var', args)
             self.ls.append(tag)
-            
+
+        depths = []
+        for pos in range(len(self.ls)):
+            tag = self.ls[pos]
+            if tag.type == 'repeat':
+                depths.append(pos)
+            elif tag.type == 'endrepeat':
+                if not depths:
+                    print('Problem: unmatched endrepeat-tag')
+                else:
+                    val = depths.pop()
+                    self.ls[val].args = [ pos-val ]
+        if depths:
+            print('Problem: unmatched repeat-tag')
         return
 
     def __repr__(self):
@@ -143,6 +165,10 @@ class Template:
                 ls.append('{:}')
             elif tag.type == 'endif':
                 ls.append('{/}')
+            elif tag.type == 'repeat':
+                ls.append('{[%s}' % (tag.value,))
+            elif tag.type == 'endrepeat':
+                ls.append('{]}')
             elif tag.type == 'var':
                 if tag.args:
                     args = [ tag.value ] + tag.args
@@ -156,7 +182,7 @@ class Template:
     def subst(self, map, outfl=sys.stdout):
         activelist = [ True ]
         
-        for tag in self.ls:
+        for (pos, tag) in enumerate(self.ls):
             if tag.type is None:
                 if not activelist[-1]:
                     continue
@@ -173,6 +199,27 @@ class Template:
                 if len(activelist) <= 1 or activelist[-2]:
                     activelist[-1] = not activelist[-1]
             elif tag.type == 'endif':
+                activelist.pop()
+            elif tag.type == 'repeat':
+                if activelist[-1]:
+                    val = None
+                    if map:
+                        val = map.get(tag.value)
+                    if val is None:
+                        outfl.write('[UNKNOWN]')
+                        print('Problem: undefined brace-tag: %s' % (tag.value,))
+                    elif type(val) in (list, tuple):
+                        subls = self.ls[pos+1 : pos+tag.args[0]]
+                        subtemplate = Template(subls)
+                        submap = ChainMap({}, map)
+                        for subval in val:
+                            submap[tag.value+':value'] = subval
+                            subtemplate.subst(submap, outfl=outfl)
+                    else:
+                        outfl.write('[NOT-REPEATABLE]')
+                        print('Problem: unrepeatable tag type: %s=%r' % (tag.value, val))
+                activelist.append(False)
+            elif tag.type == 'endrepeat':
                 activelist.pop()
             elif tag.type == 'var':
                 if not activelist[-1]:
@@ -970,6 +1017,7 @@ def generate_output_indexes(dirmap):
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     dirlinkelement_body = plan.get('Dir-Link-Element', '')
+    filemetadata_body = plan.get('File-Metadata', '')
     
     for dir in dirmap.values():
         filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
@@ -995,6 +1043,10 @@ def generate_output_indexes(dirmap):
             itermap = { 'relroot':relroot }
             for file in filelist:
                 parity_flip(itermap)
+                def metadata_thunk(outfl):
+                    itermap = dict(file.metadata)
+                    Template.substitute(filemetadata_body, itermap, outfl=outfl)
+                itermap['_metadata'] = metadata_thunk
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
         
