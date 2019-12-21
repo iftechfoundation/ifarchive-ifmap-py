@@ -8,7 +8,7 @@ import io
 
 from ifmap import escape_html_string, escape_url_string
 from ifmap import is_string_nonwhite
-from ifmap import Template
+from ifmap import Template, ParamFile
 
 class TestEscapeFunctions(unittest.TestCase):
 
@@ -106,6 +106,14 @@ class TestSubstitutions(unittest.TestCase):
         def subfunc(outfl):
             Template.substitute('bar={baz|upper}', { 'baz':'text' }, outfl=outfl)
         self.assertEqual(self.substitute('foo={bar}', { 'bar':subfunc }), 'foo=bar=TEXT')
+
+class TestParamFile(unittest.TestCase):
+    def test_simple_paramfile(self):
+        params = ParamFile('testdata/simple-params')
+        self.assertEqual(params.body, 'This space is a thing.\n')
+        self.assertEqual(len(params.map), 2)
+        self.assertEqual(params.map['Main-Template'], 'main.html')
+        self.assertEqual(params.map['Top-Level-Template'], 'αβγδε.html')
 
 if __name__ == '__main__':
     unittest.main()
