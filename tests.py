@@ -95,11 +95,15 @@ class TestSubstitutions(unittest.TestCase):
 
     def test_repeats(self):
         map = {
-            'ls': [ 'one', 'two', 'three' ]
+            't': True,
+            'ls': [ 'one', 'two', 'three' ],
+            'foo': ( 'bar', 'baz' ),
         }
         self.assertEqual(self.substitute('{[ls}bare{]}', map), 'barebarebare')
+        self.assertEqual(self.substitute('{[foo}{foo:value|upper}{]}', map), 'BARBAZ')
         self.assertEqual(self.substitute('{[ls}<{ls:value}>{]}', map), '<one><two><three>')
         self.assertEqual(self.substitute('{[ls}{?ls:first}+{:}-{/}<{ls:value}>{]}', map), '+<one>-<two>-<three>')
+        self.assertEqual(self.substitute('{[foo}{?foo:first}{foo:value|upper}{:}{foo:value}{/}{]}', map), 'BARbaz')
 
     def test_filters(self):
         self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
