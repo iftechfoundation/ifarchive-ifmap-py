@@ -93,6 +93,14 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag2':True }), 'no-1/yes-2.')
         self.assertEqual(self.substitute('{?flag1}yes-1/{?flag2}yes-2{:}no-2{/}{:}no-1/{?flag2}yes-2{:}no-2{/}{/}.', { 'flag1':True, 'flag2':True }), 'yes-1/yes-2.')
 
+    def test_repeats(self):
+        map = {
+            'ls': [ 'one', 'two', 'three' ]
+        }
+        self.assertEqual(self.substitute('{[ls}bare{]}', map), 'barebarebare')
+        self.assertEqual(self.substitute('{[ls}<{ls:value}>{]}', map), '<one><two><three>')
+        self.assertEqual(self.substitute('{[ls}{?ls:first}+{:}-{/}<{ls:value}>{]}', map), '+<one>-<two>-<three>')
+
     def test_filters(self):
         self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
         self.assertEqual(self.substitute('foo={bar|upper}', { 'bar':'xxx' }), 'foo=XXX')
