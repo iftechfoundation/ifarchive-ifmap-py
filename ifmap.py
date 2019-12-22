@@ -1265,5 +1265,5 @@ if __name__ == '__main__':
     check_missing_files(dirmap)
     
     generate_output(dirmap)
-    #generate_metadata(dirmap)
+    generate_metadata(dirmap)
     
