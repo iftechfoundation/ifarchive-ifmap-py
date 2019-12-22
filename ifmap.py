@@ -74,6 +74,7 @@ class Template:
         must be a list/tuple. The body will be repeated with {bar:value}
         substituted in. Filters may be used. {bar:first} will be true
         on the first iteration.
+    {}: No-op, substitutes the empty string.
 
     If-then tags can be nested. {foo} is an error if the foo tag is
     missing or its value is None.
@@ -134,6 +135,8 @@ class Template:
                 tag = TemplateTag(val[1:], 'repeat')
             elif val == ']':
                 tag = TemplateTag(None, 'endrepeat')
+            elif val == '':
+                tag = TemplateTag('')
             else:
                 args = None
                 if '|' in val:

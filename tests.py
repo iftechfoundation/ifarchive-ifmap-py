@@ -49,6 +49,7 @@ class TestSubstitutions(unittest.TestCase):
         return res
 
     def test_basic(self):
+        self.assertEqual(self.substitute('foo{}bar', {}), 'foobar')
         self.assertEqual(self.substitute('foo', {}), 'foo')
         self.assertEqual(self.substitute('One\nαβγδε\n<&>“”\n', {}), 'One\nαβγδε\n<&>“”\n')
         self.assertEqual(self.substitute('escape {{}!', {}), 'escape {!')
