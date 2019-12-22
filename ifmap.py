@@ -225,6 +225,18 @@ class Template:
                             submap[valuekey] = subval
                             subtemplate.subst(submap, outfl=outfl)
                             submap[firstkey] = False
+                    elif type(val) in (dict, OrderedDict):
+                        subls = self.ls[pos+1 : pos+tag.args[0]]
+                        subtemplate = Template(subls)
+                        keykey = tag.value+':key'
+                        valuekey = tag.value+':value'
+                        firstkey = tag.value+':first'
+                        submap = ChainMap({ firstkey:True }, map)
+                        for subkey, subval in val.items():
+                            submap[keykey] = subkey
+                            submap[valuekey] = subval
+                            subtemplate.subst(submap, outfl=outfl)
+                            submap[firstkey] = False
                     else:
                         outfl.write('[NOT-REPEATABLE]')
                         print('Problem: unrepeatable tag type: %s=%r' % (tag.value, val))

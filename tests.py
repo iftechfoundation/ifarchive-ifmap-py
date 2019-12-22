@@ -5,6 +5,7 @@
 
 import unittest
 import io
+from collections import OrderedDict
 
 from ifmap import escape_html_string, escape_url_string
 from ifmap import is_string_nonwhite
@@ -108,6 +109,16 @@ class TestSubstitutions(unittest.TestCase):
         self.assertEqual(self.substitute('{?f}{[ls}{ls:value}{]}{/}', map), '')
         self.assertEqual(self.substitute('{[ls}{?ls:first}{:}, {/}{ls:value}-{[foo}{foo:value}{]}{]}', map), 'one-barbaz, two-barbaz, three-barbaz')
         self.assertEqual(self.substitute('{[ls}{?ls:first}{:}, {/}{ls:value}{[foo}{?foo:first}-{:}+{/}{foo:value}{]}{]}', map), 'one-bar+baz, two-bar+baz, three-bar+baz')
+
+    def test_maplist(self):
+        metadata = OrderedDict([
+            ( 'title', [ 'Stuff' ] ),
+            ( 'author', [ 'Fred' ] ),
+            ( 'id', [ 'one', 'two', 'three' ] ),
+        ])
+        map = { 'metadata': metadata }
+        val = self.substitute('{[metadata}{?metadata:first}{:}; {/}{metadata:key}:({[metadata:value}{?metadata:value:first}{:},{/}{metadata:value:value}{]}){]}', map)
+        self.assertEqual(val, 'title:(Stuff); author:(Fred); id:(one,two,three)')
 
     def test_filters(self):
         self.assertEqual(self.substitute('foo={bar}', { 'bar':'xxx' }), 'foo=xxx')
