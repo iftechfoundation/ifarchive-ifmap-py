@@ -545,10 +545,6 @@ urlable_pattern = re.compile('[+-;@-z]+')
 
 def escape_url_string(val):
     """Apply URL escaping (percent escapes) to a string.
-    This is a bit over-zealous; it matches the behavior of the original
-    C ifmap.
-    Does not work correctly on Unicode characters outside the Latin-1
-    range (0 to 0xFF).
     """
     res = []
     pos = 0
@@ -559,7 +555,8 @@ def escape_url_string(val):
             pos = match.end()
         else:
             ch = val[pos]
-            res.append('%%%02X' % (ord(ch) & 0xFF),)
+            for chenc in ch.encode('utf8'):
+              res.append('%%%02X' % (chenc,))
             pos += 1
     return ''.join(res)
 
