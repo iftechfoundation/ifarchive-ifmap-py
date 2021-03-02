@@ -14,7 +14,7 @@ File-List-Entry: <dt class="Par{parity}"><a href={?linkdir}{relroot}/indexes/{li
     <dd class="Par{parity}">{?hasdesc}{desc}{/}
     {}
 File-Metadata: {?tuid}<dd class="FileData">{[tuid}{?tuid:first}{:},
-    {/}<a href="https://ifdb.tads.org/viewgame?id={tuid:value|url}">{?tuid:first}IFDB {:}{/}entry</a>{]}{/}
+    {/}<a href="https://ifdb.org/viewgame?id={tuid:value|url}">{?tuid:first}IFDB {:}{/}entry</a>{]}{/}
 Dir-Link-Element: {?first}{:}/<wbr>{/}<a href="{relroot}/indexes/{dir|indexuri|url}">{name|html}</a>
 
 (This space intentionally left blank.)
