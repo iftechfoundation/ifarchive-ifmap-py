@@ -1038,6 +1038,7 @@ def generate_output_indexes(dirmap):
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     dirlinkelement_body = plan.get('Dir-Link-Element', '')
     filemetadata_body = plan.get('File-Metadata', '')
+    fileunboxlink_body = plan.get('File-Unbox-Link', '')
     
     for dir in dirmap.values():
         filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
@@ -1066,7 +1067,13 @@ def generate_output_indexes(dirmap):
                 def metadata_thunk(outfl):
                     itermap = dict(file.metadata)
                     Template.substitute(filemetadata_body, itermap, outfl=outfl)
+                def unboxlink_thunk(outfl):
+                    ### more logic?
+                    flag = bool(unbox_suffix_pattern.search(file.name))
+                    itermap = { 'name':file.name, 'path':file.path, 'hasunboxlink':flag }
+                    Template.substitute(fileunboxlink_body, itermap, outfl=outfl)
                 itermap['_metadata'] = metadata_thunk
+                itermap['_unboxlink'] = unboxlink_thunk
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
         
