@@ -195,10 +195,28 @@ Release 1 / Serial number 000000
 <name>if-archive/comp/files</name>
 <xdir>if-archiveXcompXfiles</xdir>
 <parent>if-archive/comp</parent>
-<filecount>3</filecount>
+<filecount>4</filecount>
 <subdircount>0</subdircount>
 
 </directory>
+
+<file>
+<name>all.zip</name>
+<directory>if-archive/comp/files</directory>
+<path>if-archive/comp/files/all.zip</path>
+<size>487</size>
+<date>16-Oct-2018</date>
+<rawdate>1539700000</rawdate>
+
+<md5>e4f08d6708151f1197d8e4728f1b8693</md5>
+
+<sha512>2b6c836d8f28e47cc5ff2ef3b96da60974e8c8e74b0300e6fad6959ba5a175ca86bd312142a23713fad2f1e6f35ca21aed41339e7720f4551bddd578d5fb42d8</sha512>
+
+
+
+
+
+</file>
 
 <file>
 <name>file-1.txt</name>
