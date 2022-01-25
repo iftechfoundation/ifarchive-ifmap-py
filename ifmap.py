@@ -610,6 +610,7 @@ class Directory:
         self.submap[key] = val
 
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
+unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|zip)$', re.IGNORECASE)
 
 class File:
     """File: one file in the big directory map.
@@ -625,6 +626,7 @@ class File:
         self.name = filename
         self.path = parentdir.dir+'/'+filename
         self.metadata = OrderedDict()
+        self.unboxlink = False
 
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
@@ -661,6 +663,10 @@ class File:
             descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
+
+        if unbox_suffix_pattern.search(self.name):
+            ### more logic? meta and parent meta?
+            self.unboxlink = True
         
     def getkey(self, key, default=None):
         return self.submap.get(key)
