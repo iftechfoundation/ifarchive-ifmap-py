@@ -626,7 +626,6 @@ class File:
         self.name = filename
         self.path = parentdir.dir+'/'+filename
         self.metadata = OrderedDict()
-        self.unboxlink = False
 
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
@@ -664,10 +663,6 @@ class File:
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
 
-        if unbox_suffix_pattern.search(self.name):
-            ### more logic? meta and parent meta?
-            self.unboxlink = True
-        
     def getkey(self, key, default=None):
         return self.submap.get(key)
     
