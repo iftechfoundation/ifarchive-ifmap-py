@@ -1068,8 +1068,13 @@ def generate_output_indexes(dirmap):
                     itermap = dict(file.metadata)
                     Template.substitute(filemetadata_body, itermap, outfl=outfl)
                 def unboxlink_thunk(outfl):
-                    ### more logic?
-                    flag = bool(unbox_suffix_pattern.search(file.name))
+                    # We show the unbox link based on the "unbox-link" metadata key ("true" or otherwise). If that's not present, we default to showing it for zip/tar.gz/tgz files.
+                    if 'unbox-link' in file.metadata:
+                        val = ''.join(file.metadata['unbox-link'])
+                        val = val.lower()
+                        flag = (val == 'true')
+                    else:
+                        flag = bool(unbox_suffix_pattern.search(file.name))
                     itermap = { 'name':file.name, 'path':file.path, 'hasunboxlink':flag }
                     Template.substitute(fileunboxlink_body, itermap, outfl=outfl)
                 itermap['_metadata'] = metadata_thunk
