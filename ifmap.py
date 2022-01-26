@@ -311,7 +311,25 @@ class ParamFile:
     def put(self, key, val):
         self.map[key] = val
 
-class NoIndexEntry:
+class DirList:
+    """DirList: A list of directories, loaded from a source file.
+    """
+    def __init__(self, filename):
+        self.ls = []
+        try:
+            filename = os.path.join(opts.libdir, filename)
+            fl = open(filename, encoding='utf-8')
+        except:
+            return
+        while True:
+            ln = fl.readline()
+            if not ln:
+                break
+            ln = ln.strip()
+            self.ls.append(ln)
+        fl.close()
+    
+class NoIndexEntry(DirList):
     """NoIndexEntry: A list of directories in which it's okay that there's
     no index entries.
 
@@ -327,19 +345,7 @@ class NoIndexEntry:
     contents change frequently (like unprocessed).
     """
     def __init__(self):
-        self.ls = []
-        try:
-            filename = os.path.join(opts.libdir, 'no-index-entry')
-            fl = open(filename, encoding='utf-8')
-        except:
-            return
-        while True:
-            ln = fl.readline()
-            if not ln:
-                break
-            ln = ln.strip()
-            self.ls.append(ln)
-        fl.close()
+        DirList.__init__(self, 'no-index-entry')
 
     def check(self, path):
         """The argument is the pathname of a file which was found in
@@ -1265,6 +1271,7 @@ if __name__ == '__main__':
     
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
+    nounboxlinklist = DirList('no-unbox-link')
     
     Template.addfilter('html', escape_html_string)
     Template.addfilter('slashwbr', slash_add_wbr)
