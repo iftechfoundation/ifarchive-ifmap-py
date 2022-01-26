@@ -316,6 +316,7 @@ class DirList:
     """
     def __init__(self, filename):
         self.ls = []
+        self.set = set()
         try:
             filename = os.path.join(opts.libdir, filename)
             fl = open(filename, encoding='utf-8')
@@ -326,7 +327,10 @@ class DirList:
             if not ln:
                 break
             ln = ln.strip()
+            if not ln:
+                continue
             self.ls.append(ln)
+            self.set.add(ln)
         fl.close()
     
 class NoIndexEntry(DirList):
