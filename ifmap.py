@@ -669,6 +669,13 @@ class File:
     def putkey(self, key, val):
         self.submap[key] = val
 
+    def getmetadata_string(self, key):
+        # Return a metadata value as a string. If there are multiple values,
+        # just use the first.
+        if key not in self.metadata or not self.metadata[key]:
+            return None
+        return self.metadata[key][0]
+
 def parse_master_index(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
     tree to find more files. Return all the known directories as a dict.
@@ -1068,13 +1075,18 @@ def generate_output_indexes(dirmap):
                     itermap = dict(file.metadata)
                     Template.substitute(filemetadata_body, itermap, outfl=outfl)
                 def unboxlink_thunk(outfl):
-                    # We show the unbox link based on the "unbox-link" metadata key ("true" or otherwise). If that's not present, we default to showing it for zip/tar.gz/tgz files.
-                    if 'unbox-link' in file.metadata:
-                        val = ''.join(file.metadata['unbox-link'])
-                        val = val.lower()
-                        flag = (val == 'true')
+                    # We show the unbox link based on the "unbox-link"
+                    # metadata key ("true" or otherwise). If that's not
+                    # present, we default to showing it for zip/tar.gz/tgz
+                    # files.
+                    val = file.getmetadata_string('unbox-link')
+                    if val:
+                        flag = (val.lower() == 'true')
                     else:
                         flag = bool(unbox_suffix_pattern.search(file.name))
+                    # But if "unbox-block" is set, definitely no link.
+                    if file.getmetadata_string('unbox-block') == 'true':
+                        flag = false
                     itermap = { 'name':file.name, 'path':file.path, 'hasunboxlink':flag }
                     Template.substitute(fileunboxlink_body, itermap, outfl=outfl)
                 itermap['_metadata'] = metadata_thunk
