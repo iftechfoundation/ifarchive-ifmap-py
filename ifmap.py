@@ -1092,6 +1092,8 @@ def generate_output_indexes(dirmap):
                     val = file.getmetadata_string('unbox-link')
                     if val:
                         flag = (val.lower() == 'true')
+                    elif file.parentdir.dir in nounboxlinklist.set:
+                        flag = False
                     else:
                         flag = bool(unbox_suffix_pattern.search(file.name))
                     # But if "unbox-block" is set, definitely no link.
