@@ -53,13 +53,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>288</size>
+<size>320</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>617e7275be40cffd175fd0158f3b7264</md5>
+<md5>c8c0e126171050b0a80f92a06c7fa853</md5>
 
-<sha512>c6774675fd701a90251dee70f6f61e885df147b39e1d5989576791828cab5ecfe1a19ea4aaebad3a150ab6e11e65c22b8a1ba4eb20d46fbee8814ebc939a1d9e</sha512>
+<sha512>a246296eb16459f02494902edf4241caf0e2a014416583b0259b609d51491fd2e03c6cb8f706849e8577c117dfc7ae80d43fa046ba92398cdf0fc6199f252a79</sha512>
 
 
 
@@ -72,7 +72,7 @@ Symlink to if-archive/comp/files
 <name>if-archive/art</name>
 <xdir>if-archiveXart</xdir>
 <parent>if-archive</parent>
-<filecount>3</filecount>
+<filecount>4</filecount>
 <subdircount>0</subdircount>
 
 <description>
@@ -142,6 +142,28 @@ A table of contents
 *Foo*: An Art Project
 Release 1 / Serial number 000000
 </description>
+</file>
+
+<file>
+<name>x&amp;all.zip</name>
+<directory>if-archive/art</directory>
+<path>if-archive/art/x&amp;all.zip</path>
+<size>487</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+
+<md5>e4f08d6708151f1197d8e4728f1b8693</md5>
+
+<sha512>2b6c836d8f28e47cc5ff2ef3b96da60974e8c8e74b0300e6fad6959ba5a175ca86bd312142a23713fad2f1e6f35ca21aed41339e7720f4551bddd578d5fb42d8</sha512>
+
+
+
+<metadata>
+ <item><key>unbox-link</key>
+  <value>false</value>
+ </item>
+</metadata>
+
 </file>
 
 
