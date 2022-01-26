@@ -1087,8 +1087,9 @@ def generate_output_indexes(dirmap):
                 def unboxlink_thunk(outfl):
                     # We show the unbox link based on the "unbox-link"
                     # metadata key ("true" or otherwise). If that's not
-                    # present, we default to showing it for zip/tar.gz/tgz
-                    # files.
+                    # present, we check whether the parent dir is listed in
+                    # no-unbox-link. Failing that, we default to showing it
+                    # for zip/tar.gz/tgz files.
                     val = file.getmetadata_string('unbox-link')
                     if val:
                         flag = (val.lower() == 'true')
