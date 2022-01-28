@@ -620,7 +620,7 @@ class Directory:
         self.submap[key] = val
 
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
-unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|zip)$', re.IGNORECASE)
+unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
 
 class File:
     """File: one file in the big directory map.
