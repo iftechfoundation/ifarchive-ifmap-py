@@ -1292,7 +1292,6 @@ if __name__ == '__main__':
     Template.addfilter('plural_s', pluralize_s)
     Template.addfilter('plural_ies', pluralize_ies)
 
-    converter = markdown.Markdown(extensions = [])
     convertermeta = markdown.Markdown(extensions = ['meta'])
     
     if not opts.treedir:
