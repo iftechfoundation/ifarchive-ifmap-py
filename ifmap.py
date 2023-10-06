@@ -609,6 +609,7 @@ class Directory:
         self.files = {}
         self.subdirs = {}
         self.parentdir = None
+        self.metadata = OrderedDict()
 
     def __repr__(self):
         return '<Directory %s>' % (self.dir,)
@@ -747,7 +748,10 @@ def parse_master_index(indexpath, treedir):
                     dir.putkey('hasxmldesc', anyheader)
                     if anyheader:
                         # Convert Markdown to HTML.
-                        val = converter.convert(headerstr)
+                        val = convertermeta.convert(headerstr)
+                        for (mkey, mls) in convertermeta.Meta.items():
+                            dir.metadata[mkey] = list(mls)
+                        convertermeta.Meta.clear()
                         dir.putkey('header', val)
                         # For XML, we just escape.
                         val = escape_html_string(headerstr)
