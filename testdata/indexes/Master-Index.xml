@@ -6,7 +6,7 @@
 <xdir>if-archive</xdir>
 <parent></parent>
 <filecount>3</filecount>
-<subdircount>3</subdircount>
+<subdircount>4</subdircount>
 
 </directory>
 
@@ -53,13 +53,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>320</size>
+<size>459</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>c8c0e126171050b0a80f92a06c7fa853</md5>
+<md5>0dc9fb924fb3a60ffbe3b2b6c59a1c76</md5>
 
-<sha512>a246296eb16459f02494902edf4241caf0e2a014416583b0259b609d51491fd2e03c6cb8f706849e8577c117dfc7ae80d43fa046ba92398cdf0fc6199f252a79</sha512>
+<sha512>b5502f30d85dcc6e76cffd880da7b28bb471aec5f3bd051fa63d61441bad0ad4ed3d5b8be982b0007bf116935336e40dbde5df8ae4f2f608e285a1e3af752a1a</sha512>
 
 
 
@@ -291,6 +291,90 @@ Release 1 / Serial number 000000
 
 
 
+
+</file>
+
+
+<directory>
+<name>if-archive/games</name>
+<xdir>if-archiveXgames</xdir>
+<parent>if-archive</parent>
+<filecount>3</filecount>
+<subdircount>0</subdircount>
+
+<description>
+Some game files.
+</description>
+
+</directory>
+
+<file>
+<name>bothgames</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/bothgames</path>
+<size>38</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+
+<md5>ec5b9d72cb9e0852be6a95aca639c864</md5>
+
+<sha512>1be8bc652414f9429b9a35e0f7ca74bbf64f53f973c9e0a6e11915661b53db9ce1215b13af5bb9237e744758b3f897947ec25340eb914086cea2223aeeac24fa</sha512>
+
+
+
+<metadata>
+ <item><key>tuid</key>
+  <value>xyz111</value>
+  <value>xyz222</value>
+ </item>
+</metadata>
+
+</file>
+
+<file>
+<name>game1</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/game1</path>
+<size>8</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+
+<md5>0e3548092f60ba3f9e1f7306c942c1c3</md5>
+
+<sha512>ac18dc66e3aea6d122632b08dd633fdc40e1dc00b0950b63b093777e156ebd12fbc1b2e1d1b78e04b6fcd5179330818d6a606a776d033f7c98c343bdbe24abe7</sha512>
+
+
+
+<metadata>
+ <item><key>tuid</key>
+  <value>xyz111</value>
+ </item>
+</metadata>
+<description>
+
+Game number 1.
+</description>
+</file>
+
+<file>
+<name>game2</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/game2</path>
+<size>8</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+
+<md5>c91dbd63256ad50f86226fcd99737eaa</md5>
+
+<sha512>9a25e2e24dc1382f175ec5845019cd5fd8738f562d3164718d369cf8af8df30d428e7a2355769510bf61a7fc119fcdbd17fb3a401710b80319a6cdb9f6ad07e8</sha512>
+
+
+
+<metadata>
+ <item><key>tuid</key>
+  <value>xyz222</value>
+ </item>
+</metadata>
 
 </file>
 
