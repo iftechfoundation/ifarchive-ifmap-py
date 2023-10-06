@@ -1,2 +1,3 @@
 # if-archive/games/game1
 tuid: xyz111
+ifwiki: Adventure
