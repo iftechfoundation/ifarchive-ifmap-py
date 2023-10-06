@@ -8,6 +8,7 @@
 <filecount>3</filecount>
 <subdircount>4</subdircount>
 
+
 </directory>
 
 <file>
@@ -74,6 +75,7 @@ Symlink to if-archive/comp/files
 <parent>if-archive</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
+
 
 <description>
 Files from an art show:
@@ -174,6 +176,7 @@ Release 1 / Serial number 000000
 <filecount>2</filecount>
 <subdircount>1</subdircount>
 
+
 </directory>
 
 <file>
@@ -219,6 +222,7 @@ Release 1 / Serial number 000000
 <parent>if-archive/comp</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
+
 
 </directory>
 
@@ -301,6 +305,7 @@ Release 1 / Serial number 000000
 <parent>if-archive</parent>
 <filecount>3</filecount>
 <subdircount>0</subdircount>
+
 
 <description>
 Some game files.
@@ -385,6 +390,7 @@ Game number 1.
 <parent>if-archive</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
+
 
 </directory>
 

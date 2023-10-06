@@ -4,6 +4,8 @@
 <parent>{?parentdir}{parentdir|html}{/}</parent>
 <filecount>{?count}{count}{:}0{/}</filecount>
 <subdircount>{?subdircount}{subdircount}{:}0{/}</subdircount>
+{?hasmetadata}<metadata>
+{_metadata}</metadata>{/}
 {?hasxmldesc}{?xmlheader}
 <description>
 {xmlheader}</description>
