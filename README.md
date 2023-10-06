@@ -47,5 +47,6 @@ December 2018: Added SHA512 checksums to the output (and to md5-cache.txt, which
 
 December 2019: Renamed md5-cache.txt to checksum-cache.txt and moved it to the archive root. Simplified the arguments a bit (--dest is usually not needed). Updated everything to use the new Markdown-based Index format.
 
+October 2023: Directories can now have metadata, just like files. Support the "ifwiki" metadata line.
 
 
