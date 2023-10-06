@@ -1,2 +1,0 @@
-# if-archive/art/all.zip
-unbox-link: false
