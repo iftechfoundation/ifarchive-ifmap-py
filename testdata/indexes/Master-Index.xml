@@ -54,13 +54,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>495</size>
+<size>515</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>0be231dbef83ee95b89e0c6afa8b50f1</md5>
+<md5>706907f621c8876923ab62c08e1dcbce</md5>
 
-<sha512>c0290e4d5897a82bb8c69a98d59294cca243d1572d28944416b72030200301c1a8f08eefdac963bf93658ecc16abc829dc05b0fe665b9231dcd8d777881c4d9a</sha512>
+<sha512>b87015fa33be76736d3e9b61993909b71b8a0e010cded4b7c52fda6cfadad283a13e13a025373df1421e5cb572ab07dd959b7c8f803b8aec7705781950443a97</sha512>
 
 
 
@@ -75,9 +75,14 @@ Symlink to if-archive/comp/files
 <parent>if-archive</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
-
+<metadata>
+ <item><key>ifwiki</key>
+  <value>IF_Art_Show</value>
+ </item>
+</metadata>
 
 <description>
+
 Files from an art show:
 &lt;http://example.com/art/&gt;
 </description>

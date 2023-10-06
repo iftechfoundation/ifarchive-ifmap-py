@@ -761,6 +761,7 @@ def parse_master_index(indexpath, treedir):
                         convertermeta.Meta.clear()
                         ### sort metadata?
                         dir.putkey('hasmetadata', bool(dir.metadata))
+                        dir.putkey('headerormeta', (bool(dir.metadata) or bool(val)))
                         dir.putkey('header', val)
                         # For XML, we just escape.
                         val = stripmetadata(headerstr.split('\n'))
@@ -1065,6 +1066,7 @@ def generate_output_indexes(dirmap):
     filename = plan.get('General-Footer')
     general_footer = read_lib_file(filename, '')
 
+    dirmetadata_body = plan.get('Dir-Metadata', '')
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
     dirlinkelement_body = plan.get('Dir-Link-Element', '')
@@ -1075,6 +1077,10 @@ def generate_output_indexes(dirmap):
         filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
         
         relroot = '..'
+        
+        def dirmetadata_thunk(outfl):
+            itermap = dict(dir.metadata)
+            Template.substitute(dirmetadata_body, itermap, outfl=outfl)
         
         def dirlinks_thunk(outfl):
             els = dir.dir.split('/')
@@ -1134,9 +1140,12 @@ def generate_output_indexes(dirmap):
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
         itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        if dir.metadata:
+            itermap['_metadata'] = dirmetadata_thunk
         if dir.dir == ROOTNAME:
             itermap['hasdesc'] = True
             itermap['header'] = toplevel_body_thunk
+            itermap['headerormeta'] = True
 
         # Write out the Xdir.html version
         xify_mode = True
