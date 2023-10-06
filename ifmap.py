@@ -744,8 +744,6 @@ def parse_master_index(indexpath, treedir):
                     if opts.verbose:
                         print('Finishing %s...' % (dirname,))
 
-                    while len(headerlines) and headerlines[0] == '':
-                        headerlines.pop(0)
                     headerstr = '\n'.join(headerlines)
                     headerstr = headerstr.rstrip() + '\n'
                     # Now headerstr starts with zero newlines and ends
