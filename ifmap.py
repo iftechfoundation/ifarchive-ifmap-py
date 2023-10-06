@@ -759,6 +759,8 @@ def parse_master_index(indexpath, treedir):
                         for (mkey, mls) in convertermeta.Meta.items():
                             dir.metadata[mkey] = list(mls)
                         convertermeta.Meta.clear()
+                        ### sort metadata?
+                        dir.putkey('hasmetadata', bool(dir.metadata))
                         dir.putkey('header', val)
                         # For XML, we just escape.
                         val = stripmetadata(headerstr.split('\n'))

@@ -27,6 +27,7 @@ Release 1 / Serial number 000000
 unbox-link: false
 
 # if-archive/games:
+metakey: metadata
 
 Some game files.
 
