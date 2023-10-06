@@ -623,6 +623,21 @@ class Directory:
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
 unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
 
+def stripmetadata(lines):
+    """Given a list of lines, remove the metadata lines (lines at the
+    beginning that look like "key:value"). Return a joined string of
+    the rest.
+    """
+    pos = 0
+    for ln in lines:
+        if not ln.strip():
+            break
+        if not (metadata_pattern.match(ln) or ln.startswith('    ')):
+            break
+        pos += 1
+    val = '\n'.join(lines[pos:])
+    return val.rstrip() + '\n'
+
 class File:
     """File: one file in the big directory map.
     (There is no global file list. You have to look at dir.files for each
@@ -661,15 +676,7 @@ class File:
             self.putkey('hasdesc', is_string_nonwhite(filestr))
 
             # Remove metadata lines before generating XML.
-            pos = 0
-            for ln in desclines:
-                if not ln.strip():
-                    break
-                if not (metadata_pattern.match(ln) or ln.startswith('    ')):
-                    break
-                pos += 1
-            val = '\n'.join(desclines[pos:])
-            descstr = val.rstrip() + '\n'
+            descstr = stripmetadata(desclines)
             descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
@@ -754,7 +761,8 @@ def parse_master_index(indexpath, treedir):
                         convertermeta.Meta.clear()
                         dir.putkey('header', val)
                         # For XML, we just escape.
-                        val = escape_html_string(headerstr)
+                        val = stripmetadata(headerstr.split('\n'))
+                        val = escape_html_string(val)
                         dir.putkey('xmlheader', val)
                     dir = None
 
