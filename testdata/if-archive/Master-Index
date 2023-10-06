@@ -28,9 +28,8 @@ Release 1 / Serial number 000000
 unbox-link: false
 
 # if-archive/games:
-metakey: metadata
 
-Some game files.
+Hey: these are some game files.
 
 ## game1
 tuid: xyz111

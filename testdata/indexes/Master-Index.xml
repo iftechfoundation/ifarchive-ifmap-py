@@ -54,13 +54,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>515</size>
+<size>512</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>706907f621c8876923ab62c08e1dcbce</md5>
+<md5>2dd30036897c44d307b1110dac40b5a6</md5>
 
-<sha512>b87015fa33be76736d3e9b61993909b71b8a0e010cded4b7c52fda6cfadad283a13e13a025373df1421e5cb572ab07dd959b7c8f803b8aec7705781950443a97</sha512>
+<sha512>03570faffe4408d81ee57bd3544bf7f24730caed5bb11d0568914f19aca4b0ba749c8310486b4f0dc72ccdf5f2f47d49bddfa9281e23991ea6e74a26878bcd46</sha512>
 
 
 
@@ -310,15 +310,11 @@ Release 1 / Serial number 000000
 <parent>if-archive</parent>
 <filecount>3</filecount>
 <subdircount>0</subdircount>
-<metadata>
- <item><key>metakey</key>
-  <value>metadata</value>
- </item>
-</metadata>
+
 
 <description>
 
-Some game files.
+Hey: these are some game files.
 </description>
 
 </directory>
