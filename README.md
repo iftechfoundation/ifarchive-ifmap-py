@@ -8,6 +8,12 @@ This program has one core task: to look through all the files in the IF Archive,
 
 (The Master-Index file is created by sewing together all the Index files in all the directories of the Archive. That's done by the make-master-index.py script, also included in this repo.)
 
+Related files in this repo:
+
+- `make-master-index.py`: Sew together all the Index files to create Master-Index.
+- `make-master-index`: Shell script wrapper to run `make-master-index.py` on the Archive.
+- `build-indexes`: Shell script wrapper to run `ifmap.py` on the Archive.
+
 ## Arguments
 
 In normal Archive operation, this is invoked from the build-indexes script.
