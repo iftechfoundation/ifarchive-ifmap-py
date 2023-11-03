@@ -33,10 +33,15 @@ chgrp ifarchive if-archive/{ls-lR,Master-Index}
 chmod 664 if-archive/{ls-lR,Master-Index}
 
 # Also set the group for all Index files, so that they're editable
+# through the admin portal. Same goes for directories, so that the admin
+# portal can move files around.
+# The Archive's files themselves (other than Index) are *not* editable
 # through the admin portal.
 
 cd /var/ifarchive/htdocs/if-archive
 find . -type f -name Index -print0 | xargs -0 chgrp uploaders
+find . -type f -name Index -print0 | xargs -0 chmod 664
+find . -type d -print0 | xargs -0 chgrp uploaders
 
 # Clean up the lock file.
 
