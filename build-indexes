@@ -9,10 +9,27 @@
 # from scratch takes more like 150 seconds.
 # (That's as of 2023. No doubt the times will creep up in future years.)
 
+# Protect this script from running if it (or build-indexes) is already
+# running. (It will fail if build.lock already exists.)
+set -o noclobber
+if { > /var/ifarchive/htdocs/build.lock ; } then
+  :
+else
+  echo 'Build script is already running'
+  ls -l /var/ifarchive/htdocs/build.lock
+  exit
+fi
+set +o noclobber
+
+# Build all the indexes and metadata files.
 
 /var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
 
+# Build the RSS feed file.
+
 /var/ifarchive/bin/make-rss.py /var/ifarchive/ifnews /var/ifarchive/htdocs/indexes/Master-Index.xml > /var/ifarchive/htdocs/indexes/archive.rss
+
+# Make sure those files have the correct group and mode.
 
 cd /var/ifarchive/htdocs/indexes
 find . -type f -print0 | xargs -0 chmod 664
@@ -26,4 +43,6 @@ find . -type f -print0 | xargs -0 chgrp ifarchive
 find . -type d -print0 | xargs -0 chmod 775
 find . -type d -print0 | xargs -0 chgrp ifarchive
 
+# Clean up the lock file.
 
+rm /var/ifarchive/htdocs/build.lock

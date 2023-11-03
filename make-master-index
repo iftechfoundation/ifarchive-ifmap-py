@@ -6,12 +6,32 @@
 # Ensure that ls -lR sorts its output without any clever case-folding.
 export LC_COLLATE=C
 
+# Protect this script from running if it (or build-indexes) is already
+# running. (It will fail if build.lock already exists.)
+set -o noclobber
+if { > /var/ifarchive/htdocs/build.lock ; } then
+  :
+else
+  echo 'Build script is already running'
+  ls -l /var/ifarchive/htdocs/build.lock
+  exit
+fi
+set +o noclobber
+
+# Create ls-lR and Master-Index.
+
 cd /var/ifarchive/htdocs
 #cp /var/ifarchive/ifnews if-archive/new-since-last-post
 ls -lRn if-archive > if-archive/ls-lR
 /var/ifarchive/bin/make-master-index.py if-archive/ls-lR > if-archive/Master-Index
 
+# Make sure those files have the correct group and mode.
+
 #chgrp ifarchive if-archive/{new-since-last-post,ls-lR,Master-Index}
 #chmod 664 if-archive/{new-since-last-post,ls-lR,Master-Index}
 chgrp ifarchive if-archive/{ls-lR,Master-Index}
 chmod 664 if-archive/{ls-lR,Master-Index}
+
+# Clean up the lock file.
+
+rm /var/ifarchive/htdocs/build.lock
