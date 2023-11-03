@@ -1,10 +1,10 @@
-#!/bin/csh -f
+#!/bin/bash
 
 # The top-level script to regenerate Master-Index. Also the ls-lR listing.
 # (Run this as root, please.)
 
 # Ensure that ls -lR sorts its output without any clever case-folding.
-setenv LC_COLLATE C
+export LC_COLLATE=C
 
 cd /var/ifarchive/htdocs
 #cp /var/ifarchive/ifnews if-archive/new-since-last-post
