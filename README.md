@@ -1,6 +1,6 @@
 # ifmap.py -- the index generator tool for the IF Archive
 
-- Copyright 2017-19 by the Interactive Fiction Technology Foundation
+- Copyright 2017-23 by the Interactive Fiction Technology Foundation
 - Distributed under the MIT license
 - Created by Andrew Plotkin <erkyrath@eblong.com>
 
