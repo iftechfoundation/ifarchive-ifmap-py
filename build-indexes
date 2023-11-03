@@ -1,0 +1,29 @@
+#!/bin/csh -f
+
+# The top-level script to read Master-Index and generate all the
+# indexes/ files. It also updates the RSS feed.
+# (Run this as root, please.)
+
+# Note that this takes roughly 15 seconds to run, if the checksum cache
+# (htdocs/checksum-cache.txt) already exists. Recreating the cache
+# from scratch takes more like 150 seconds.
+# (That's as of 2023. No doubt the times will creep up in future years.)
+
+
+/var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
+
+/var/ifarchive/bin/make-rss.py /var/ifarchive/ifnews /var/ifarchive/htdocs/indexes/Master-Index.xml > /var/ifarchive/htdocs/indexes/archive.rss
+
+cd /var/ifarchive/htdocs/indexes
+find . -type f -print0 | xargs -0 chmod 664
+find . -type f -print0 | xargs -0 chgrp ifarchive
+find . -type d -print0 | xargs -0 chmod 775
+find . -type d -print0 | xargs -0 chgrp ifarchive
+
+cd /var/ifarchive/htdocs/metadata
+find . -type f -print0 | xargs -0 chmod 664
+find . -type f -print0 | xargs -0 chgrp ifarchive
+find . -type d -print0 | xargs -0 chmod 775
+find . -type d -print0 | xargs -0 chgrp ifarchive
+
+

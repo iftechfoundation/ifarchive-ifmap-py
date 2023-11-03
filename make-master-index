@@ -1,0 +1,17 @@
+#!/bin/csh -f
+
+# The top-level script to regenerate Master-Index. Also the ls-lR listing.
+# (Run this as root, please.)
+
+# Ensure that ls -lR sorts its output without any clever case-folding.
+setenv LC_COLLATE C
+
+cd /var/ifarchive/htdocs
+#cp /var/ifarchive/ifnews if-archive/new-since-last-post
+ls -lRn if-archive > if-archive/ls-lR
+/var/ifarchive/bin/make-master-index.py if-archive/ls-lR > if-archive/Master-Index
+
+#chgrp ifarchive if-archive/{new-since-last-post,ls-lR,Master-Index}
+#chmod 664 if-archive/{new-since-last-post,ls-lR,Master-Index}
+chgrp ifarchive if-archive/{ls-lR,Master-Index}
+chmod 664 if-archive/{ls-lR,Master-Index}
