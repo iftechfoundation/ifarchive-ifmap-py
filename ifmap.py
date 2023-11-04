@@ -482,6 +482,14 @@ def relroot_for_dirname(val):
     num = val.count('/')
     return '../..' + num * '/..'
 
+def isodate(val):
+    """Convert a timestamp to RFS date format.
+    """
+    tup = time.gmtime(int(val))
+    # RFC 822 date format.
+    return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
+    
+
 xify_mode = True
 
 def xify_dirname(val):
@@ -1355,6 +1363,7 @@ if __name__ == '__main__':
     Template.addfilter('slashwbr', slash_add_wbr)
     Template.addfilter('url', escape_url_string)
     Template.addfilter('xify', xify_dirname)
+    Template.addfilter('isodate', isodate)
     Template.addfilter('indexuri', indexuri_dirname)
     Template.addfilter('plural_s', pluralize_s)
     Template.addfilter('plural_ies', pluralize_ies)
