@@ -1259,7 +1259,15 @@ def generate_rss(dirmap):
     filename = plan.get('RSS-Template')
     rss_body = read_lib_file(filename, '<xml>\n{_files}\n</xml>\n')
 
-    itermap = {}
+    rss_entry = plan.get('RSS-Entry', '<item>{name}</item>')
+    
+    def filelist_thunk(outfl):
+        itermap = { }
+        for file in filelist:
+            Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
+            outfl.write('\n\n')
+    
+    itermap = { '_files':filelist_thunk }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
