@@ -1237,12 +1237,12 @@ def generate_output(dirmap):
 
 def generate_rss(dirmap, changedate):
     """Write out the archive.rss file.
-    This will be the most recent three months' worth of files,
+    This will be the most recent two months' worth of files,
     excluding Master-Index, ls-lR, and files in /unprocessed.
     The changedate should be the timestamp on Master-Index.
     """
     excludeset = set([ 'Master-Index', 'ls-lR' ])
-    intlen = 93*24*60*60
+    intlen = 62*24*60*60
     curtime = int(time.time())
 
     # Create a list of all files is sorted by date, newest to oldest.
