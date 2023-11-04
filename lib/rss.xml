@@ -7,6 +7,8 @@
     <description>New additions to the Interactive Fiction Archive</description>
     <language>en-us</language>
     <webMaster>tech@ifarchive.org (Archive Support)</webMaster>
+    <pubDate>{changedate|isodate}</pubDate>
+    <lastBuildDate>{curdate|isodate}</lastBuildDate>
 
 {_files}
 
