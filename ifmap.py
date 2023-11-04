@@ -1245,8 +1245,6 @@ def generate_rss(dirmap, changedate):
     intlen = 93*24*60*60
     curtime = int(time.time())
 
-    intlen = intlen * 24 #### testing ####
-
     # Create a list of all files is sorted by date, newest to oldest.
     
     filelist = []
