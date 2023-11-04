@@ -4,6 +4,14 @@ General-Footer: footer.html
 XML-Template: xmlbase.xml
 XML-Dir-Template: xmldir.xml
 XML-File-Template: xmlfile.xml
+RSS-Template: rss.xml
+RSS-Entry: <item>
+    <title>{name|html}</title>
+    <link>https://ifarchive.org/{path|html}</link>
+    <guid>https://ifarchive.org/{path|html}</guid>
+    <pubDate>{date|isodate}</pubDate>
+    {?hasxmldesc}<description>{xmldesc}</description>{/}
+    </item>
 Dir-List-Template: dirlist.html
 Dir-List-Entry: <li class="Par{parity}"><a href="{dir|indexuri|url}">{dir|html|slashwbr}</a>
 Date-List-Template: datelist.html
