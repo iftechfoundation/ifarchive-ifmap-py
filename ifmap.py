@@ -1227,6 +1227,47 @@ def generate_output(dirmap):
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap)
 
+def generate_rss(dirmap):
+    """Write out the archive.rss file.
+    This will be the most recent three months' worth of files,
+    excluding Master-Index, ls-lR, and files in /unprocessed.
+    """
+    excludeset = set([ 'Master-Index', 'ls-lR' ])
+    intlen = 93*24*60*60
+    curtime = int(time.time())
+
+    intlen = intlen * 24 #### testing ####
+
+    # Create a list of all files is sorted by date, newest to oldest.
+    
+    filelist = []
+    for dir in dirmap.values():
+        for file in dir.files.values():
+            if file.name in excludeset:
+                continue
+            if file.path.startswith('if-archive/unprocessed/'):
+                continue
+            if file.getkey('islink'):
+                continue
+            dateval = file.getkey('date')
+            if dateval and int(dateval) + intlen >= curtime:
+                filelist.append(file)
+
+    # Same sorting criteria as in generate_output_datelist().
+    filelist.sort(key=lambda file: (-int(file.getkey('date')), file.name.lower(), file.path.lower()))
+
+    filename = plan.get('RSS-Template')
+    rss_body = read_lib_file(filename, '<xml>\n{_files}\n</xml>\n')
+
+    itermap = {}
+
+    filename = os.path.join(DESTDIR, 'archive.rss')
+    tempname = os.path.join(DESTDIR, '__temp')
+    writer = SafeWriter(tempname, filename)
+    Template.substitute(rss_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    writer.resolve()
+
+    
 def generate_metadata(dirmap):
     """Write out all the metadata files.
     """
@@ -1323,4 +1364,6 @@ if __name__ == '__main__':
     
     generate_output(dirmap)
     generate_metadata(dirmap)
+    
+    generate_rss(dirmap)
     
