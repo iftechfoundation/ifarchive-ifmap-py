@@ -1235,10 +1235,11 @@ def generate_output(dirmap):
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap)
 
-def generate_rss(dirmap):
+def generate_rss(dirmap, changedate):
     """Write out the archive.rss file.
     This will be the most recent three months' worth of files,
     excluding Master-Index, ls-lR, and files in /unprocessed.
+    The changedate should be the timestamp on Master-Index.
     """
     excludeset = set([ 'Master-Index', 'ls-lR' ])
     intlen = 93*24*60*60
@@ -1275,7 +1276,7 @@ def generate_rss(dirmap):
             Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
             outfl.write('\n\n')
     
-    itermap = { '_files':filelist_thunk }
+    itermap = { '_files':filelist_thunk, 'curdate':int(time.time()), 'changedate':changedate }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
@@ -1376,11 +1377,14 @@ if __name__ == '__main__':
         DESTDIR = os.path.join(opts.treedir, opts.destdir)
         
     dirmap = parse_master_index(opts.indexpath, opts.treedir)
+
+    stat = os.stat(opts.indexpath)
+    indexmtime = int(stat.st_mtime)
     
     check_missing_files(dirmap)
     
     generate_output(dirmap)
     generate_metadata(dirmap)
     
-    generate_rss(dirmap)
+    generate_rss(dirmap, indexmtime)
     
