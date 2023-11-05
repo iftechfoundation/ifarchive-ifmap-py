@@ -22,12 +22,9 @@ fi
 set +o noclobber
 
 # Build all the indexes and metadata files.
+# (Including the RSS feed file.)
 
 /var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
-
-# Build the RSS feed file.
-
-/var/ifarchive/bin/make-rss.py /var/ifarchive/ifnews /var/ifarchive/htdocs/indexes/Master-Index.xml > /var/ifarchive/htdocs/indexes/archive.rss
 
 # Make sure those files have the correct group and mode.
 
