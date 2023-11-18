@@ -13,6 +13,7 @@ Related files in this repo:
 - `make-master-index.py`: Sew together all the Index files to create Master-Index.
 - `make-master-index`: Shell script wrapper to run `make-master-index.py` on the Archive.
 - `build-indexes`: Shell script wrapper to run `ifmap.py` on the Archive.
+- `build-indexes-bg`: Another shell script wrapper to run both `make-master-index` and `build-indexes` sequentially in the background. (This is used by the admin web interface.)
 
 ## Arguments
 
@@ -55,4 +56,5 @@ December 2019: Renamed md5-cache.txt to checksum-cache.txt and moved it to the a
 
 October 2023: Directories can now have metadata, just like files. Support the "ifwiki" metadata line.
 
+November 2023: Generate the RSS feed along with all the other index files.
 
