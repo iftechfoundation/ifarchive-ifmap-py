@@ -4,4 +4,4 @@
 # but in the background. This script can therefore be invoked by the
 # admin server tool without blocking httpd.
 
-( /var/ifarchive/bin/make-master-index ; /var/ifarchive/bin/build-indexes ) &> /dev/null &
+( /var/ifarchive/bin/make-master-index ; /var/ifarchive/bin/build-indexes ) &> /var/ifarchive/htdocs/build.out &
