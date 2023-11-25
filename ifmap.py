@@ -536,8 +536,17 @@ def pluralize_ies(val):
         return 'ies'
 
 def slash_add_wbr(val):
+    """Add a silent wordwrap-point after every slash.
+    """
     return val.replace('/', '/<wbr>')
-    
+
+def escape_wikipage(val):
+    """Convert a wiki page title to its URI form. I think this just
+    means converting spaces to underscores.
+    (This does *not* include percent-encoding; that's a later stage.)
+    """
+    return val.replace(' ', '_')
+
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
@@ -1360,6 +1369,7 @@ if __name__ == '__main__':
     
     Template.addfilter('html', escape_html_string)
     Template.addfilter('slashwbr', slash_add_wbr)
+    Template.addfilter('wikipage', escape_wikipage)
     Template.addfilter('url', escape_url_string)
     Template.addfilter('xify', xify_dirname)
     Template.addfilter('isodate', isodate)
