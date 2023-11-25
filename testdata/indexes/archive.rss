@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<rss version="2.0">
+  <channel>
+    <title>IFArchive Recent Additions</title>
+    <link>https://ifarchive.org</link>
+    <description>New additions to the Interactive Fiction Archive</description>
+    <language>en-us</language>
+    <webMaster>tech@ifarchive.org (Archive Support)</webMaster>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <lastBuildDate>Thu, 15 Nov 2018 12:00:00 +0000</lastBuildDate>
+
+<item>
+<title>bothgames</title>
+<link>https://ifarchive.org/if-archive/games/bothgames</link>
+<guid>https://ifarchive.org/if-archive/games/bothgames</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>foo.z5</title>
+<link>https://ifarchive.org/if-archive/art/foo.z5</link>
+<guid>https://ifarchive.org/if-archive/art/foo.z5</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+<description>
+*Foo*: An Art Project
+Release 1 / Serial number 000000
+</description>
+</item>
+
+<item>
+<title>game1</title>
+<link>https://ifarchive.org/if-archive/games/game1</link>
+<guid>https://ifarchive.org/if-archive/games/game1</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+<description>
+Game number 1.
+</description>
+</item>
+
+<item>
+<title>game2</title>
+<link>https://ifarchive.org/if-archive/games/game2</link>
+<guid>https://ifarchive.org/if-archive/games/game2</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>leftfoot.blorb</title>
+<link>https://ifarchive.org/if-archive/comp/leftfoot.blorb</link>
+<guid>https://ifarchive.org/if-archive/comp/leftfoot.blorb</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>rightfoot.blorb</title>
+<link>https://ifarchive.org/if-archive/comp/rightfoot.blorb</link>
+<guid>https://ifarchive.org/if-archive/comp/rightfoot.blorb</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>space file.txt</title>
+<link>https://ifarchive.org/if-archive/space%20dir/space%20file.txt</link>
+<guid>https://ifarchive.org/if-archive/space%20dir/space%20file.txt</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>x&amp;all.zip</title>
+<link>https://ifarchive.org/if-archive/art/x%26all.zip</link>
+<guid>https://ifarchive.org/if-archive/art/x%26all.zip</guid>
+<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>all.zip</title>
+<link>https://ifarchive.org/if-archive/comp/files/all.zip</link>
+<guid>https://ifarchive.org/if-archive/comp/files/all.zip</guid>
+<pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>file-3.txt</title>
+<link>https://ifarchive.org/if-archive/comp/files/file-3.txt</link>
+<guid>https://ifarchive.org/if-archive/comp/files/file-3.txt</guid>
+<pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+
+</item>
+
+<item>
+<title>file-2.txt</title>
+<link>https://ifarchive.org/if-archive/comp/files/file-2.txt</link>
+<guid>https://ifarchive.org/if-archive/comp/files/file-2.txt</guid>
+<pubDate>Mon, 15 Oct 2018 10:40:00 +0000</pubDate>
+
+</item>
+
+<item>
+<title>file-1.txt</title>
+<link>https://ifarchive.org/if-archive/comp/files/file-1.txt</link>
+<guid>https://ifarchive.org/if-archive/comp/files/file-1.txt</guid>
+<pubDate>Sun, 14 Oct 2018 06:53:20 +0000</pubDate>
+
+</item>
+
+
+
+  </channel>
+</rss>

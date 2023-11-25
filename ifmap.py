@@ -38,6 +38,9 @@ popt.add_option('--exclude',
 popt.add_option('-v', '--verbose',
                 action='store_true', dest='verbose',
                 help='print verbose output')
+popt.add_option('--builddate',
+                action='store', dest='builddate', metavar='ISODATE',
+                help='timestamp to use as "now" (for testing)')
 
 class TemplateTag:
     """Data element used inside a Template.
@@ -1037,8 +1040,6 @@ def generate_output_datelist(dirmap):
     filename = plan.get('General-Footer')
     general_footer = read_lib_file(filename, '')
 
-    curtime = int(time.time())
-    
     for (intkey, intlen, intname) in intervals:
         if intkey:
             filename = os.path.join(DESTDIR, 'date_%d.html' % (intkey,))
@@ -1253,7 +1254,6 @@ def generate_rss(dirmap, changedate):
     """
     excludeset = set([ 'Master-Index', 'ls-lR' ])
     intlen = 62*24*60*60
-    curtime = int(time.time())
 
     # Create a list of all files sorted by date, newest to oldest.
     
@@ -1284,7 +1284,7 @@ def generate_rss(dirmap, changedate):
             Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
             outfl.write('\n\n')
     
-    itermap = { '_files':filelist_thunk, 'curdate':int(time.time()), 'changedate':changedate }
+    itermap = { '_files':filelist_thunk, 'curdate':curtime, 'changedate':changedate }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
@@ -1361,6 +1361,12 @@ if __name__ == '__main__':
 
     if not opts.libdir:
         raise Exception('--src argument required')
+
+    if not opts.builddate:
+        curtime = int(time.time())
+    else:
+        tup = datetime.datetime.fromisoformat(opts.builddate)
+        curtime = int(tup.timestamp())
 
     plan = ParamFile(os.path.join(opts.libdir, 'index'))
     
