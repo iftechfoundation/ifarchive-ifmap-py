@@ -38,8 +38,8 @@ popt.add_option('--exclude',
 popt.add_option('-v', '--verbose',
                 action='store_true', dest='verbose',
                 help='print verbose output')
-popt.add_option('--builddate',
-                action='store', dest='builddate', metavar='ISODATE',
+popt.add_option('--curdate',
+                action='store', dest='curdate', metavar='ISODATE',
                 help='timestamp to use as "now" (for testing)')
 
 class TemplateTag:
@@ -1053,7 +1053,7 @@ def generate_output_datelist(dirmap):
             for file in filelist:
                 parity_flip(itermap)
                 if intlen:
-                    if int(file.getkey('date')) + intlen < curtime:
+                    if int(file.getkey('date')) + intlen < curdate:
                         break
                 Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
@@ -1267,7 +1267,7 @@ def generate_rss(dirmap, changedate):
             if file.getkey('islink'):
                 continue
             dateval = file.getkey('date')
-            if dateval and int(dateval) + intlen >= curtime:
+            if dateval and int(dateval) + intlen >= curdate:
                 filelist.append(file)
 
     # Same sorting criteria as in generate_output_datelist().
@@ -1284,7 +1284,7 @@ def generate_rss(dirmap, changedate):
             Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
             outfl.write('\n\n')
     
-    itermap = { '_files':filelist_thunk, 'curdate':curtime, 'changedate':changedate }
+    itermap = { '_files':filelist_thunk, 'curdate':curdate, 'changedate':changedate }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
@@ -1362,11 +1362,11 @@ if __name__ == '__main__':
     if not opts.libdir:
         raise Exception('--src argument required')
 
-    if not opts.builddate:
-        curtime = int(time.time())
+    if not opts.curdate:
+        curdate = int(time.time())
     else:
-        tup = datetime.datetime.fromisoformat(opts.builddate)
-        curtime = int(tup.timestamp())
+        tup = datetime.datetime.fromisoformat(opts.curdate)
+        curdate = int(tup.timestamp())
 
     plan = ParamFile(os.path.join(opts.libdir, 'index'))
     

@@ -36,7 +36,7 @@ Type `python3 tests.py` to run tests on the low-level string-escaping and templa
 For an end-to-end test, try:
 
     python3 testdata/set-timestamps.py
-    python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --builddate 2018-11-15T12:00:00Z
+    python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --curdate 2018-11-15T12:00:00Z
 
 If everything works, the generated files in testdata/indexes should match what's in the Git repository. (`git status` should show no changes.)
 
