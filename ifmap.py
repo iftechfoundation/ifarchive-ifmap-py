@@ -5,6 +5,7 @@ import re
 import os
 import os.path
 import time
+import datetime
 import hashlib
 from collections import ChainMap, OrderedDict
 import optparse
@@ -1014,7 +1015,7 @@ def generate_output_datelist(dirmap):
         (4, 366*24*60*60, 'year')
     ]
 
-    # Create a list of all files is sorted by date, newest to oldest.
+    # Create a list of all files sorted by date, newest to oldest.
     
     filelist = []
     for dir in dirmap.values():
@@ -1254,7 +1255,7 @@ def generate_rss(dirmap, changedate):
     intlen = 62*24*60*60
     curtime = int(time.time())
 
-    # Create a list of all files is sorted by date, newest to oldest.
+    # Create a list of all files sorted by date, newest to oldest.
     
     filelist = []
     for dir in dirmap.values():
