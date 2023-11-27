@@ -1135,6 +1135,8 @@ def generate_output_indexes(dirmap):
                     else:
                         flag = bool(unbox_suffix_pattern.search(file.name))
                     # But if "unbox-block" is set, definitely no link.
+                    # (Yes, this is redundant with "unbox-link". I should
+                    # drop this step.)
                     if file.getmetadata_string('unbox-block') == 'true':
                         flag = false
                     itermap = { 'name':file.name, 'path':file.path, 'hasunboxlink':flag }
