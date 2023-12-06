@@ -42,6 +42,7 @@ cd /var/ifarchive/htdocs/if-archive
 find . -type f -name Index -print0 | xargs -0 chgrp uploaders
 find . -type f -name Index -print0 | xargs -0 chmod 664
 find . -type d -print0 | xargs -0 chgrp uploaders
+find . -type d -print0 | xargs -0 chmod 775
 
 # Clean up the lock file.
 
