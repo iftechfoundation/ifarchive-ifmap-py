@@ -22,16 +22,10 @@ if not args:
     sys.exit(0)
 
 # Read the configuration values from configpath.
-# I refuse to formalize Windows INI format, so the config file just
-# looks like:
-#   api_secret_key = ...
-#   zone_id = ...
-#   account_email = ...
 
 configpath = '/var/ifarchive/lib/cloudflare.config'
-dat = '[DEFAULT]\n' + open(configpath).read()
 confparse = configparser.ConfigParser()
-confparse.read_string(dat)
+confparse.read(configpath)
 config = confparse['DEFAULT']
 
 api_secret_key = config['api_secret_key']
