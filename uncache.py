@@ -62,7 +62,7 @@ urls = []
 if opts.urls:
     urls.extend(opts.urls)
 
-# Figure out the URLs for file arguments.
+# Figure out the URLs for file arguments, and normalize them.
 
 pat = re.compile('^http[s]?://[a-z.]*ifarchive[.]org/', re.IGNORECASE)
 
@@ -73,6 +73,8 @@ prefixes = [
     'http://mirror.ifarchive.org/if-archive/',
 ]
 
+filenames = []
+
 for val in args:
     match = pat.match(val)
     if match:
@@ -81,11 +83,17 @@ for val in args:
         val = val[ 1 : ]
     if val.startswith('if-archive/'):
         val = val[ 11 : ]
+    filenames.append(val)
+
+for val in filenames:
     for prefix in prefixes:
         urls.append(prefix+val)
 
 # Got all the URLs.
 print(urls)
+
+if opts.zip:
+    print('###', filenames)
 
 if opts.dryrun:
     sys.exit()
