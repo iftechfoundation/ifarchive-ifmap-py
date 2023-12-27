@@ -2,6 +2,21 @@
 
 # uncache.py: Wipe a URL from the CloudFlare cache.
 
+# The argument is anything that looks like a Archive file URL or URI.
+# You can specify any number of them. All of the following are equivalent,
+# and will purge the file "foo" for all our primary domains (ifarchive.org,
+# www.ifarchive.org, and mirror.ifarchive.org):
+#
+#   foo
+#   if-archive/foo
+#   /if-archive/foo
+#   http://ifarchive.org/if-archive/foo
+#   https://ifarchive.org/if-archive/foo
+#
+# You can also specify a URL directly. It will not be normalized.
+#
+#   -u http://ifarchive.org/misc/ifarchive.css
+
 import sys
 import re
 import optparse
@@ -18,6 +33,10 @@ popt.add_option('-u', '--url',
 popt.add_option('-n', '--dryrun',
                 action='store_true', dest='dryrun',
                 help='show the URLs that will be purged, but don\'t call CloudFlare')
+
+popt.add_option('-z', '--zip',
+                action='store_true', dest='zip',
+                help='for zip files, also purge the Unbox URLs')
 
 (opts, args) = popt.parse_args()
 
@@ -36,18 +55,14 @@ api_secret_key = config['api_secret_key']
 zone_id = config['zone_id']
 account_email = config['account_email']
 
-# Extract the URLs from the command-line arguments. We accept anything
-# that looks like a URL or URI. All of the following are equivalent
-# command-line arguments:
-#   foo
-#   if-archive/foo
-#   /if-archive/foo
-#   http://ifarchive.org/if-archive/foo
-#   https://ifarchive.org/if-archive/foo
-
+# Extract the URLs from the command-line arguments.
 urls = []
+
+# Raw URLs are used directly.
 if opts.urls:
     urls.extend(opts.urls)
+
+# Figure out the URLs for file arguments.
 
 pat = re.compile('^http[s]?://[a-z.]*ifarchive[.]org/', re.IGNORECASE)
 
@@ -69,6 +84,7 @@ for val in args:
     for prefix in prefixes:
         urls.append(prefix+val)
 
+# Got all the URLs.
 print(urls)
 
 if opts.dryrun:
