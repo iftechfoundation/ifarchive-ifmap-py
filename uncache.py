@@ -23,6 +23,7 @@ import re
 import optparse
 import json
 import configparser
+import hashlib
 import urllib.request
 
 popt = optparse.OptionParser(usage='uncache.py')
@@ -37,7 +38,7 @@ popt.add_option('-n', '--dryrun',
 
 popt.add_option('-z', '--zip',
                 action='store_true', dest='zip',
-                help='for zip files, also purge the Unbox URLs')
+                help='for zip files, also purge the Unbox content URLs')
 
 (opts, args) = popt.parse_args()
 
@@ -57,6 +58,21 @@ zone_id = config['zone_id']
 account_email = config['account_email']
 archivedir = config.get('archivedir', '/var/ifarchive/htdocs/if-archive')
 
+def path_to_hash(path):
+    # Convert a path to a hash string. This algorithm follows Unbox; see:
+    # https://github.com/iftechfoundation/ifarchive-unbox/blob/main/doc/spec.md
+    bytes = hashlib.sha512(path.encode()).hexdigest()[0:12]
+    ival = int(bytes, 16)
+    alpha = '0123456789abcdefghijklmnopqrstuvwxyz'
+    res = []
+    while ival:
+        ch = alpha[ival % 36]
+        ival = ival // 36
+        res.insert(0, ch)
+    while len(res) < 10:
+        res.insert(0, '0')
+    return ''.join(res)
+
 # Extract the URLs from the command-line arguments.
 urls = []
 
@@ -73,6 +89,7 @@ prefixes = [
     'http://ifarchive.org/if-archive/',
     'http://www.ifarchive.org/if-archive/',
     'http://mirror.ifarchive.org/if-archive/',
+    'https://unbox.ifarchive.org/?url=/if-archive/',
 ]
 
 filenames = []
