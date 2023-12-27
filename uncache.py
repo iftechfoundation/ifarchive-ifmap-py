@@ -18,6 +18,7 @@
 #   -u http://ifarchive.org/misc/ifarchive.css
 
 import sys
+import os, os.path
 import re
 import optparse
 import json
@@ -54,6 +55,7 @@ config = confparse['DEFAULT']
 api_secret_key = config['api_secret_key']
 zone_id = config['zone_id']
 account_email = config['account_email']
+archivedir = config.get('archivedir', '/var/ifarchive/htdocs/if-archive')
 
 # Extract the URLs from the command-line arguments.
 urls = []
@@ -93,7 +95,9 @@ for val in filenames:
 print(urls)
 
 if opts.zip:
-    print('###', filenames)
+    for val in filenames:
+        path = os.path.join(archivedir, val)
+        print('###', path)
 
 if opts.dryrun:
     sys.exit()
