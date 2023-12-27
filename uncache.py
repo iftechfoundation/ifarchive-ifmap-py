@@ -65,6 +65,9 @@ for val in args:
 
 print(urls)
 
+if opts.dryrun:
+    sys.exit()
+
 cmd = 'purge_cache'
 url = 'https://api.cloudflare.com/client/v4/zones/%s/%s' % (zone_id, cmd)
 headers = {
