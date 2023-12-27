@@ -4,11 +4,20 @@
 
 import sys
 import re
+import optparse
 import json
 import configparser
 import urllib.request
 
-if len(sys.argv) <= 1:
+popt = optparse.OptionParser(usage='uncache.py')
+
+popt.add_option('-n', '--dryrun',
+                action='store_true', dest='dryrun',
+                help='show the URLs that will be purged, but don\'t call CloudFlare')
+
+(opts, args) = popt.parse_args()
+
+if not args:
     print('usage: uncache.py URIs...')
     sys.exit(0)
 
@@ -49,7 +58,7 @@ prefixes = [
     'http://mirror.ifarchive.org/if-archive/',
 ]
 
-for val in sys.argv[1:]:
+for val in args:
     match = pat.match(val)
     if match:
         val = val[ match.end() : ]
