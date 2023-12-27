@@ -25,6 +25,7 @@ import json
 import configparser
 import hashlib
 import urllib.request
+import zipfile
 
 popt = optparse.OptionParser(usage='uncache.py')
 
@@ -108,13 +109,22 @@ for val in filenames:
     for prefix in prefixes:
         urls.append(prefix+val)
 
-# Got all the URLs.
-print(urls)
-
 if opts.zip:
     for val in filenames:
         path = os.path.join(archivedir, val)
-        print('###', path)
+        hash = path_to_hash(val)
+        if not os.path.isfile(path):
+            print('zip file not found:', path)
+            continue
+        try:
+            with zipfile.ZipFile(path) as zipfl:
+                for val in zipfl.namelist():
+                    urls.append('https://unbox.ifarchive.org/%s/%s' % (hash, val,))
+        except Exception as ex:
+            print('%s: %s' % (path, ex,))
+
+# Got all the URLs.
+print(urls)
 
 if opts.dryrun:
     sys.exit()
