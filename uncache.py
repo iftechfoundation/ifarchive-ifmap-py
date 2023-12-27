@@ -11,13 +11,17 @@ import urllib.request
 
 popt = optparse.OptionParser(usage='uncache.py')
 
+popt.add_option('-u', '--url',
+                action='append', dest='urls',
+                help='purge this URL as-is (do not treat it as a file under if-archive)')
+
 popt.add_option('-n', '--dryrun',
                 action='store_true', dest='dryrun',
                 help='show the URLs that will be purged, but don\'t call CloudFlare')
 
 (opts, args) = popt.parse_args()
 
-if not args:
+if not args and not opts.urls:
     print('usage: uncache.py URIs...')
     sys.exit(0)
 
@@ -42,6 +46,8 @@ account_email = config['account_email']
 #   https://ifarchive.org/if-archive/foo
 
 urls = []
+if opts.urls:
+    urls.extend(opts.urls)
 
 pat = re.compile('^http[s]?://[a-z.]*ifarchive[.]org/', re.IGNORECASE)
 
