@@ -86,10 +86,13 @@ if opts.urls:
 pat = re.compile('^http[s]?://[a-z.]*ifarchive[.]org/', re.IGNORECASE)
 
 prefixes = [
-    # Don't need the https: versions; Cloudflare treats them the same.
     'http://ifarchive.org/if-archive/',
+    'https://ifarchive.org/if-archive/',
     'http://www.ifarchive.org/if-archive/',
+    'https://www.ifarchive.org/if-archive/',
     'http://mirror.ifarchive.org/if-archive/',
+    'https://mirror.ifarchive.org/if-archive/',
+    # Don't need the http: version for unbox; it redirects.
     'https://unbox.ifarchive.org/?url=/if-archive/',
 ]
 
