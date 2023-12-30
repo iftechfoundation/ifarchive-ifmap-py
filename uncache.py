@@ -92,8 +92,10 @@ prefixes = [
     'https://www.ifarchive.org/if-archive/',
     'http://mirror.ifarchive.org/if-archive/',
     'https://mirror.ifarchive.org/if-archive/',
-    # Don't need the http: version for unbox; it redirects.
+    # Don't need the http: version for unbox; it redirects. But the query param *does* need all versions.
     'https://unbox.ifarchive.org/?url=/if-archive/',
+    'https://unbox.ifarchive.org/?url=http://ifarchive.org/if-archive/',
+    'https://unbox.ifarchive.org/?url=https://ifarchive.org/if-archive/',
 ]
 
 filenames = []
