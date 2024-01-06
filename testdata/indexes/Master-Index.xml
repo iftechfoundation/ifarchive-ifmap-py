@@ -309,7 +309,7 @@ Release 1 / Serial number 000000
 <xdir>if-archiveXgames</xdir>
 <parent>if-archive</parent>
 <filecount>3</filecount>
-<subdircount>0</subdircount>
+<subdircount>1</subdircount>
 
 
 <description>
@@ -389,6 +389,35 @@ Game number 1.
   <value>xyz222</value>
  </item>
 </metadata>
+
+</file>
+
+
+<directory>
+<name>if-archive/games/old</name>
+<xdir>if-archiveXgamesXold</xdir>
+<parent>if-archive/games</parent>
+<filecount>1</filecount>
+<subdircount>0</subdircount>
+
+
+</directory>
+
+<file>
+<name>game1-v1</name>
+<directory>if-archive/games/old</directory>
+<path>if-archive/games/old/game1-v1</path>
+<size>21</size>
+<date>08-Oct-2018</date>
+<rawdate>1539000000</rawdate>
+
+<md5>de1b9390c9b8805c0c07b7ee78d2e75d</md5>
+
+<sha512>4f16a98f8de648ad54fd988e40b26eb83f31bb0c0377a821fb0579a1b59dd35b1f776d6526d851d1c62c7ca5b11227450edd7e243d646490ee3a2944c6b815f1</sha512>
+
+
+
+
 
 </file>
 
