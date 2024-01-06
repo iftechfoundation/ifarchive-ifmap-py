@@ -8,7 +8,7 @@ RSS-Template: rss.xml
 RSS-Entry: <item>
     <title>{name|html}</title>
     <link>https://ifarchive.org/{path|url}</link>
-    <guid>https://ifarchive.org/{path|url}</guid>
+    <guid>{path|url}::{date}</guid>
     <pubDate>{date|isodate}</pubDate>
     {?hasxmldesc}<description>{xmldesc}</description>{/}
     </item>
