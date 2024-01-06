@@ -1267,6 +1267,8 @@ def generate_rss(dirmap, changedate):
                 continue
             if file.path.startswith('if-archive/unprocessed/'):
                 continue
+            if file.parentdir.dir.endswith('/old'):
+                continue
             if file.getkey('islink'):
                 continue
             dateval = file.getkey('date')
