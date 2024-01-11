@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # The top-level script to read Master-Index and generate all the
-# indexes/ files. It also updates the RSS feed.
+# indexes/ files, including Master-Index.xml. It also updates the RSS
+# feed.
 # (Run this as root, please.)
 
 # Note that this takes roughly 15 seconds to run, if the checksum cache
@@ -21,8 +22,8 @@ else
 fi
 set +o noclobber
 
-# Build all the indexes and metadata files.
-# (Including the RSS feed file.)
+# Build Master-Index.xml, all the index .html files, the metadata files,
+# and the RSS feed file.
 
 /var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
 
