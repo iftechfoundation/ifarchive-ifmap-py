@@ -25,6 +25,8 @@ set +o noclobber
 # Build Master-Index.xml, all the index .html files, the metadata files,
 # and the RSS feed file.
 
+echo 'Rebuilding indexes...'
+
 /var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
 
 # Make sure those files have the correct group and mode.
@@ -42,9 +44,9 @@ find . -type d -print0 | xargs -0 chmod 775
 find . -type d -print0 | xargs -0 chgrp ifarchive
 
 # Tell Unbox that Master-Index.xml has updated.
-echo -n 'unbox: '
+echo -n 'Unbox: '
 unboxkey=$(sed -E -n 's/UnboxRefreshKey[[:space:]]*=[[:space:]]*([a-zA-Z0-9-]*)/\1/p' /var/ifarchive/lib/ifarch.config)
-curl --data "key=$unboxkey" "https://unbox.ifarchive.org/?recheck_index"
+curl --silent --data "key=$unboxkey" "https://unbox.ifarchive.org/?recheck_index"
 echo
 
 # Clean up the lock file.
