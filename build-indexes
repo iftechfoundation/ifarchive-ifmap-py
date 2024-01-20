@@ -49,6 +49,8 @@ unboxkey=$(sed -E -n 's/UnboxRefreshKey[[:space:]]*=[[:space:]]*([a-zA-Z0-9-]*)/
 curl --silent --data "key=$unboxkey" "https://unbox.ifarchive.org/?recheck_index"
 echo
 
+echo 'Done.'
+
 # Clean up the lock file.
 
 rm /var/ifarchive/htdocs/build.lock
