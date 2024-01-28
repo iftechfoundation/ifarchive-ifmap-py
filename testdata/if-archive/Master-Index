@@ -27,6 +27,8 @@ Release 1 / Serial number 000000
 ## x&all.zip
 unbox-link: false
 
+------------------------------------------------------
+
 # if-archive/games:
 
 Hey: these are some game files.
@@ -43,3 +45,5 @@ tuid: xyz222
 ## bothgames
 tuid: xyz111
     xyz222
+
+------------------------------------------------------
