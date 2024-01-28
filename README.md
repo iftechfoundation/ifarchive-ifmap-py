@@ -15,6 +15,16 @@ Related files in this repo:
 - `build-indexes`: Shell script wrapper to run `ifmap.py` on the Archive.
 - `build-indexes-bg`: Another shell script wrapper to run both `make-master-index` and `build-indexes` sequentially in the background. (This is used by the admin web interface.)
 
+## Installation
+
+Create a virtual environment in the `venv` directory and install the requirements from `requirements.txt`.
+
+```
+python3 -m venv venv
+source venv/bin/activate
+pip3 install -r requirements.txt
+```
+
 ## Arguments
 
 In normal Archive operation, this is invoked from the build-indexes script.
