@@ -15,9 +15,17 @@ Related files in this repo:
 - `build-indexes`: Shell script wrapper to run `ifmap.py` on the Archive.
 - `build-indexes-bg`: Another shell script wrapper to run both `make-master-index` and `build-indexes` sequentially in the background. (This is used by the admin web interface.)
 
+## Setup
+
+The generator uses the Python Markdown package. To install this:
+
+```
+pip3 install -r requirements.txt
+```
+
 ## Arguments
 
-In normal Archive operation, this is invoked from the build-indexes script.
+In normal Archive operation, this is invoked from the `build-indexes` script.
 
 - --index FILE: pathname of Master-Index. (Normally /var/ifarchive/htdocs/if-archive/Master-Index.)
 - --src DIR: Pathname of the directory full of HTML templates which control the appearance of the index files. (Normally /var/ifarchive/lib/ifmap.)
