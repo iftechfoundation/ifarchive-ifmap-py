@@ -606,14 +606,27 @@ def findfile(path):
     dir = dirmap[dirname]
     return dir.files[filename]
 
+class ArchiveTree:
+    """ArchiveTree: The big directory map.
+    """
+    def __init__(self):
+        self.dirmap = {}
+
+    def get_directory(self, dirname, oradd=False):
+        dir = self.dirmap.get(dirname)
+        if dir:
+            return dir
+        if oradd:
+            dir = Directory(dirname)
+            self.dirmap[dirname] = dir
+            return dir
+        return None
+
 class Directory:
     """Directory: one directory in the big directory map.
     """
-    def __init__(self, dirname, dirmap):
+    def __init__(self, dirname):
         self.dir = dirname
-        # Place into the big directory map.
-        dirmap[dirname] = self
-
         self.submap = {}
 
         self.putkey('dir', dirname)
@@ -715,7 +728,7 @@ class File:
             return None
         return self.metadata[key][0]
 
-def parse_master_index(indexpath, dirmap):
+def parse_master_index(indexpath, archtree):
     dirname_pattern = re.compile('^#[ ]*(%s.*):$' % (re.escape(ROOTNAME),))
     filename_pattern = re.compile('^##[^#]')
     dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
@@ -782,7 +795,7 @@ def parse_master_index(indexpath, dirmap):
                 dirname = match.group(1)
                 if opts.verbose:
                     print('Starting  %s...' % (dirname,))
-                dir = Directory(dirname, dirmap=dirmap)
+                dir = archtree.get_directory(dirname, oradd=True)
                 
                 filedesclines = None
                 inheader = True
@@ -834,7 +847,7 @@ def parse_master_index(indexpath, dirmap):
     # Finished reading Master-Index.
     infl.close()
 
-def parse_directory_tree(treedir, dirmap):
+def parse_directory_tree(treedir, archtree):
     # Do an actual scan of the tree and write in any directories
     # we missed. We also take the opportunity to scan file dates
     # and sizes.
@@ -844,10 +857,7 @@ def parse_directory_tree(treedir, dirmap):
         """
         if opts.verbose:
             print('Scanning %s...' % (dirname,))
-        dir = dirmap.get(dirname)
-        if dir is None:
-            print('Problem: unable to find directory: %s' % (dirname,))
-            return
+        dir = archtree.get_directory(dirname, oradd=True)
         
         pathname = os.path.join(treedir, dirname)
         for ent in os.scandir(pathname):
@@ -905,9 +915,7 @@ def parse_directory_tree(treedir, dirmap):
                 continue
 
             if ent.is_dir():
-                dir2 = dirmap.get(dirname2)
-                if dir2 is None:
-                    dir2 = Directory(dirname2, dirmap=dirmap)
+                dir2 = archtree.get_directory(dirname2, oradd=True)
                 file = dir.files.get(ent.name)
                 if file is not None:
                     file.putkey('linkdir', dirname2)
@@ -932,34 +940,34 @@ def create_dirmap(indexpath, treedir):
     returns the root directory.
     """
 
-    dirmap = {}
+    archtree = ArchiveTree()
 
-    rootdir = Directory(ROOTNAME, dirmap=dirmap)
+    rootdir = archtree.get_directory(ROOTNAME, oradd=True)
 
     if indexpath:
-        parse_master_index(indexpath, dirmap)
+        parse_master_index(indexpath, archtree)
 
     if treedir:
-        parse_directory_tree(treedir, dirmap)
+        parse_directory_tree(treedir, archtree)
 
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
             
     # Create the subdir list and count for each directory.
-    for dir in dirmap.values():
+    for dir in archtree.dirmap.values():
         if dir.parentdirname:
-            dir2 = dirmap.get(dir.parentdirname)
+            dir2 = archtree.get_directory(dir.parentdirname, oradd=False)
             if not dir2:
                 sys.stderr.write('Directory\'s parent is not listed: %s\n' % (dir.dir))
                 continue
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
                 
-    for dir in dirmap.values():
+    for dir in archtree.dirmap.values():
         dir.putkey('count', len(dir.files))
         dir.putkey('subdircount', len(dir.subdirs))
         
-    return dirmap
+    return archtree.dirmap
 
 def check_missing_files(dirmap):
     """Go through dirmap and look for entries which were not found in
