@@ -32,9 +32,6 @@ popt.add_option('--dest',
 popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
-popt.add_option('--exclude',
-                action='store_true', dest='excludemissing',
-                help='files without index entries are excluded from index listings')
 popt.add_option('-v', '--verbose',
                 action='store_true', dest='verbose',
                 help='print verbose output')
@@ -342,9 +339,7 @@ class NoIndexEntry(DirList):
     no index entries.
 
     The logic here is a bit twisty. Normally, if we find a file which
-    is not mentioned in any Index file, we print a warning. (If the
-    --exclude flag is used, we exclude the file from indexing entirely.
-    But that flag is not used in production.)
+    is not mentioned in any Index file, we print a warning.
 
     The no-index-entry file (in libdir) is a list of files and directories
     in which we do *not* do this check (and therefore print no warning,
@@ -360,15 +355,12 @@ class NoIndexEntry(DirList):
         the treedir but which was never mentioned in any Index file.
         
         If the path, or any prefix of the path, exists in our list,
-        we print nothing and return False. Otherwise, we print a
-        warning and return True (to exclude the file from the index)
-        or False (to index the file anyway).
+        we print nothing. Otherwise, we print a warning.
         """
         for val in self.ls:
             if path.startswith(val):
-                return False
+                return
         sys.stderr.write('File without index entry: %s\n' % (path,))
-        return opts.excludemissing
     
 class FileHasher:
     """FileHasher: A module which can extract hashes of files.
@@ -876,8 +868,7 @@ def parse_directory_tree(treedir, archtree):
                 if ent.is_file(follow_symlinks=True):
                     file = dir.files.get(ent.name)
                     if file is None:
-                        if noindexlist.check(dirname2):
-                            continue
+                        noindexlist.check(dirname2)
                         file = File(ent.name, dir)
                     file.putkey('islink', True)
                     file.putkey('islinkfile', True)
@@ -902,8 +893,7 @@ def parse_directory_tree(treedir, archtree):
                     continue
                 file = dir.files.get(ent.name)
                 if file is None:
-                    if noindexlist.check(dirname2):
-                        continue
+                    noindexlist.check(dirname2)
                     file = File(ent.name, dir)
                 file.putkey('filesize', str(sta.st_size))
                 file.putkey('date', str(int(sta.st_mtime)))
