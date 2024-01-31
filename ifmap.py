@@ -932,7 +932,7 @@ def parse_directory_tree(treedir, archtree):
     # Call the above function recursively.
     scan_directory(ROOTNAME)
     
-def create_dirmap(indexpath, treedir):
+def construct_archtree(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
     tree to find more files. Return all the known directories as a dict.
 
@@ -967,7 +967,7 @@ def create_dirmap(indexpath, treedir):
         dir.putkey('count', len(dir.files))
         dir.putkey('subdircount', len(dir.subdirs))
         
-    return archtree.dirmap
+    return archtree
 
 def check_missing_files(dirmap):
     """Go through dirmap and look for entries which were not found in
@@ -1410,15 +1410,15 @@ if __name__ == '__main__':
     else:
         DESTDIR = os.path.join(opts.treedir, opts.destdir)
         
-    dirmap = create_dirmap(opts.indexpath, opts.treedir)
+    archtree = construct_archtree(opts.indexpath, opts.treedir)
 
     stat = os.stat(opts.indexpath)
     indexmtime = int(stat.st_mtime)
     
-    check_missing_files(dirmap)
+    check_missing_files(archtree.dirmap)
     
-    generate_output(dirmap)
-    generate_metadata(dirmap)
+    generate_output(archtree.dirmap)
+    generate_metadata(archtree.dirmap)
     
-    generate_rss(dirmap, indexmtime)
+    generate_rss(archtree.dirmap, indexmtime)
     
