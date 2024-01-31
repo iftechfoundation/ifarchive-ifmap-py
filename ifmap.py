@@ -715,7 +715,216 @@ class File:
             return None
         return self.metadata[key][0]
 
-def parse_master_index(indexpath, treedir):
+def parse_master_index(indexpath, dirmap):
+    dirname_pattern = re.compile('^#[ ]*(%s.*):$' % (re.escape(ROOTNAME),))
+    filename_pattern = re.compile('^##[^#]')
+    dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
+    
+    dir = None
+    file = None
+    filedesclines = None
+    inheader = True
+    headerlines = None
+    
+    infl = open(indexpath, encoding='utf-8')
+
+    done = False
+    while not done:
+        ln = infl.readline()
+        if not ln:
+            done = True
+            ln = None
+            match = None
+        else:
+            ln = ln.rstrip()
+            match = dirname_pattern.match(ln)
+
+        if done or match:
+            # End of a directory block or end of file.
+            # Finish constructing the dir entry.
+
+            if dir:
+                if file:
+                    # Also have to finish constructing the file entry.
+                    file.complete(filedesclines)
+                    file = None
+
+                dirname = dir.dir
+                if opts.verbose:
+                    print('Finishing %s...' % (dirname,))
+
+                headerstr = '\n'.join(headerlines)
+                headerstr = headerstr.rstrip() + '\n'
+                # Now headerstr starts with zero newlines and ends
+                # with one newline.
+                anyheader = bool(headerstr.strip())
+                dir.putkey('hasdesc', anyheader)
+                dir.putkey('hasxmldesc', anyheader)
+                if anyheader:
+                    # Convert Markdown to HTML.
+                    val = convertermeta.convert(headerstr)
+                    for (mkey, mls) in convertermeta.Meta.items():
+                        dir.metadata[mkey] = list(mls)
+                    convertermeta.Meta.clear()
+                    ### sort metadata?
+                    dir.putkey('hasmetadata', bool(dir.metadata))
+                    dir.putkey('headerormeta', (bool(dir.metadata) or bool(val)))
+                    dir.putkey('header', val)
+                    # For XML, we just escape.
+                    val = stripmetadata(headerstr.split('\n'))
+                    val = escape_html_string(val)
+                    dir.putkey('xmlheader', val)
+                dir = None
+
+            if not done:
+                # Beginning of a directory block.
+                assert(match is not None)
+                dirname = match.group(1)
+                if opts.verbose:
+                    print('Starting  %s...' % (dirname,))
+                dir = Directory(dirname, dirmap=dirmap)
+                
+                filedesclines = None
+                inheader = True
+                headerlines = []
+
+            continue
+
+        # We can't do any work outside of a directory block.
+        if dir is None:
+            continue
+
+        # Skip any line which is entirely dashes (or dash-like
+        # characters). But we don't skip blank lines this way.
+        if dashline_pattern.match(ln):
+            continue
+
+        bx = ln
+
+        if inheader:
+            if not filename_pattern.match(bx):
+                # Further header lines become part of headerlines.
+                headerlines.append(bx)
+                continue
+
+            # The header ends when we find a line starting with "##".
+            inheader = False
+
+        if filename_pattern.match(bx):
+            # Start of a new file block.
+
+            if file:
+                # Finish constructing the file in progress.
+                file.complete(filedesclines)
+                file = None
+
+            # Set up the new file, including a fresh filedesclines
+            # accumulator.
+
+            filename = bx[2:].strip()
+            bx = ''
+            filedesclines = []
+                
+            file = File(filename, dir)
+
+        else:
+            # Continuing a file block.
+            filedesclines.append(bx)
+
+    # Finished reading Master-Index.
+    infl.close()
+
+def parse_directory_tree(treedir, dirmap):
+    # Do an actual scan of the tree and write in any directories
+    # we missed. We also take the opportunity to scan file dates
+    # and sizes.
+
+    def scan_directory(dirname, parentlist=None, parentdir=None):
+        """Internal recursive function.
+        """
+        if opts.verbose:
+            print('Scanning %s...' % (dirname,))
+        dir = dirmap.get(dirname)
+        if dir is None:
+            print('Problem: unable to find directory: %s' % (dirname,))
+            return
+        
+        pathname = os.path.join(treedir, dirname)
+        for ent in os.scandir(pathname):
+            if ent.name.startswith('.'):
+                continue
+            sta = ent.stat(follow_symlinks=False)
+            dirname2 = os.path.join(dirname, ent.name)
+            pathname = os.path.join(treedir, dirname, ent.name)
+            
+            if ent.is_symlink():
+                linkname = os.readlink(ent.path)
+                # Symlink destinations should always be relative.
+                if linkname.endswith('/'):
+                    linkname = linkname[0:-1]
+                sta2 = ent.stat(follow_symlinks=True)
+                if ent.is_file(follow_symlinks=True):
+                    file = dir.files.get(ent.name)
+                    if file is None:
+                        if noindexlist.check(dirname2):
+                            continue
+                        file = File(ent.name, dir)
+                    file.putkey('islink', True)
+                    file.putkey('islinkfile', True)
+                    file.putkey('linkpath', linkname) ### canonicalize?
+                    file.putkey('date', str(int(sta2.st_mtime)))
+                    tmdat = time.gmtime(sta2.st_mtime)
+                    file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
+                elif ent.is_dir(follow_symlinks=True):
+                    targetname = os.path.normpath(os.path.join(dirname, linkname))
+                    file = dir.files.get(ent.name)
+                    if file is None:
+                        file = File(ent.name, dir)
+                        file.complete(['Symlink to '+targetname])
+                    file.putkey('islink', True)
+                    file.putkey('islinkdir', True)
+                    file.putkey('linkdir', targetname)
+
+                continue
+                    
+            if ent.is_file():
+                if ent.name == 'Index':
+                    continue
+                file = dir.files.get(ent.name)
+                if file is None:
+                    if noindexlist.check(dirname2):
+                        continue
+                    file = File(ent.name, dir)
+                file.putkey('filesize', str(sta.st_size))
+                file.putkey('date', str(int(sta.st_mtime)))
+                tmdat = time.gmtime(sta.st_mtime)
+                file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
+                hash_md5, hash_sha512 = hasher.get_hashes(pathname, sta.st_size, int(sta.st_mtime))
+                file.putkey('md5', hash_md5)
+                file.putkey('sha512', hash_sha512)
+                continue
+
+            if ent.is_dir():
+                dir2 = dirmap.get(dirname2)
+                if dir2 is None:
+                    dir2 = Directory(dirname2, dirmap=dirmap)
+                file = dir.files.get(ent.name)
+                if file is not None:
+                    file.putkey('linkdir', dirname2)
+                if parentlist and parentdir:
+                    parentname = os.path.join(parentdir, ent.name)
+                    parentfile = parentlist.get(parentname)
+                    if parentfile is not None:
+                        parentfile.putkey('linkdir', dirname2)
+                scan_directory(dirname2, dir.files, ent.name)
+                continue
+                        
+        # End of internal scan_directory function.
+
+    # Call the above function recursively.
+    scan_directory(ROOTNAME)
+    
+def create_dirmap(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
     tree to find more files. Return all the known directories as a dict.
 
@@ -725,216 +934,13 @@ def parse_master_index(indexpath, treedir):
 
     dirmap = {}
 
-    dir = Directory(ROOTNAME, dirmap=dirmap)
+    rootdir = Directory(ROOTNAME, dirmap=dirmap)
 
     if indexpath:
-        dirname_pattern = re.compile('^#[ ]*(%s.*):$' % (re.escape(ROOTNAME),))
-        filename_pattern = re.compile('^##[^#]')
-        dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
-        
-        dir = None
-        file = None
-        filedesclines = None
-        inheader = True
-        headerlines = None
-        
-        infl = open(indexpath, encoding='utf-8')
-
-        done = False
-        while not done:
-            ln = infl.readline()
-            if not ln:
-                done = True
-                ln = None
-                match = None
-            else:
-                ln = ln.rstrip()
-                match = dirname_pattern.match(ln)
-
-            if done or match:
-                # End of a directory block or end of file.
-                # Finish constructing the dir entry.
-
-                if dir:
-                    if file:
-                        # Also have to finish constructing the file entry.
-                        file.complete(filedesclines)
-                        file = None
-
-                    dirname = dir.dir
-                    if opts.verbose:
-                        print('Finishing %s...' % (dirname,))
-
-                    headerstr = '\n'.join(headerlines)
-                    headerstr = headerstr.rstrip() + '\n'
-                    # Now headerstr starts with zero newlines and ends
-                    # with one newline.
-                    anyheader = bool(headerstr.strip())
-                    dir.putkey('hasdesc', anyheader)
-                    dir.putkey('hasxmldesc', anyheader)
-                    if anyheader:
-                        # Convert Markdown to HTML.
-                        val = convertermeta.convert(headerstr)
-                        for (mkey, mls) in convertermeta.Meta.items():
-                            dir.metadata[mkey] = list(mls)
-                        convertermeta.Meta.clear()
-                        ### sort metadata?
-                        dir.putkey('hasmetadata', bool(dir.metadata))
-                        dir.putkey('headerormeta', (bool(dir.metadata) or bool(val)))
-                        dir.putkey('header', val)
-                        # For XML, we just escape.
-                        val = stripmetadata(headerstr.split('\n'))
-                        val = escape_html_string(val)
-                        dir.putkey('xmlheader', val)
-                    dir = None
-
-                if not done:
-                    # Beginning of a directory block.
-                    assert(match is not None)
-                    dirname = match.group(1)
-                    if opts.verbose:
-                        print('Starting  %s...' % (dirname,))
-                    dir = Directory(dirname, dirmap=dirmap)
-                    
-                    filedesclines = None
-                    inheader = True
-                    headerlines = []
-
-                continue
-
-            # We can't do any work outside of a directory block.
-            if dir is None:
-                continue
-
-            # Skip any line which is entirely dashes (or dash-like
-            # characters). But we don't skip blank lines this way.
-            if dashline_pattern.match(ln):
-                continue
-
-            bx = ln
-
-            if inheader:
-                if not filename_pattern.match(bx):
-                    # Further header lines become part of headerlines.
-                    headerlines.append(bx)
-                    continue
-
-                # The header ends when we find a line starting with "##".
-                inheader = False
-
-            if filename_pattern.match(bx):
-                # Start of a new file block.
-
-                if file:
-                    # Finish constructing the file in progress.
-                    file.complete(filedesclines)
-                    file = None
-
-                # Set up the new file, including a fresh filedesclines
-                # accumulator.
-
-                filename = bx[2:].strip()
-                bx = ''
-                filedesclines = []
-                    
-                file = File(filename, dir)
-
-            else:
-                # Continuing a file block.
-                filedesclines.append(bx)
-
-        # Finished reading Master-Index.
-        infl.close()
+        parse_master_index(indexpath, dirmap)
 
     if treedir:
-        # Do an actual scan of the tree and write in any directories
-        # we missed. We also take the opportunity to scan file dates
-        # and sizes.
-
-        def scan_directory(dirname, parentlist=None, parentdir=None):
-            """Internal recursive function.
-            """
-            if opts.verbose:
-                print('Scanning %s...' % (dirname,))
-            dir = dirmap.get(dirname)
-            if dir is None:
-                print('Problem: unable to find directory: %s' % (dirname,))
-                return
-            
-            pathname = os.path.join(treedir, dirname)
-            for ent in os.scandir(pathname):
-                if ent.name.startswith('.'):
-                    continue
-                sta = ent.stat(follow_symlinks=False)
-                dirname2 = os.path.join(dirname, ent.name)
-                pathname = os.path.join(treedir, dirname, ent.name)
-                
-                if ent.is_symlink():
-                    linkname = os.readlink(ent.path)
-                    # Symlink destinations should always be relative.
-                    if linkname.endswith('/'):
-                        linkname = linkname[0:-1]
-                    sta2 = ent.stat(follow_symlinks=True)
-                    if ent.is_file(follow_symlinks=True):
-                        file = dir.files.get(ent.name)
-                        if file is None:
-                            if noindexlist.check(dirname2):
-                                continue
-                            file = File(ent.name, dir)
-                        file.putkey('islink', True)
-                        file.putkey('islinkfile', True)
-                        file.putkey('linkpath', linkname) ### canonicalize?
-                        file.putkey('date', str(int(sta2.st_mtime)))
-                        tmdat = time.gmtime(sta2.st_mtime)
-                        file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    elif ent.is_dir(follow_symlinks=True):
-                        targetname = os.path.normpath(os.path.join(dirname, linkname))
-                        file = dir.files.get(ent.name)
-                        if file is None:
-                            file = File(ent.name, dir)
-                            file.complete(['Symlink to '+targetname])
-                        file.putkey('islink', True)
-                        file.putkey('islinkdir', True)
-                        file.putkey('linkdir', targetname)
-
-                    continue
-                        
-                if ent.is_file():
-                    if ent.name == 'Index':
-                        continue
-                    file = dir.files.get(ent.name)
-                    if file is None:
-                        if noindexlist.check(dirname2):
-                            continue
-                        file = File(ent.name, dir)
-                    file.putkey('filesize', str(sta.st_size))
-                    file.putkey('date', str(int(sta.st_mtime)))
-                    tmdat = time.gmtime(sta.st_mtime)
-                    file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
-                    hash_md5, hash_sha512 = hasher.get_hashes(pathname, sta.st_size, int(sta.st_mtime))
-                    file.putkey('md5', hash_md5)
-                    file.putkey('sha512', hash_sha512)
-                    continue
-
-                if ent.is_dir():
-                    dir2 = dirmap.get(dirname2)
-                    if dir2 is None:
-                        dir2 = Directory(dirname2, dirmap=dirmap)
-                    file = dir.files.get(ent.name)
-                    if file is not None:
-                        file.putkey('linkdir', dirname2)
-                    if parentlist and parentdir:
-                        parentname = os.path.join(parentdir, ent.name)
-                        parentfile = parentlist.get(parentname)
-                        if parentfile is not None:
-                            parentfile.putkey('linkdir', dirname2)
-                    scan_directory(dirname2, dir.files, ent.name)
-                    continue
-                            
-            # End of internal scan_directory function.
-
-        # Call the above function recursively.
-        scan_directory(ROOTNAME)
+        parse_directory_tree(treedir, dirmap)
 
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
@@ -1396,7 +1402,7 @@ if __name__ == '__main__':
     else:
         DESTDIR = os.path.join(opts.treedir, opts.destdir)
         
-    dirmap = parse_master_index(opts.indexpath, opts.treedir)
+    dirmap = create_dirmap(opts.indexpath, opts.treedir)
 
     stat = os.stat(opts.indexpath)
     indexmtime = int(stat.st_mtime)
