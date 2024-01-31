@@ -829,8 +829,10 @@ def parse_master_index(indexpath, archtree):
             filename = bx[2:].strip()
             bx = ''
             filedesclines = []
-                
-            file = File(filename, dir)
+
+            file = dir.files.get(filename)
+            if file is None:
+                file = File(filename, dir)
 
         else:
             # Continuing a file block.
