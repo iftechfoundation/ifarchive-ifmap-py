@@ -564,7 +564,7 @@ def escape_html_string(val):
             pos += 1
     return ''.join(res)
 
-urlable_pattern = re.compile('[+-;@-z]+')
+urlable_pattern = re.compile('[,-;@-z]+')
 
 def escape_url_string(val):
     """Apply URL escaping (percent escapes) to a string.
