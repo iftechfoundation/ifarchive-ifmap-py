@@ -13,7 +13,8 @@ timestamps = {
     'file-2.txt': 1539600000,
     'file-3.txt': 1539700000,
     'all.zip':    1539700000,
-    'game1-v1':   1539000000
+    'game1-v1':   1539000000,
+    'game1-pre':  1538800000,
 }
 
 for root, dirs, files in os.walk('testdata/if-archive'):
