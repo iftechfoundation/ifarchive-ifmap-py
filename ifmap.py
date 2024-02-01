@@ -355,12 +355,12 @@ class NoIndexEntry(DirList):
         the treedir but which was never mentioned in any Index file.
         
         If the path, or any prefix of the path, exists in our list,
-        we print nothing. Otherwise, we print a warning.
+        we return True.
         """
         for val in self.ls:
             if path.startswith(val):
-                return
-        sys.stderr.write('File without index entry: %s\n' % (path,))
+                return True
+        return False
     
 class FileHasher:
     """FileHasher: A module which can extract hashes of files.
@@ -679,6 +679,8 @@ class File:
         self.path = parentdir.dir+'/'+filename
         self.metadata = OrderedDict()
 
+        self.intree = False
+        self.inmaster = False
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
         self.putkey('path', self.path)
@@ -833,6 +835,7 @@ def parse_master_index(indexpath, archtree):
             file = dir.files.get(filename)
             if file is None:
                 file = File(filename, dir)
+            file.inmaster = True
 
         else:
             # Continuing a file block.
@@ -870,8 +873,8 @@ def parse_directory_tree(treedir, archtree):
                 if ent.is_file(follow_symlinks=True):
                     file = dir.files.get(ent.name)
                     if file is None:
-                        noindexlist.check(dirname2)
                         file = File(ent.name, dir)
+                    file.intree = True
                     file.putkey('islink', True)
                     file.putkey('islinkfile', True)
                     file.putkey('linkpath', linkname) ### canonicalize?
@@ -884,6 +887,7 @@ def parse_directory_tree(treedir, archtree):
                     if file is None:
                         file = File(ent.name, dir)
                         file.complete(['Symlink to '+targetname])
+                    file.intree = True
                     file.putkey('islink', True)
                     file.putkey('islinkdir', True)
                     file.putkey('linkdir', targetname)
@@ -895,8 +899,8 @@ def parse_directory_tree(treedir, archtree):
                     continue
                 file = dir.files.get(ent.name)
                 if file is None:
-                    noindexlist.check(dirname2)
                     file = File(ent.name, dir)
+                file.intree = True
                 file.putkey('filesize', str(sta.st_size))
                 file.putkey('date', str(int(sta.st_mtime)))
                 tmdat = time.gmtime(sta.st_mtime)
@@ -911,6 +915,7 @@ def parse_directory_tree(treedir, archtree):
                 file = dir.files.get(ent.name)
                 if file is not None:
                     file.putkey('linkdir', dirname2)
+                    file.intree = True
                 if parentlist and parentdir:
                     parentname = os.path.join(parentdir, ent.name)
                     parentfile = parentlist.get(parentname)
@@ -969,7 +974,11 @@ def check_missing_files(dirmap):
     for dir in dirmap.values():
         for file in dir.files.values():
             if file.getkey('date') is None and file.getkey('linkdir') is None and file.getkey('islink') is None:
-                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, file.name))
+                sys.stderr.write('Index entry without file: %s\n' % (file.path,))
+            if file.intree and not file.inmaster:
+                if not noindexlist.check(file.path):
+                    sys.stderr.write('File without index entry: %s\n' % (file.path,))
+
 
 def parity_flip(map):
     """Utility function to change the "parity" entry in a dict from "Even"
