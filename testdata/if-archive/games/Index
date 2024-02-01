@@ -1,0 +1,28 @@
+
+Hey: these are some game files.
+
+# game1
+tuid: xyz111
+ifwiki: Adventure
+
+Game number 1.
+
+# game2
+tuid: xyz222
+
+# bothgames
+tuid: xyz111
+    xyz222
+
+# all.zip
+
+Linked to comp/files.
+
+# old
+
+The directory of old stuff.
+
+# old/older
+
+A double-depth directory.
+

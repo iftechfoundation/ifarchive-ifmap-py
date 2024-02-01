@@ -1,0 +1,27 @@
+ifwiki: IF Art Show
+
+Files from an art show:
+<http://example.com/art/>
+
+# concept.txt
+
+The concept statement of the art show:
+
+A description paragraph.
+
+# contents.txt
+
+A table of contents
+
+- Entry 1
+- Entry 2
+- Entry 3
+
+# foo.z5
+
+*Foo*: An Art Project
+Release 1 / Serial number 000000
+
+# x&all.zip
+unbox-link: false
+
