@@ -25,5 +25,5 @@ for root, dirs, files in os.walk('testdata/if-archive'):
             continue
         os.utime(path, times=(val, val))
         timestr = time.strftime('%H:%M:%S %d-%b-%Y', time.gmtime(val))
-        print('%s: %s' % (path, timestr))
+        #print('%s: %s' % (path, timestr))
         
