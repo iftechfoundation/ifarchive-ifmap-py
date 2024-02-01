@@ -48,8 +48,6 @@ For an end-to-end test, try:
 
 If everything works, the generated files in testdata/indexes should match what's in the Git repository. (`git status` should show no changes.)
 
-The `set-timestamps.py` script is needed because `ifmap.py` looks at the timestamps and writes them into the index files, but a freshly-checked-out Git repository has all new timestamps.
-
 ## History
 
 I wrote the first version of this program in 1999-ish. It was built around the original Index files, which were hand-written by Volker Blasius (the original Archive curator) for human consumption. Their format was not particularly convenient for parsing, but I parsed them anyway.
