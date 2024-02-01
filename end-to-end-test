@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd testdata
+LC_COLLATE=C ls -lRn if-archive > if-archive/ls-lR
+
+cd ..
+
+python3 make-master-index.py testdata/if-archive/ls-lR testdata > testdata/if-archive/Master-Index
+
+rm testdata/if-archive/ls-lR
+
+python3 testdata/set-timestamps.py
+python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --curdate 2018-11-15T12:00:00Z
+
