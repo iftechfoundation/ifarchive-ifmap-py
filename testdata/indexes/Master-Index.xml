@@ -54,13 +54,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>512</size>
+<size>626</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>58028ca6860923d67c9d711764898340</md5>
+<md5>ce42446b99d282a9ec6854d77cd5b5d3</md5>
 
-<sha512>189f9cc5121defa6d090cd2d3cf596519f45c3df68e8b4c89425930c990dde41fef8316bcc3ce25af632f06a332d8384fc4b2d6a720aeb4336151c93590b900c</sha512>
+<sha512>8cf2735ed6640a3d46178a49856414ec5411708c197a737c0e954ce0402d2f04f6c6f01a41ae8f13d415bf26fdf55934566dc83eeb89ee1c1dd5bb724564f9c6</sha512>
 
 
 
@@ -308,7 +308,7 @@ Release 1 / Serial number 000000
 <name>if-archive/games</name>
 <xdir>if-archiveXgames</xdir>
 <parent>if-archive</parent>
-<filecount>3</filecount>
+<filecount>6</filecount>
 <subdircount>1</subdircount>
 
 
@@ -318,6 +318,28 @@ Hey: these are some game files.
 </description>
 
 </directory>
+
+<file>
+<name>all.zip</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/all.zip</path>
+
+<date>16-Oct-2018</date>
+<rawdate>1539700000</rawdate>
+
+
+
+<symlink type="file">
+<path>../comp/files/all.zip</path>
+</symlink>
+
+
+
+<description>
+
+Linked to comp/files.
+</description>
+</file>
 
 <file>
 <name>bothgames</name>
@@ -392,13 +414,47 @@ Game number 1.
 
 </file>
 
+<file>
+<name>old</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/old</path>
+
+
+
+
+
+
+
+<description>
+
+The directory of old stuff.
+</description>
+</file>
+
+<file>
+<name>old/older</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/old/older</path>
+
+
+
+
+
+
+
+<description>
+
+A double-depth directory.
+</description>
+</file>
+
 
 <directory>
 <name>if-archive/games/old</name>
 <xdir>if-archiveXgamesXold</xdir>
 <parent>if-archive/games</parent>
 <filecount>1</filecount>
-<subdircount>0</subdircount>
+<subdircount>1</subdircount>
 
 
 </directory>
@@ -414,6 +470,35 @@ Game number 1.
 <md5>de1b9390c9b8805c0c07b7ee78d2e75d</md5>
 
 <sha512>4f16a98f8de648ad54fd988e40b26eb83f31bb0c0377a821fb0579a1b59dd35b1f776d6526d851d1c62c7ca5b11227450edd7e243d646490ee3a2944c6b815f1</sha512>
+
+
+
+
+
+</file>
+
+
+<directory>
+<name>if-archive/games/old/older</name>
+<xdir>if-archiveXgamesXoldXolder</xdir>
+<parent>if-archive/games/old</parent>
+<filecount>1</filecount>
+<subdircount>0</subdircount>
+
+
+</directory>
+
+<file>
+<name>game1-pre</name>
+<directory>if-archive/games/old/older</directory>
+<path>if-archive/games/old/older/game1-pre</path>
+<size>21</size>
+<date>06-Oct-2018</date>
+<rawdate>1538800000</rawdate>
+
+<md5>9ddfc5003ba50de6ab967c67a92a78f9</md5>
+
+<sha512>427f788dfb72c2878413c627d03bbd43de8e0bf0cff46347ebec7c0865c5abf1d7121d0c7e335bf41f1217abd4c07893d6219d6abecec29d91c6b2c901c9fdf7</sha512>
 
 
 
