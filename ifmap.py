@@ -968,12 +968,13 @@ def construct_archtree(indexpath, treedir):
 
 def check_missing_files(dirmap):
     """Go through dirmap and look for entries which were not found in
-    the scan-directory phase. We know an entry was not found if we
-    never read its date (file timestamp).
+    the scan-directory phase.
+    Also look for files that *were* in the scan-directory phase, but
+    had no Index entry.
     """
     for dir in dirmap.values():
         for file in dir.files.values():
-            if file.getkey('date') is None and file.getkey('linkdir') is None and file.getkey('islink') is None:
+            if file.inmaster and not file.intree and file.getkey('linkdir') is None and file.getkey('islink') is None:
                 sys.stderr.write('Index entry without file: %s\n' % (file.path,))
             if file.intree and not file.inmaster and file.getkey('linkdir') is None:
                 if not noindexlist.check(file.path):
