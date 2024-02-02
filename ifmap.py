@@ -957,13 +957,6 @@ def parse_directory_tree(treedir, archtree):
                     file = File(ent.name, dir, isdir=True)
                 file.putkey('linkdir', dirname2)
                 file.intree = True
-                #if parentlist and parentdir:
-                #    parentname = os.path.join(parentdir, ent.name)
-                #    print('### checking', parentname, 'in', parentdir)
-                #    parentfile = parentlist.get(parentname)
-                #    if parentfile is not None:
-                #        print('### adding linkdir', parentfile, dirname2)
-                #        parentfile.putkey('linkdir', dirname2)
                 scan_directory(dirname2, dir.files, ent.name)
                 continue
                         
