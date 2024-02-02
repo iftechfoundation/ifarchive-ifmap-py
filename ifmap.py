@@ -856,14 +856,34 @@ def parse_master_index(indexpath, archtree):
             bx = ''
             filedesclines = []
 
-            file = dir.files.get(filename)
-            if file is None:
-                file = File(filename, dir)
-            file.inmaster = True
+            if '/' not in filename:
+                file = dir.files.get(filename)
+                if file is None:
+                    file = File(filename, dir)
+                file.inmaster = True
+            else:
+                # Distant file reference, like "Comp/Games"
+                reldir, _, relfile = filename.rpartition('/')
+                reldir = dir.dir+'/'+reldir
+                rel = archtree.get_directory(reldir, oradd=False)
+                if not rel:
+                    sys.stderr.write('Compound file entry refers to a bad directory: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                relfile = rel.files.get(relfile)
+                if not relfile:
+                    sys.stderr.write('Compound file entry refers to a bad file: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                file = dir.files.get(filename)
+                if file is not None:
+                    sys.stderr.write('Compound file entry appears twice: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                file = File(filename, dir, isdir=relfile.isdir, islink=relfile.islink)
+                if file.isdir:
+                    file.putkey('linkdir', dir.dir+'/'+filename)
+            continue
 
-        else:
-            # Continuing a file block.
-            filedesclines.append(bx)
+        # Continuing a file block.
+        filedesclines.append(bx)
 
     # Finished reading Master-Index.
     infl.close()
@@ -933,15 +953,17 @@ def parse_directory_tree(treedir, archtree):
             if ent.is_dir():
                 dir2 = archtree.get_directory(dirname2, oradd=True)
                 file = dir.files.get(ent.name)
-                if file is not None:
-                    ### doesn't happen
-                    file.putkey('linkdir', dirname2)
-                    file.intree = True
-                if parentlist and parentdir:
-                    parentname = os.path.join(parentdir, ent.name)
-                    parentfile = parentlist.get(parentname)
-                    if parentfile is not None:
-                        parentfile.putkey('linkdir', dirname2)
+                if file is None:
+                    file = File(ent.name, dir, isdir=True)
+                file.putkey('linkdir', dirname2)
+                file.intree = True
+                #if parentlist and parentdir:
+                #    parentname = os.path.join(parentdir, ent.name)
+                #    print('### checking', parentname, 'in', parentdir)
+                #    parentfile = parentlist.get(parentname)
+                #    if parentfile is not None:
+                #        print('### adding linkdir', parentfile, dirname2)
+                #        parentfile.putkey('linkdir', dirname2)
                 scan_directory(dirname2, dir.files, ent.name)
                 continue
                         
