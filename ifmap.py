@@ -1010,9 +1010,9 @@ def construct_archtree(indexpath, treedir):
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
                 
-    for dir in archtree.dirmap.values():
-        dir.putkey('count', len(dir.files))
-        dir.putkey('subdircount', len(dir.subdirs))
+    #for dir in archtree.dirmap.values():
+    #    dir.putkey('count', len(dir.files))
+    #    dir.putkey('subdircount', len(dir.subdirs))
         
     return archtree
 
@@ -1164,6 +1164,11 @@ def generate_output_indexes(dirmap):
         
         relroot = '..'
         
+        filelist = dir.getitems(isdir=False, display=True)
+        filelist.sort(key=lambda file:file.name.lower())
+        subdirlist = dir.getitems(isdir=True, display=True)
+        subdirlist.sort(key=lambda file:file.name.lower())
+            
         def dirmetadata_thunk(outfl):
             itermap = dict(dir.metadata)
             Template.substitute(dirmetadata_body, itermap, outfl=outfl)
@@ -1182,8 +1187,6 @@ def generate_output_indexes(dirmap):
                 first = False
             
         def filelist_thunk(outfl):
-            filelist = list(dir.files.values())
-            filelist.sort(key=lambda file:file.name.lower())
             itermap = { 'relroot':relroot }
             for file in filelist:
                 parity_flip(itermap)
@@ -1217,18 +1220,18 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
         
         def subdirlist_thunk(outfl):
-            dirlist = list(dir.subdirs.values())
-            dirlist.sort(key=lambda dir:dir.dir.lower())
+            ###dirlist = list(dir.subdirs.values())
+            ###dirlist.sort(key=lambda dir:dir.dir.lower())
             itermap = { 'relroot':relroot }
-            for subdir in dirlist:
+            for dfile in subdirlist:
                 parity_flip(itermap)
-                Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
+                Template.substitute(subdirlist_entry, ChainMap(itermap, dfile.submap), outfl=outfl)
                 outfl.write('\n')
 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
         if dir.dir == ROOTNAME:
@@ -1277,15 +1280,17 @@ def generate_output_xml(dirmap):
         dirlist.sort(key=lambda dir:dir.dir.lower())
         
         for dir in dirlist:
+            filelist = dir.getitems(isdir=False, display=False)
+            filelist.sort(key=lambda file:file.name.lower())
+            subdirlist = dir.getitems(isdir=True, display=False)
+            subdirlist.sort(key=lambda file:file.name.lower())
             def filelist_thunk(outfl):
-                filelist = list(dir.files.values())
-                filelist.sort(key=lambda file:file.name.lower())
                 for file in filelist:
                     itermap = { '_metadata': lambda outfl:metadata_thunk(file, outfl) }
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                     outfl.write('\n')
 
-            itermap = { '_files':filelist_thunk, '_metadata': lambda outfl:metadata_thunk(dir, outfl) }
+            itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), '_files':filelist_thunk, '_metadata': lambda outfl:metadata_thunk(dir, outfl) }
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
         
     itermap = { '_dirs':dirlist_thunk }
