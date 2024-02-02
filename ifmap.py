@@ -702,7 +702,9 @@ class File:
                 self.putkey('islinkfile', True)
 
     def __repr__(self):
-        return '<File %s>' % (self.name,)
+        linkstr = ' (link)' if self.islink else ''
+        dirstr = ' (dir)' if self.isdir else ''
+        return '<File %s%s%s>' % (self.name, linkstr, dirstr,)
 
     def complete(self, desclines):
         # Take the accumulated description text and stick it into our
