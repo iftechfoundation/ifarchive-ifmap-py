@@ -873,6 +873,7 @@ def parse_master_index(indexpath, archtree):
                 if not relfile:
                     sys.stderr.write('Compound file entry refers to a bad file: "%s" in %s' % (filename, dir.dir,))
                     continue
+                relfile.inmaster = True
                 file = dir.files.get(filename)
                 if file is not None:
                     sys.stderr.write('Compound file entry appears twice: "%s" in %s' % (filename, dir.dir,))
