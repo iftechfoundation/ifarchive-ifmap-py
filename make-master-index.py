@@ -29,7 +29,7 @@ if len(sys.argv) >= 3:
 
 dirre = re.compile('^if-archive.*:$')
 
-currentdir = None
+currentdir = 'if-archive'
 
 lsfile = open(lspath, encoding='utf-8')
 
