@@ -942,7 +942,7 @@ def parse_directory_tree(treedir, archtree):
                     file = dir.files.get(ent.name)
                     if file is None:
                         file = File(ent.name, dir, islink=True, isdir=True)
-                        file.complete(['Symlink to '+targetname])
+                        #file.complete(['Symlink to '+targetname])
                     file.intree = True
                     file.putkey('linkdir', targetname)
 
