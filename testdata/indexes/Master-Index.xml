@@ -54,13 +54,13 @@ Symlink to if-archive/comp/files
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>739</size>
+<size>792</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>86c2b6872bbdee99aa85ac47195d331a</md5>
+<md5>647c7bcc69d458426d93b379f1fef3c5</md5>
 
-<sha512>cd2be2e7e63c43281ebad5ee5eca61128baa25319fc7c6e722170b8b3ca61567121747be77f09bc1158331d4be2f8d432f124376a4fdcaeb8de5ba489f9a4140</sha512>
+<sha512>5d59e02e57ebe361929711ceeb97f4a24a0157a7d271d6d5707fd55c313ef6b3b7a7c06f2443559fa023245d16769b57000a8bfa76c49466333d0bb2d641639b</sha512>
 
 
 
@@ -308,7 +308,7 @@ Release 1 / Serial number 000000
 <name>if-archive/games</name>
 <xdir>if-archiveXgames</xdir>
 <parent>if-archive</parent>
-<filecount>6</filecount>
+<filecount>7</filecount>
 <subdircount>1</subdircount>
 
 
@@ -445,6 +445,23 @@ The directory of old stuff.
 <description>
 
 A double-depth directory.
+</description>
+</file>
+
+<file>
+<name>old/older/game1-pre</name>
+<directory>if-archive/games</directory>
+<path>if-archive/games/old/older/game1-pre</path>
+
+
+
+
+
+
+
+<description>
+
+Triple-depth file reference.
 </description>
 </file>
 
