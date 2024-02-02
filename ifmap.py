@@ -486,7 +486,7 @@ def isodate(val):
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
 
-xify_mode = True
+xify_mode = None
 
 def xify_dirname(val):
     """Convert a directory name to an X-string, as used in the index.html
@@ -502,6 +502,8 @@ def indexuri_dirname(val):
     The global xify_mode switch determines whether we use the X trick
     (see above) or not.
     """
+    if xify_mode is None:
+        raise Exception('xify not set')
     if xify_mode:
         return val.replace('/', 'X') + '.html'
     else:
@@ -665,11 +667,13 @@ def stripmetadata(lines):
     return val.rstrip() + '\n'
 
 class File:
-    """File: one file in the big directory map.
+    """File: one entry in a directory.
+    The name is a bit of a misnomer; this could represent a file,
+    symlink, or subdirectory.
     (There is no global file list. You have to look at dir.files for each
     directory in dirmap.)
     """
-    def __init__(self, filename, parentdir):
+    def __init__(self, filename, parentdir, isdir=False, islink=False):
         self.submap = {}
         self.parentdir = parentdir
         # Place into the parent directory.
@@ -678,12 +682,24 @@ class File:
         self.name = filename
         self.path = parentdir.dir+'/'+filename
         self.metadata = OrderedDict()
+        self.isdir = isdir
+        self.islink = islink
 
         self.intree = False
         self.inmaster = False
         self.putkey('name', filename)
         self.putkey('dir', parentdir.dir)
         self.putkey('path', self.path)
+
+        if not islink:
+            if isdir:
+                self.putkey('isdir', True)
+        else:
+            self.putkey('islink', True)
+            if isdir:
+                self.putkey('islinkdir', True)
+            else:
+                self.putkey('islinkfile', True)
 
     def __repr__(self):
         return '<File %s>' % (self.name,)
@@ -830,6 +846,9 @@ def parse_master_index(indexpath, archtree):
 
             # Set up the new file, including a fresh filedesclines
             # accumulator.
+            # (If the file already exists, then it was found in the tree;
+            # we'll add to its entry. If not, we create a new entry,
+            # presumed to be as regular file.)
 
             filename = bx[2:].strip()
             bx = ''
@@ -876,10 +895,8 @@ def parse_directory_tree(treedir, archtree):
                 if ent.is_file(follow_symlinks=True):
                     file = dir.files.get(ent.name)
                     if file is None:
-                        file = File(ent.name, dir)
+                        file = File(ent.name, dir, islink=True, isdir=False)
                     file.intree = True
-                    file.putkey('islink', True)
-                    file.putkey('islinkfile', True)
                     file.putkey('linkpath', linkname) ### canonicalize?
                     file.putkey('date', str(int(sta2.st_mtime)))
                     tmdat = time.gmtime(sta2.st_mtime)
@@ -888,11 +905,9 @@ def parse_directory_tree(treedir, archtree):
                     targetname = os.path.normpath(os.path.join(dirname, linkname))
                     file = dir.files.get(ent.name)
                     if file is None:
-                        file = File(ent.name, dir)
+                        file = File(ent.name, dir, islink=True, isdir=True)
                         file.complete(['Symlink to '+targetname])
                     file.intree = True
-                    file.putkey('islink', True)
-                    file.putkey('islinkdir', True)
                     file.putkey('linkdir', targetname)
 
                 continue
@@ -917,6 +932,7 @@ def parse_directory_tree(treedir, archtree):
                 dir2 = archtree.get_directory(dirname2, oradd=True)
                 file = dir.files.get(ent.name)
                 if file is not None:
+                    ### doesn't happen
                     file.putkey('linkdir', dirname2)
                     file.intree = True
                 if parentlist and parentdir:
@@ -944,11 +960,11 @@ def construct_archtree(indexpath, treedir):
 
     rootdir = archtree.get_directory(ROOTNAME, oradd=True)
 
-    if indexpath:
-        parse_master_index(indexpath, archtree)
-
     if treedir:
         parse_directory_tree(treedir, archtree)
+
+    if indexpath:
+        parse_master_index(indexpath, archtree)
 
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
