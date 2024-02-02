@@ -1159,11 +1159,18 @@ def generate_output_indexes(dirmap):
         filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
         
         relroot = '..'
-        
+
+        # Divide up the directory's items into "files" and "subdirs".
+        # Note that we're not using dir.subdirs here; we're relying on
+        # dir.files and distinguishing the Files based on their flags.
         filelist = dir.getitems(isdir=False, display=True)
         filelist.sort(key=lambda file:file.name.lower())
         subdirlist = dir.getitems(isdir=True, display=True)
         subdirlist.sort(key=lambda file:file.name.lower())
+        # Also distinguish which subdirs are *top-level* subdirs.
+        # (Deeper refs and symlinks are listed in the "Subdirectories"
+        # pane, but we count them separately.)
+        topsubdirlist = [ file for file in subdirlist if not file.islink and not file.isdeep ]
             
         def dirmetadata_thunk(outfl):
             itermap = dict(dir.metadata)
@@ -1225,7 +1232,7 @@ def generate_output_indexes(dirmap):
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), 'topdircount':len(topsubdirlist), '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
         if dir.dir == ROOTNAME:
