@@ -648,6 +648,18 @@ class Directory:
     def putkey(self, key, val):
         self.submap[key] = val
 
+    def getitems(self, isdir=False, display=True):
+        ls = list(self.files.values())
+        if display:
+            # When displaying, symlinks and deep refs to directories all
+            # count as directories.
+            ls = [ file for file in ls if file.isdir == isdir ]
+        else:
+            # For XML cataloging, symlinks are always files. Deep refs
+            # are skipped entirely, sorry.
+            ls = [ file for file in ls if not file.isdeep and (file.isdir and not file.islink) == isdir ]
+        return ls
+
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
 unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
 
@@ -684,6 +696,7 @@ class File:
         self.metadata = OrderedDict()
         self.isdir = isdir
         self.islink = islink
+        self.isdeep = ('/' in filename)
 
         self.intree = False
         self.inmaster = False
@@ -1013,7 +1026,7 @@ def check_missing_files(dirmap):
         for file in dir.files.values():
             if file.inmaster and not file.intree and file.getkey('linkdir') is None and file.getkey('islink') is None:
                 val = file.name
-                if '/' in val:
+                if file.isdeep:
                     val = '(%s)' % (val,)
                 sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, val,))
             if file.intree and not file.inmaster and file.getkey('linkdir') is None:
