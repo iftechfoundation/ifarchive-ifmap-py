@@ -933,7 +933,8 @@ def parse_directory_tree(treedir, archtree):
                     if file is None:
                         file = File(ent.name, dir, islink=True, isdir=False)
                     file.intree = True
-                    file.putkey('linkpath', linkname) ### canonicalize?
+                    file.putkey('linkpath', linkname)
+                    file.putkey('nlinkpath', os.path.normpath(os.path.join(dir.dir, linkname)))
                     file.putkey('date', str(int(sta2.st_mtime)))
                     tmdat = time.gmtime(sta2.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))

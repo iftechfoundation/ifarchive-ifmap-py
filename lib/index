@@ -27,7 +27,7 @@ Dir-Metadata: {?tuid}<p>{[tuid}{?tuid:first}{:},
     {?ifwiki}<p>{[ifwiki}{?ifwiki:first}IFWiki: {:}, {/}<a href="https://www.ifwiki.org/{ifwiki:value|wikipage|url}">{ifwiki:value|html}</a>{]}</p>{/}
 File-List-Entry: <dt class="Par{parity}"><a href="{?linkdir}{relroot}/indexes/{linkdir|indexuri|url}{:}{relroot}/{dir|url}/{name|url}{/}">{name|html}</a>
     {?date} <span class="Date">[{datestr}]</span>{/}
-    {?islink}(link to <a href="{relroot}/{dir|url}/{name|url}">{linkpath|html}</a>){/}
+    {?islink}(link to <a href="{relroot}/{nlinkpath|url}">{nlinkpath|html}</a>){/}
     {_unboxlink}
     {_metadata}
     <dd class="Par{parity}">{?hasdesc}{desc}{/}
