@@ -1000,7 +1000,7 @@ def construct_archtree(indexpath, treedir):
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
             
-    # Create the subdir list and count for each directory.
+    # Create the subdir list.
     for dir in archtree.dirmap.values():
         if dir.parentdirname:
             dir2 = archtree.get_directory(dir.parentdirname, oradd=False)
@@ -1010,10 +1010,6 @@ def construct_archtree(indexpath, treedir):
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
                 
-    #for dir in archtree.dirmap.values():
-    #    dir.putkey('count', len(dir.files))
-    #    dir.putkey('subdircount', len(dir.subdirs))
-        
     return archtree
 
 def check_missing_files(dirmap):
