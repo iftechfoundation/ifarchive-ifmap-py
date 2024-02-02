@@ -1216,8 +1216,6 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
         
         def subdirlist_thunk(outfl):
-            ###dirlist = list(dir.subdirs.values())
-            ###dirlist.sort(key=lambda dir:dir.dir.lower())
             itermap = { 'relroot':relroot }
             for dfile in subdirlist:
                 parity_flip(itermap)
