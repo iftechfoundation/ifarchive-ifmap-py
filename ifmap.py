@@ -994,7 +994,10 @@ def check_missing_files(dirmap):
     for dir in dirmap.values():
         for file in dir.files.values():
             if file.inmaster and not file.intree and file.getkey('linkdir') is None and file.getkey('islink') is None:
-                sys.stderr.write('Index entry without file: %s\n' % (file.path,))
+                val = file.name
+                if '/' in val:
+                    val = '(%s)' % (val,)
+                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, val,))
             if file.intree and not file.inmaster and file.getkey('linkdir') is None:
                 if not noindexlist.check(file.path):
                     sys.stderr.write('File without index entry: %s\n' % (file.path,))
