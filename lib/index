@@ -16,7 +16,8 @@ Dir-List-Template: dirlist.html
 Dir-List-Entry: <li class="Par{parity}"><a href="{dir|indexuri|url}">{dir|html|slashwbr}</a>
 Date-List-Template: datelist.html
 Date-List-Entry: <li class="Par{parity}"><span class="Date">[{datestr}]</span> <a href="{relroot}/{dir|url}/{name|url}">{dir|html|slashwbr}/<wbr>{name|html}</a>
-Subdir-List-Entry: <li class="Par{parity}"><a href="{relroot}/indexes/{dir|indexuri|url}">{dir|html|slashwbr}</a>
+Subdir-List-Entry: <li class="Par{parity}">{?islink}{path|html|slashwbr}{:}<a href="{relroot}/indexes/{path|indexuri|url}">{path|html|slashwbr}</a>{/}
+    {?islink}(link to <a href="{relroot}/indexes/{linkdir|indexuri|url}">{linkdir|html}</a>){/}
 Dir-Metadata: {?tuid}<p>{[tuid}{?tuid:first}{:},
     {/}<a href="https://ifdb.org/viewgame?id={tuid:value|url}">{?tuid:first}IFDB {:}{/}entry</a>{]}</p>{/}
     {?tuidcomp}<p>{[tuidcomp}{?tuidcomp:first}{:},
