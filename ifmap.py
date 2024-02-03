@@ -678,6 +678,18 @@ def stripmetadata(lines):
     val = '\n'.join(lines[pos:])
     return val.rstrip() + '\n'
 
+def deepsplit(ls):
+    """Split a list of File objects into non-deep and deep lists.
+    """
+    undeepls = []
+    deepls = []
+    for val in ls:
+        if val.isdeep:
+            deepls.append(val)
+        else:
+            undeepls.append(val)
+    return undeepls, deepls
+        
 class File:
     """File: one entry in a directory.
     The name is a bit of a misnomer; this could represent a file,
@@ -1176,10 +1188,10 @@ def generate_output_indexes(dirmap):
         filelist.sort(key=lambda file:file.name.lower())
         subdirlist = dir.getitems(isdir=True, display=True)
         subdirlist.sort(key=lambda file:file.name.lower())
-        # Also distinguish which subdirs are *top-level* subdirs.
-        # (Deeper refs and symlinks are listed in the "Subdirectories"
-        # pane, but we count them separately.)
-        topsubdirlist = [ file for file in subdirlist if not file.islink and not file.isdeep ]
+
+        # Divide each of these lists into  "regular" and "deep sublists.
+        filelist, alsofilelist = deepsplit(filelist)
+        subdirlist, alsosubdirlist = deepsplit(subdirlist)
             
         def dirmetadata_thunk(outfl):
             itermap = dict(dir.metadata)
@@ -1198,9 +1210,9 @@ def generate_output_indexes(dirmap):
                 Template.substitute(dirlinkelement_body, itermap, outfl=outfl)
                 first = False
             
-        def filelist_thunk(outfl):
+        def filelist_thunk(outfl, fls):
             itermap = { 'relroot':relroot }
-            for file in filelist:
+            for file in fls:
                 parity_flip(itermap)
                 def metadata_thunk(outfl):
                     itermap = dict(file.metadata)
@@ -1231,9 +1243,9 @@ def generate_output_indexes(dirmap):
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
         
-        def subdirlist_thunk(outfl):
+        def subdirlist_thunk(outfl, dls):
             itermap = { 'relroot':relroot }
-            for dfile in subdirlist:
+            for dfile in dls:
                 parity_flip(itermap)
                 Template.substitute(subdirlist_entry, ChainMap(itermap, dfile.submap), outfl=outfl)
                 outfl.write('\n')
@@ -1242,10 +1254,14 @@ def generate_output_indexes(dirmap):
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
         itermap = {
-            'count':len(filelist), 'subdircount':len(subdirlist), 'topdircount':len(topsubdirlist),
-            '_files':filelist_thunk,
-            '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk,
-            'footer':general_footer_thunk,
+            'count':len(filelist), 'subdircount':len(subdirlist),
+            'alsocount':len(alsofilelist), 'alsosubdircount':len(alsosubdirlist),
+            '_files': lambda outfl:filelist_thunk(outfl, filelist),
+            '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
+            '_subdirs': lambda outfl:subdirlist_thunk(outfl, subdirlist),
+            '_alsosubdirs': lambda outfl:subdirlist_thunk(outfl, alsosubdirlist),
+            '_dirlinks': dirlinks_thunk,
+            'footer': general_footer_thunk,
             'rootdir':ROOTNAME, 'relroot':relroot
         }
         if dir.metadata:
