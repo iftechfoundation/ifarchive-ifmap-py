@@ -1065,7 +1065,11 @@ def generate_output_dirlist(dirmap):
     relroot = '..'
     general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
 
-    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+    itermap = {
+        '_dirs':dirlist_thunk,
+        'footer':general_footer_thunk,
+        'rootdir':ROOTNAME, 'relroot':relroot
+    }
 
     filename = os.path.join(DESTDIR, 'dirlist.html')
     tempname = os.path.join(DESTDIR, '__temp')
@@ -1126,7 +1130,11 @@ def generate_output_datelist(dirmap):
                 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = {
+            '_files':filelist_thunk,
+            'footer':general_footer_thunk,
+            'rootdir':ROOTNAME, 'relroot':relroot
+        }
         if intname:
             itermap['interval'] = intname
             
@@ -1233,7 +1241,13 @@ def generate_output_indexes(dirmap):
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), 'topdircount':len(topsubdirlist), '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = {
+            'count':len(filelist), 'subdircount':len(subdirlist), 'topdircount':len(topsubdirlist),
+            '_files':filelist_thunk,
+            '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk,
+            'footer':general_footer_thunk,
+            'rootdir':ROOTNAME, 'relroot':relroot
+        }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
         if dir.dir == ROOTNAME:
@@ -1292,7 +1306,11 @@ def generate_output_xml(dirmap):
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                     outfl.write('\n')
 
-            itermap = { 'count':len(filelist), 'subdircount':len(subdirlist), '_files':filelist_thunk, '_metadata': lambda outfl:metadata_thunk(dir, outfl) }
+            itermap = {
+                'count':len(filelist), 'subdircount':len(subdirlist),
+                '_files':filelist_thunk,
+                '_metadata': lambda outfl:metadata_thunk(dir, outfl)
+            }
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
         
     itermap = { '_dirs':dirlist_thunk }
@@ -1360,7 +1378,7 @@ def generate_rss(dirmap, changedate):
     rss_entry = plan.get('RSS-Entry', '<item>{name}</item>')
     
     def filelist_thunk(outfl):
-        itermap = { }
+        itermap = {}
         for file in filelist:
             Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
             outfl.write('\n\n')
