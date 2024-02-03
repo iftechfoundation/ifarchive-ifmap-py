@@ -39,9 +39,16 @@
 <div class="Body">
 
 {?subdircount}
-<h3 class="ListHeader" id="subdirheader">{topdircount} Subdirector{topdircount|plural_ies}</h3>
+<h3 class="ListHeader" id="subdirheader">{subdircount} Subdirector{subdircount|plural_ies}</h3>
 <dl id="subdirlist" class="ItemList">
 {_subdirs}
+</dl>
+{/}
+
+{?alsosubdircount}
+<h4 class="ListHeader">See Also</h4>
+<dl id="alsosubdirlist" class="ItemList">
+{_alsosubdirs}
 </dl>
 {/}
 
@@ -49,6 +56,13 @@
 <h3 class="ListHeader" id="itemheader">{count} File{count|plural_s}</h3>
 <dl id="filelist" class="ItemList">
 {_files}
+</dl>
+{/}
+
+{?alsocount} 
+<h4 class="ListHeader">See Also</h4>
+<dl id="alsofilelist" class="ItemList">
+{_alsofiles}
 </dl>
 {/}
 
