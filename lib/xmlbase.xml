@@ -9,15 +9,21 @@
 <parent>{{ dir.parentdir }}</parent>
 <filecount>{% if dir.count %}{{ dir.count }}{% else %}0{% endif %}</filecount>
 <subdircount>{% if dir.subdircount %}{{ dir.subdircount }}{% else %}0{% endif %}</subdircount>
-{% if dir.hasmetadata %}
+{%- if dir.hasmetadata %}
 <metadata>
-{_metadata}
+{%- for key, valls in dir._metadata %}
+  <item><key>{{ key }}</key>
+  {%- for val in valls %}
+    <value>{{ val }}</value>
+  {%- endfor %}
+  </item>
+{%- endfor %}
 </metadata>
-{% endif %}
-{% if dir.hasxmldesc and dir.xmlheader %}
+{%- endif %}
+{%- if dir.hasxmldesc and dir.xmlheader %}
 <description>
 {{ dir.xmlheader }}</description>
-{% endif %}
+{%- endif %}
 </directory>
 
 {_files}
