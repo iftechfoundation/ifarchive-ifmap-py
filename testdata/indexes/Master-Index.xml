@@ -1,51 +1,36 @@
 <?xml version="1.0"?>
 <ifarchive>
 
+
+
 <directory>
 <name>if-archive</name>
 <xdir>if-archive</xdir>
 <parent></parent>
 <filecount>3</filecount>
 <subdircount>4</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>compfile1</name>
 <directory>if-archive</directory>
 <path>if-archive/compfile1</path>
-
 <date>14-Oct-2018</date>
 <rawdate>1539500000</rawdate>
-
-
-
 <symlink type="file">
-<path>comp/files/file-1.txt</path>
+  <path>comp/files/file-1.txt</path>
 </symlink>
-
-
-
-
 </file>
 
 <file>
 <name>compfiles</name>
 <directory>if-archive</directory>
 <path>if-archive/compfiles</path>
-
-
-
-
-
 <symlink type="dir">
-<name>if-archive/comp/files</name>
-<xdir>if-archiveXcompXfiles</xdir>
+  <name>if-archive/comp/files</name>
+  <xdir>if-archiveXcompXfiles</xdir>
 </symlink>
-
-
-
 </file>
 
 <file>
@@ -55,16 +40,11 @@
 <size>907</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>52a9776c6a09e3485b33e6bb5a9e4263</md5>
-
 <sha512>1dfa3543f359619e3e9e11acd08c0c1a9744bd1dc623eed9f71ea74d5de795ff5a2a95ba53934ce8545b9d7c9f4dac8bfee94afe3f3911ebc22fd7d0cd46f0c5</sha512>
-
-
-
-
-
 </file>
+
+
 
 
 <directory>
@@ -74,30 +54,22 @@
 <filecount>4</filecount>
 <subdircount>0</subdircount>
 <metadata>
- <item><key>ifwiki</key>
-  <value>IF Art Show</value>
- </item>
+  <item><key>ifwiki</key>
+    <value>IF Art Show</value>
+  </item>
 </metadata>
-
 <description>
 
 Files from an art show:
 &lt;http://example.com/art/&gt;
 </description>
-
 </directory>
+
 
 <file>
 <name>concept.txt</name>
 <directory>if-archive/art</directory>
 <path>if-archive/art/concept.txt</path>
-
-
-
-
-
-
-
 <description>
 
 The concept statement of the art show:
@@ -110,13 +82,6 @@ A description paragraph.
 <name>contents.txt</name>
 <directory>if-archive/art</directory>
 <path>if-archive/art/contents.txt</path>
-
-
-
-
-
-
-
 <description>
 
 A table of contents
@@ -134,14 +99,8 @@ A table of contents
 <size>19</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>c19cb4e6a3926c266da0343d2d0b5f8e</md5>
-
 <sha512>e977d28b986de1b6d37f5da3893087fd718d778d02feee408dcfc61914fcc75c227e3a58b4d9ea662101e71b92337c3ab743ed4d702434f85e1a690ba63caea5</sha512>
-
-
-
-
 <description>
 
 *Foo*: An Art Project
@@ -156,20 +115,16 @@ Release 1 / Serial number 000000
 <size>487</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>e4f08d6708151f1197d8e4728f1b8693</md5>
-
 <sha512>2b6c836d8f28e47cc5ff2ef3b96da60974e8c8e74b0300e6fad6959ba5a175ca86bd312142a23713fad2f1e6f35ca21aed41339e7720f4551bddd578d5fb42d8</sha512>
-
-
-
 <metadata>
- <item><key>unbox-link</key>
-  <value>false</value>
- </item>
+  <item><key>unbox-link</key>
+    <value>false</value>
+  </item>
 </metadata>
-
 </file>
+
+
 
 
 <directory>
@@ -178,9 +133,8 @@ Release 1 / Serial number 000000
 <parent>if-archive</parent>
 <filecount>2</filecount>
 <subdircount>1</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>leftfoot.blorb</name>
@@ -189,15 +143,8 @@ Release 1 / Serial number 000000
 <size>25</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>c40894f1e64fbb7813e1e6b233978570</md5>
-
 <sha512>3d7508fd0b9b95945aff73ed255d622821ad5da330d9987ccae6b2dbffca98aa7ad034d15e1356aa05abd4d98bb93b3b90c12ed3e37008d3c1f12ab07da6629d</sha512>
-
-
-
-
-
 </file>
 
 <file>
@@ -207,16 +154,11 @@ Release 1 / Serial number 000000
 <size>28</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>cde894d652c4918acf10b7b5d440f5f7</md5>
-
 <sha512>08131070051ab20d4c30afa6fa7359301d89609ee4f68df1acd6448b08d976da4a5c19d03e01c95b881c3a12bfa1a8263245ffbc844de78c3165ba243ab27bb1</sha512>
-
-
-
-
-
 </file>
+
+
 
 
 <directory>
@@ -225,9 +167,8 @@ Release 1 / Serial number 000000
 <parent>if-archive/comp</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>all.zip</name>
@@ -236,15 +177,8 @@ Release 1 / Serial number 000000
 <size>487</size>
 <date>16-Oct-2018</date>
 <rawdate>1539700000</rawdate>
-
 <md5>e4f08d6708151f1197d8e4728f1b8693</md5>
-
 <sha512>2b6c836d8f28e47cc5ff2ef3b96da60974e8c8e74b0300e6fad6959ba5a175ca86bd312142a23713fad2f1e6f35ca21aed41339e7720f4551bddd578d5fb42d8</sha512>
-
-
-
-
-
 </file>
 
 <file>
@@ -254,15 +188,8 @@ Release 1 / Serial number 000000
 <size>7</size>
 <date>14-Oct-2018</date>
 <rawdate>1539500000</rawdate>
-
 <md5>f6994894a975f34178b43db4062cece1</md5>
-
 <sha512>474be20011ed9c91c4f0bba91e505489140f0b60ba2e1966623934498ba15f0f0a4a90dc0f6fe0893b92c7fcd5513eed83172b049b2c4f0f8efe81b069575f44</sha512>
-
-
-
-
-
 </file>
 
 <file>
@@ -272,15 +199,8 @@ Release 1 / Serial number 000000
 <size>7</size>
 <date>15-Oct-2018</date>
 <rawdate>1539600000</rawdate>
-
 <md5>4345184361915e8d0592760a254ab488</md5>
-
 <sha512>0c075c1c1e76852368d43e6d14016737817d850adae86ae5835ff5798f17ddc8c73206cd8f7a9dd27715eb5cda6d5c4cf3ab1e3d4e7fdbd1648eb9e86f3058ac</sha512>
-
-
-
-
-
 </file>
 
 <file>
@@ -290,16 +210,11 @@ Release 1 / Serial number 000000
 <size>7</size>
 <date>16-Oct-2018</date>
 <rawdate>1539700000</rawdate>
-
 <md5>65b17cb1d1308e8bead96db0f31125b5</md5>
-
 <sha512>9aabba937febaca4450ecc2ea915537d77e58ecdf8d394b52aa8671f28a63ed9d05ee9cc558d425b9933ce4e6c66e695f126548cb14da91232beb9cee586992e</sha512>
-
-
-
-
-
 </file>
+
+
 
 
 <directory>
@@ -308,31 +223,22 @@ Release 1 / Serial number 000000
 <parent>if-archive</parent>
 <filecount>4</filecount>
 <subdircount>1</subdircount>
-
-
 <description>
 
 Hey: these are some game files.
 </description>
-
 </directory>
+
 
 <file>
 <name>all.zip</name>
 <directory>if-archive/games</directory>
 <path>if-archive/games/all.zip</path>
-
 <date>16-Oct-2018</date>
 <rawdate>1539700000</rawdate>
-
-
-
 <symlink type="file">
-<path>../comp/files/all.zip</path>
+  <path>../comp/files/all.zip</path>
 </symlink>
-
-
-
 <description>
 
 Linked to comp/files.
@@ -346,20 +252,14 @@ Linked to comp/files.
 <size>38</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>ec5b9d72cb9e0852be6a95aca639c864</md5>
-
 <sha512>1be8bc652414f9429b9a35e0f7ca74bbf64f53f973c9e0a6e11915661b53db9ce1215b13af5bb9237e744758b3f897947ec25340eb914086cea2223aeeac24fa</sha512>
-
-
-
 <metadata>
- <item><key>tuid</key>
-  <value>xyz111</value>
-  <value>xyz222</value>
- </item>
+  <item><key>tuid</key>
+    <value>xyz111</value>
+    <value>xyz222</value>
+  </item>
 </metadata>
-
 </file>
 
 <file>
@@ -369,20 +269,15 @@ Linked to comp/files.
 <size>8</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>0e3548092f60ba3f9e1f7306c942c1c3</md5>
-
 <sha512>ac18dc66e3aea6d122632b08dd633fdc40e1dc00b0950b63b093777e156ebd12fbc1b2e1d1b78e04b6fcd5179330818d6a606a776d033f7c98c343bdbe24abe7</sha512>
-
-
-
 <metadata>
- <item><key>tuid</key>
-  <value>xyz111</value>
- </item>
- <item><key>ifwiki</key>
-  <value>Adventure</value>
- </item>
+  <item><key>tuid</key>
+    <value>xyz111</value>
+  </item>
+  <item><key>ifwiki</key>
+    <value>Adventure</value>
+  </item>
 </metadata>
 <description>
 
@@ -397,20 +292,16 @@ Game number 1.
 <size>8</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>c91dbd63256ad50f86226fcd99737eaa</md5>
-
 <sha512>9a25e2e24dc1382f175ec5845019cd5fd8738f562d3164718d369cf8af8df30d428e7a2355769510bf61a7fc119fcdbd17fb3a401710b80319a6cdb9f6ad07e8</sha512>
-
-
-
 <metadata>
- <item><key>tuid</key>
-  <value>xyz222</value>
- </item>
+  <item><key>tuid</key>
+    <value>xyz222</value>
+  </item>
 </metadata>
-
 </file>
+
+
 
 
 <directory>
@@ -419,9 +310,8 @@ Game number 1.
 <parent>if-archive/games</parent>
 <filecount>1</filecount>
 <subdircount>1</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>game1-v1</name>
@@ -430,16 +320,11 @@ Game number 1.
 <size>21</size>
 <date>08-Oct-2018</date>
 <rawdate>1539000000</rawdate>
-
 <md5>de1b9390c9b8805c0c07b7ee78d2e75d</md5>
-
 <sha512>4f16a98f8de648ad54fd988e40b26eb83f31bb0c0377a821fb0579a1b59dd35b1f776d6526d851d1c62c7ca5b11227450edd7e243d646490ee3a2944c6b815f1</sha512>
-
-
-
-
-
 </file>
+
+
 
 
 <directory>
@@ -448,9 +333,8 @@ Game number 1.
 <parent>if-archive/games/old</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>game1-pre</name>
@@ -459,16 +343,11 @@ Game number 1.
 <size>21</size>
 <date>06-Oct-2018</date>
 <rawdate>1538800000</rawdate>
-
 <md5>9ddfc5003ba50de6ab967c67a92a78f9</md5>
-
 <sha512>427f788dfb72c2878413c627d03bbd43de8e0bf0cff46347ebec7c0865c5abf1d7121d0c7e335bf41f1217abd4c07893d6219d6abecec29d91c6b2c901c9fdf7</sha512>
-
-
-
-
-
 </file>
+
+
 
 
 <directory>
@@ -477,9 +356,8 @@ Game number 1.
 <parent>if-archive</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
-
-
 </directory>
+
 
 <file>
 <name>space file.txt</name>
@@ -488,15 +366,8 @@ Game number 1.
 <size>20</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-
 <md5>b2f57c0b2f38ff7ad928bbba01e3ecf4</md5>
-
 <sha512>5bca54049e9114f5f3cf22599b0688b9e1db23f81cfe0fe5d12a622209169024e3bc3871667d7fee5f6ae70139dd3bec291c8408ad61c2d5b2bb6adc5adedbe9</sha512>
-
-
-
-
-
 </file>
 
 
