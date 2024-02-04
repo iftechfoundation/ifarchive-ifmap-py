@@ -1322,7 +1322,7 @@ def generate_output_xml(dirmap, jenv):
     filename = os.path.join(DESTDIR, 'Master-Index.xml')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    template.stream(ChainMap(itermap, plan.map)).dump(writer.stream())
+    template.stream(itermap).dump(writer.stream())
     writer.resolve()
 
 def generate_output(dirmap, jenv):
@@ -1385,7 +1385,7 @@ def generate_rss(dirmap, changedate, jenv):
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    template.stream(ChainMap(itermap, plan.map)).dump(writer.stream())
+    template.stream(itermap).dump(writer.stream())
     writer.resolve()
 
     
