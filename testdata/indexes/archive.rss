@@ -10,115 +10,115 @@
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
     <lastBuildDate>Thu, 15 Nov 2018 12:00:00 +0000</lastBuildDate>
 
-<item>
-<title>bothgames</title>
-<link>https://ifarchive.org/if-archive/games/bothgames</link>
-<guid>if-archive/games/bothgames::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
 
-</item>
+    <item>
+    <title>bothgames</title>
+    <link>https://ifarchive.org/if-archive/games/bothgames</link>
+    <guid>if-archive/games/bothgames::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-<item>
-<title>foo.z5</title>
-<link>https://ifarchive.org/if-archive/art/foo.z5</link>
-<guid>if-archive/art/foo.z5::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
-<description>
+    <item>
+    <title>foo.z5</title>
+    <link>https://ifarchive.org/if-archive/art/foo.z5</link>
+    <guid>if-archive/art/foo.z5::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
 *Foo*: An Art Project
 Release 1 / Serial number 000000
 </description>
-</item>
+    </item>
 
-<item>
-<title>game1</title>
-<link>https://ifarchive.org/if-archive/games/game1</link>
-<guid>if-archive/games/game1::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
-<description>
+    <item>
+    <title>game1</title>
+    <link>https://ifarchive.org/if-archive/games/game1</link>
+    <guid>if-archive/games/game1::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
 Game number 1.
 </description>
-</item>
+    </item>
 
-<item>
-<title>game2</title>
-<link>https://ifarchive.org/if-archive/games/game2</link>
-<guid>if-archive/games/game2::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <item>
+    <title>game2</title>
+    <link>https://ifarchive.org/if-archive/games/game2</link>
+    <guid>if-archive/games/game2::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-</item>
+    <item>
+    <title>leftfoot.blorb</title>
+    <link>https://ifarchive.org/if-archive/comp/leftfoot.blorb</link>
+    <guid>if-archive/comp/leftfoot.blorb::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-<item>
-<title>leftfoot.blorb</title>
-<link>https://ifarchive.org/if-archive/comp/leftfoot.blorb</link>
-<guid>if-archive/comp/leftfoot.blorb::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <item>
+    <title>rightfoot.blorb</title>
+    <link>https://ifarchive.org/if-archive/comp/rightfoot.blorb</link>
+    <guid>if-archive/comp/rightfoot.blorb::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-</item>
+    <item>
+    <title>space file.txt</title>
+    <link>https://ifarchive.org/if-archive/space%20dir/space%20file.txt</link>
+    <guid>if-archive/space%20dir/space%20file.txt::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-<item>
-<title>rightfoot.blorb</title>
-<link>https://ifarchive.org/if-archive/comp/rightfoot.blorb</link>
-<guid>if-archive/comp/rightfoot.blorb::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <item>
+    <title>x&amp;all.zip</title>
+    <link>https://ifarchive.org/if-archive/art/x%26all.zip</link>
+    <guid>if-archive/art/x%26all.zip::1540000000</guid>
+    <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    
+    </item>
 
-</item>
+    <item>
+    <title>all.zip</title>
+    <link>https://ifarchive.org/if-archive/comp/files/all.zip</link>
+    <guid>if-archive/comp/files/all.zip::1539700000</guid>
+    <pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+    
+    </item>
 
-<item>
-<title>space file.txt</title>
-<link>https://ifarchive.org/if-archive/space%20dir/space%20file.txt</link>
-<guid>if-archive/space%20dir/space%20file.txt::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <item>
+    <title>file-3.txt</title>
+    <link>https://ifarchive.org/if-archive/comp/files/file-3.txt</link>
+    <guid>if-archive/comp/files/file-3.txt::1539700000</guid>
+    <pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+    
+    </item>
 
-</item>
+    <item>
+    <title>file-2.txt</title>
+    <link>https://ifarchive.org/if-archive/comp/files/file-2.txt</link>
+    <guid>if-archive/comp/files/file-2.txt::1539600000</guid>
+    <pubDate>Mon, 15 Oct 2018 10:40:00 +0000</pubDate>
+    
+    </item>
 
-<item>
-<title>x&amp;all.zip</title>
-<link>https://ifarchive.org/if-archive/art/x%26all.zip</link>
-<guid>if-archive/art/x%26all.zip::1540000000</guid>
-<pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <item>
+    <title>file-1.txt</title>
+    <link>https://ifarchive.org/if-archive/comp/files/file-1.txt</link>
+    <guid>if-archive/comp/files/file-1.txt::1539500000</guid>
+    <pubDate>Sun, 14 Oct 2018 06:53:20 +0000</pubDate>
+    
+    </item>
 
-</item>
-
-<item>
-<title>all.zip</title>
-<link>https://ifarchive.org/if-archive/comp/files/all.zip</link>
-<guid>if-archive/comp/files/all.zip::1539700000</guid>
-<pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
-
-</item>
-
-<item>
-<title>file-3.txt</title>
-<link>https://ifarchive.org/if-archive/comp/files/file-3.txt</link>
-<guid>if-archive/comp/files/file-3.txt::1539700000</guid>
-<pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
-
-</item>
-
-<item>
-<title>file-2.txt</title>
-<link>https://ifarchive.org/if-archive/comp/files/file-2.txt</link>
-<guid>if-archive/comp/files/file-2.txt::1539600000</guid>
-<pubDate>Mon, 15 Oct 2018 10:40:00 +0000</pubDate>
-
-</item>
-
-<item>
-<title>file-1.txt</title>
-<link>https://ifarchive.org/if-archive/comp/files/file-1.txt</link>
-<guid>if-archive/comp/files/file-1.txt::1539500000</guid>
-<pubDate>Sun, 14 Oct 2018 06:53:20 +0000</pubDate>
-
-</item>
-
-<item>
-<title>game1-pre</title>
-<link>https://ifarchive.org/if-archive/games/old/older/game1-pre</link>
-<guid>if-archive/games/old/older/game1-pre::1538800000</guid>
-<pubDate>Sat, 06 Oct 2018 04:26:40 +0000</pubDate>
-
-</item>
-
+    <item>
+    <title>game1-pre</title>
+    <link>https://ifarchive.org/if-archive/games/old/older/game1-pre</link>
+    <guid>if-archive/games/old/older/game1-pre::1538800000</guid>
+    <pubDate>Sat, 06 Oct 2018 04:26:40 +0000</pubDate>
+    
+    </item>
 
 
   </channel>
