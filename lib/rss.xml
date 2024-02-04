@@ -10,7 +10,7 @@
     <pubDate>{{ changedate |isodate }}</pubDate>
     <lastBuildDate>{{ curdate |isodate }}</lastBuildDate>
 
-{% for file in _files() %}
+{% for file in _files %}
     <item>
     <title>{{ file.name }}</title>
     <link>https://ifarchive.org/{{ file.path |urlencode }}</link>

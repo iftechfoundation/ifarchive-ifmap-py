@@ -1378,10 +1378,9 @@ def generate_rss(dirmap, changedate, jenv):
 
     template = jenv.get_template('rss.xml')
     
-    def filelist_thunk():
-        return [ ChainMap({}, file.submap) for file in filelist ]
+    fileentlist = [ ChainMap({}, file.submap) for file in filelist ]
     
-    itermap = { '_files':filelist_thunk, 'curdate':curdate, 'changedate':changedate }
+    itermap = { '_files':fileentlist, 'curdate':curdate, 'changedate':changedate }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
