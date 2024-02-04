@@ -7,10 +7,18 @@
     <description>New additions to the Interactive Fiction Archive</description>
     <language>en-us</language>
     <webMaster>tech@ifarchive.org (Archive Support)</webMaster>
-    <pubDate>{changedate|isodate}</pubDate>
-    <lastBuildDate>{curdate|isodate}</lastBuildDate>
+    <pubDate>{{ changedate |isodate }}</pubDate>
+    <lastBuildDate>{{ curdate |isodate }}</lastBuildDate>
 
-{_files}
+{% for file in _files() %}
+    <item>
+    <title>{{ file.name }}</title>
+    <link>https://ifarchive.org/{{ file.path |urlencode }}</link>
+    <guid>{{ file.path |urlencode }}::{{ file.date }}</guid>
+    <pubDate>{{ file.date |isodate }}</pubDate>
+    {% if file.hasxmldesc %}<description>{{ file.xmldesc }}</description>{% endif %}
+    </item>
+{% endfor %}
 
   </channel>
 </rss>

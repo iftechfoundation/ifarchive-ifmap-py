@@ -12,6 +12,9 @@ import optparse
 import markdown
 import json
 
+from jinja2 import Environment, FileSystemLoader, select_autoescape
+from jinja2.ext import Extension
+
 ROOTNAME = 'if-archive'
 DESTDIR = None
 
@@ -748,7 +751,6 @@ class File:
 
             # Remove metadata lines before generating XML.
             descstr = stripmetadata(desclines)
-            descstr = escape_html_string(descstr)
             self.putkey('xmldesc', descstr)
             self.putkey('hasxmldesc', is_string_nonwhite(descstr))
 
@@ -1359,7 +1361,7 @@ def generate_output(dirmap):
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap)
 
-def generate_rss(dirmap, changedate):
+def generate_rss(dirmap, changedate, jenv):
     """Write out the archive.rss file.
     This will be the most recent two months' worth of files,
     excluding Master-Index, ls-lR, and files in /unprocessed.
@@ -1388,23 +1390,17 @@ def generate_rss(dirmap, changedate):
     # Same sorting criteria as in generate_output_datelist().
     filelist.sort(key=lambda file: (-int(file.getkey('date')), file.name.lower(), file.path.lower()))
 
-    filename = plan.get('RSS-Template')
-    rss_body = read_lib_file(filename, '<xml>\n{_files}\n</xml>\n')
-
-    rss_entry = plan.get('RSS-Entry', '<item>{name}</item>')
+    template = jenv.get_template('rss.xml')
     
-    def filelist_thunk(outfl):
-        itermap = {}
-        for file in filelist:
-            Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
-            outfl.write('\n\n')
+    def filelist_thunk():
+        return [ ChainMap({}, file.submap) for file in filelist ]
     
     itermap = { '_files':filelist_thunk, 'curdate':curdate, 'changedate':changedate }
 
     filename = os.path.join(DESTDIR, 'archive.rss')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    Template.substitute(rss_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    template.stream(ChainMap(itermap, plan.map)).dump(writer.stream())
     writer.resolve()
 
     
@@ -1499,6 +1495,21 @@ if __name__ == '__main__':
     Template.addfilter('plural_s', pluralize_s)
     Template.addfilter('plural_ies', pluralize_ies)
 
+    def jenvfilter(key, func):
+        class JenvFilterExt(Extension):
+            def __init__(self, env):
+                env.filters[key] = func
+        return JenvFilterExt
+    
+    jenv = Environment(
+        loader = FileSystemLoader(opts.libdir),
+        extensions = [
+            jenvfilter('isodate', isodate),
+        ],
+        autoescape = select_autoescape(),
+        keep_trailing_newline = True,
+    )
+    
     convertermeta = markdown.Markdown(extensions = ['meta'])
     
     if not opts.treedir:
@@ -1516,5 +1527,5 @@ if __name__ == '__main__':
     generate_output(archtree.dirmap)
     generate_metadata(archtree.dirmap)
     
-    generate_rss(archtree.dirmap, indexmtime)
+    generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
     
