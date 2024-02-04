@@ -16,7 +16,9 @@
     <link>https://ifarchive.org/{{ file.path |urlencode }}</link>
     <guid>{{ file.path |urlencode }}::{{ file.date }}</guid>
     <pubDate>{{ file.date |isodate }}</pubDate>
-    {% if file.hasxmldesc %}<description>{{ file.xmldesc }}</description>{% endif %}
+    {%- if file.hasxmldesc %}
+        <description>{{ file.xmldesc }}</description>
+    {%- endif %}
     </item>
 {% endfor %}
 
