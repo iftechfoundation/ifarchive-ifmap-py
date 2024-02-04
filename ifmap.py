@@ -1300,13 +1300,6 @@ def generate_output_xml(dirmap, jenv):
     filename = plan.get('XML-File-Template')
     filelist_entry = read_lib_file(filename, '<file>\n{name}\n</file>\n')
 
-    def metadata_thunk(obj, outfl):
-        for key, valls in obj.metadata.items():
-            outfl.write(' <item><key>%s</key>\n' % (escape_html_string(key),))
-            for val in valls:
-                outfl.write('  <value>%s</value>\n' % (escape_html_string(val),))
-            outfl.write(' </item>\n')
-                            
     def dirlist_thunk():
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
@@ -1317,15 +1310,15 @@ def generate_output_xml(dirmap, jenv):
             filelist.sort(key=lambda file:file.name.lower())
             subdirlist = dir.getitems(isdir=True, display=False)
             subdirlist.sort(key=lambda file:file.name.lower())
-            def filelist_thunk(outfl):
-                for file in filelist:
-                    itermap = { '_metadata': lambda outfl:metadata_thunk(file, outfl) }
-                    Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
-                    outfl.write('\n')
+            
+            fileentlist = []
+            for file in filelist:
+                itermap = { '_metadata': list(file.metadata.items()) }
+                fileentlist.append(ChainMap(itermap, file.submap))
 
             itermap = {
                 'count':len(filelist), 'subdircount':len(subdirlist),
-                '_files':filelist_thunk,
+                '_files': fileentlist,
                 '_metadata': list(dir.metadata.items()),
             }
             res.append(ChainMap(itermap, dir.submap))
