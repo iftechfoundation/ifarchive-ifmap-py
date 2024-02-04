@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ifarchive>
 
-{% for dir in _dirs() %}
+{% for dir in _dirs %}
 
 <directory>
 <name>{{ dir.dir }}</name>

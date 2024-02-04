@@ -1295,32 +1295,29 @@ def generate_output_xml(dirmap, jenv):
     """
     template = jenv.get_template('xmlbase.xml')
 
-    def dirlist_thunk():
-        dirlist = list(dirmap.values())
-        dirlist.sort(key=lambda dir:dir.dir.lower())
+    dirlist = list(dirmap.values())
+    dirlist.sort(key=lambda dir:dir.dir.lower())
 
-        res = []
-        for dir in dirlist:
-            filelist = dir.getitems(isdir=False, display=False)
-            filelist.sort(key=lambda file:file.name.lower())
-            subdirlist = dir.getitems(isdir=True, display=False)
-            subdirlist.sort(key=lambda file:file.name.lower())
-            
-            fileentlist = []
-            for file in filelist:
-                itermap = { '_metadata': list(file.metadata.items()) }
-                fileentlist.append(ChainMap(itermap, file.submap))
+    dirents = []
+    for dir in dirlist:
+        filelist = dir.getitems(isdir=False, display=False)
+        filelist.sort(key=lambda file:file.name.lower())
+        subdirlist = dir.getitems(isdir=True, display=False)
+        subdirlist.sort(key=lambda file:file.name.lower())
 
-            itermap = {
-                'count':len(filelist), 'subdircount':len(subdirlist),
-                '_files': fileentlist,
-                '_metadata': list(dir.metadata.items()),
-            }
-            res.append(ChainMap(itermap, dir.submap))
+        fileentlist = []
+        for file in filelist:
+            itermap = { '_metadata': list(file.metadata.items()) }
+            fileentlist.append(ChainMap(itermap, file.submap))
 
-        return res
-        
-    itermap = { '_dirs':dirlist_thunk }
+        itermap = {
+            'count':len(filelist), 'subdircount':len(subdirlist),
+            '_files': fileentlist,
+            '_metadata': list(dir.metadata.items()),
+        }
+        dirents.append(ChainMap(itermap, dir.submap))
+
+    itermap = { '_dirs':dirents }
     
     filename = os.path.join(DESTDIR, 'Master-Index.xml')
     tempname = os.path.join(DESTDIR, '__temp')
