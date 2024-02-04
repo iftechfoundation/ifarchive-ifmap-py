@@ -50,8 +50,10 @@
 {% endif %}
 {?hasmetadata}<metadata>
 {_metadata}</metadata>{/}
-{?hasxmldesc}<description>
-{xmldesc}</description>{/}
+{%- if file.hasxmldesc %}
+<description>
+{{ file.xmldesc }}</description>
+{%- endif %}
 </file>
 {% endfor %}
 

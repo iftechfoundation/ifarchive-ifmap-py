@@ -548,6 +548,7 @@ def escape_wikipage(val):
     """
     return val.replace(' ', '_')
 
+### will go away? ###
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
@@ -1293,12 +1294,6 @@ def generate_output_xml(dirmap, jenv):
     """Write out the Master-Index.xml file.
     """
     template = jenv.get_template('xmlbase.xml')
-
-    filename = plan.get('XML-Dir-Template')
-    dirlist_entry = read_lib_file(filename, '<directory>\n{dir}\n</directory>\n')
-    
-    filename = plan.get('XML-File-Template')
-    filelist_entry = read_lib_file(filename, '<file>\n{name}\n</file>\n')
 
     def dirlist_thunk():
         dirlist = list(dirmap.values())
