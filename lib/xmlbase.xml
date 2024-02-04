@@ -31,25 +31,41 @@
 <name>{{ file.name }}</name>
 <directory>{{ file.dir }}</directory>
 <path>{{ file.dir }}/{{ file.name }}</path>
-{% if file.filesize %}<size>{{ file.filesize }}</size>{% endif %}
-{% if file.date %}<date>{{ file.datestr }}</date>
+{%- if file.filesize %}
+<size>{{ file.filesize }}</size>
+{%- endif %}
+{%- if file.date %}
+<date>{{ file.datestr }}</date>
 <rawdate>{{ file.date }}</rawdate>
-{% endif %}
-{% if file.md5 %}<md5>{{ file.md5 }}</md5>
-{% endif %}
-{% if file.sha512 %}<sha512>{{ file.sha512 }}</sha512>
-{% endif %}
-{% if file.islinkfile %}<symlink type="file">
-<path>{{ file.linkpath }}</path>
+{%- endif %}
+{%- if file.md5 %}
+<md5>{{ file.md5 }}</md5>
+{%- endif %}
+{%- if file.sha512 %}
+<sha512>{{ file.sha512 }}</sha512>
+{%- endif %}
+{%- if file.islinkfile %}
+<symlink type="file">
+  <path>{{ file.linkpath }}</path>
 </symlink>
-{% endif %}
-{% if file.islinkdir %}<symlink type="dir">
-<name>{{ file.linkdir }}</name>
-<xdir>{{ file.linkdir |xify }}</xdir>
+{%- endif %}
+{%- if file.islinkdir %}
+<symlink type="dir">
+  <name>{{ file.linkdir }}</name>
+  <xdir>{{ file.linkdir |xify }}</xdir>
 </symlink>
-{% endif %}
-{?hasmetadata}<metadata>
-{_metadata}</metadata>{/}
+{%- endif %}
+{%- if file.hasmetadata %}
+<metadata>
+{%- for key, valls in file._metadata %}
+  <item><key>{{ key }}</key>
+  {%- for val in valls %}
+    <value>{{ val }}</value>
+  {%- endfor %}
+  </item>
+{%- endfor %}
+</metadata>
+{%- endif %}
 {%- if file.hasxmldesc %}
 <description>
 {{ file.xmldesc }}</description>
