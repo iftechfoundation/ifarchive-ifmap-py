@@ -827,7 +827,6 @@ def parse_master_index(indexpath, archtree):
                     dir.putkey('header', val)
                     # For XML, we just escape.
                     val = stripmetadata(headerstr.split('\n'))
-                    val = escape_html_string(val)
                     dir.putkey('xmlheader', val)
                 dir = None
 
@@ -1290,11 +1289,10 @@ def generate_output_indexes(dirmap):
         writer.resolve()
 
 
-def generate_output_xml(dirmap):
+def generate_output_xml(dirmap, jenv):
     """Write out the Master-Index.xml file.
     """
-    filename = plan.get('XML-Template')
-    xmllist_body = read_lib_file(filename, '<xml>\n{_dirs}\n</xml>\n')
+    template = jenv.get_template('xmlbase.xml')
 
     filename = plan.get('XML-Dir-Template')
     dirlist_entry = read_lib_file(filename, '<directory>\n{dir}\n</directory>\n')
@@ -1309,10 +1307,11 @@ def generate_output_xml(dirmap):
                 outfl.write('  <value>%s</value>\n' % (escape_html_string(val),))
             outfl.write(' </item>\n')
                             
-    def dirlist_thunk(outfl):
+    def dirlist_thunk():
         dirlist = list(dirmap.values())
         dirlist.sort(key=lambda dir:dir.dir.lower())
-        
+
+        res = []
         for dir in dirlist:
             filelist = dir.getitems(isdir=False, display=False)
             filelist.sort(key=lambda file:file.name.lower())
@@ -1329,17 +1328,19 @@ def generate_output_xml(dirmap):
                 '_files':filelist_thunk,
                 '_metadata': lambda outfl:metadata_thunk(dir, outfl)
             }
-            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
+            res.append(ChainMap(itermap, dir.submap))
+
+        return res
         
     itermap = { '_dirs':dirlist_thunk }
     
     filename = os.path.join(DESTDIR, 'Master-Index.xml')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    Template.substitute(xmllist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    template.stream(ChainMap(itermap, plan.map)).dump(writer.stream())
     writer.resolve()
 
-def generate_output(dirmap):
+def generate_output(dirmap, jenv):
     """Write out all the index files.
     """
     global xify_mode
@@ -1359,7 +1360,7 @@ def generate_output(dirmap):
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
-    generate_output_xml(dirmap)
+    generate_output_xml(dirmap, jenv=jenv)
 
 def generate_rss(dirmap, changedate, jenv):
     """Write out the archive.rss file.
@@ -1505,6 +1506,7 @@ if __name__ == '__main__':
         loader = FileSystemLoader(opts.libdir),
         extensions = [
             jenvfilter('isodate', isodate),
+            jenvfilter('xify', xify_dirname),
         ],
         autoescape = select_autoescape(),
         keep_trailing_newline = True,
@@ -1524,7 +1526,7 @@ if __name__ == '__main__':
     
     check_missing_files(archtree.dirmap)
     
-    generate_output(archtree.dirmap)
+    generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)

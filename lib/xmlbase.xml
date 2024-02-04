@@ -1,6 +1,27 @@
 <?xml version="1.0"?>
 <ifarchive>
 
-{_dirs}
+{% for dir in _dirs() %}
+
+<directory>
+<name>{{ dir.dir }}</name>
+<xdir>{{ dir.dir |xify }}</xdir>
+<parent>{{ dir.parentdir }}</parent>
+<filecount>{% if dir.count %}{{ dir.count }}{% else %}0{% endif %}</filecount>
+<subdircount>{% if dir.subdircount %}{{ dir.subdircount }}{% else %}0{% endif %}</subdircount>
+{% if dir.hasmetadata %}
+<metadata>
+{_metadata}
+</metadata>
+{% endif %}
+{% if dir.hasxmldesc and dir.xmlheader %}
+<description>
+{{ dir.xmlheader }}</description>
+{% endif %}
+</directory>
+
+{_files}
+
+{% endfor %}
 
 </ifarchive>
