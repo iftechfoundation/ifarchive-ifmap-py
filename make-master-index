@@ -23,7 +23,7 @@ set +o noclobber
 cd /var/ifarchive/htdocs
 #cp /var/ifarchive/ifnews if-archive/new-since-last-post
 ls -lRn if-archive > if-archive/ls-lR
-/var/ifarchive/bin/make-master-index.py if-archive/ls-lR > if-archive/Master-Index
+/var/ifarchive/bin/make-master-index.py > if-archive/Master-Index
 
 # Make sure those files have the correct group and mode.
 

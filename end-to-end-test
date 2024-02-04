@@ -1,13 +1,6 @@
 #!/bin/bash
 
-(cd testdata; LC_COLLATE=C ls -lRn if-archive > if-archive/ls-lR )
-
-python3 make-master-index.py testdata/if-archive/ls-lR testdata > testdata/if-archive/Master-Index
-
-# The ls-lR output isn't consistent between test environments, so we can't
-# use it as part of the test comparison. It was only needed for
-# make-master-index.py.
-rm testdata/if-archive/ls-lR
+python3 make-master-index.py testdata > testdata/if-archive/Master-Index
 
 # The ifmap.py script looks at file timestamps to decide the "last updated"
 # date of each file. Git doesn't preserve file timestamps, so we need
