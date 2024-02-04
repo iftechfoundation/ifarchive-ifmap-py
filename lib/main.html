@@ -46,7 +46,11 @@
 {/}
 
 {?alsosubdircount}
+{?subdircount}
 <h4 class="ListHeader">See Also</h4>
+{:}
+<h3 class="ListHeader">See Also Subdirector{alsocount|plural_ies}</h3>
+{/}
 <dl id="alsosubdirlist" class="ItemList">
 {_alsosubdirs}
 </dl>
@@ -59,8 +63,12 @@
 </dl>
 {/}
 
-{?alsocount} 
+{?alsocount}
+{?count}
 <h4 class="ListHeader">See Also</h4>
+{:}
+<h3 class="ListHeader">See Also File{alsocount|plural_s}</h3>
+{/}
 <dl id="alsofilelist" class="ItemList">
 {_alsofiles}
 </dl>
