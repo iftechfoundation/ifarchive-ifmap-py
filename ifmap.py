@@ -1070,6 +1070,8 @@ def generate_output_dirlist(dirmap):
         dirlist.sort(key=lambda dir:dir.dir.lower())
         itermap = {}
         for dir in dirlist:
+            if re.search(r'^if-archive/games/competition\d+/', dir.dir) or re.search(r'^if-archive/games/springthing/\d+/', dir.dir):
+                continue
             parity_flip(itermap)
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
             outfl.write('\n')
