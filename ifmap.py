@@ -486,7 +486,7 @@ def isodate(val):
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
 
-xify_mode = True
+xify_mode = None
 
 def xify_dirname(val):
     """Convert a directory name to an X-string, as used in the index.html
@@ -502,6 +502,8 @@ def indexuri_dirname(val):
     The global xify_mode switch determines whether we use the X trick
     (see above) or not.
     """
+    if xify_mode is None:
+        raise Exception('xify not set')
     if xify_mode:
         return val.replace('/', 'X') + '.html'
     else:
@@ -646,6 +648,18 @@ class Directory:
     def putkey(self, key, val):
         self.submap[key] = val
 
+    def getitems(self, isdir=False, display=True):
+        ls = list(self.files.values())
+        if display:
+            # When displaying, symlinks and deep refs to directories all
+            # count as directories.
+            ls = [ file for file in ls if file.isdir == isdir ]
+        else:
+            # For XML cataloging, symlinks are always files. Deep refs
+            # are skipped entirely, sorry.
+            ls = [ file for file in ls if not file.isdeep and (file.isdir and not file.islink) == isdir ]
+        return ls
+
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
 unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
 
@@ -664,12 +678,26 @@ def stripmetadata(lines):
     val = '\n'.join(lines[pos:])
     return val.rstrip() + '\n'
 
+def deepsplit(ls):
+    """Split a list of File objects into non-deep and deep lists.
+    """
+    undeepls = []
+    deepls = []
+    for val in ls:
+        if val.isdeep:
+            deepls.append(val)
+        else:
+            undeepls.append(val)
+    return undeepls, deepls
+        
 class File:
-    """File: one file in the big directory map.
+    """File: one entry in a directory.
+    The name is a bit of a misnomer; this could represent a file,
+    symlink, or subdirectory.
     (There is no global file list. You have to look at dir.files for each
     directory in dirmap.)
     """
-    def __init__(self, filename, parentdir):
+    def __init__(self, filename, parentdir, isdir=False, islink=False):
         self.submap = {}
         self.parentdir = parentdir
         # Place into the parent directory.
@@ -678,6 +706,9 @@ class File:
         self.name = filename
         self.path = parentdir.dir+'/'+filename
         self.metadata = OrderedDict()
+        self.isdir = isdir
+        self.islink = islink
+        self.isdeep = ('/' in filename)
 
         self.intree = False
         self.inmaster = False
@@ -685,8 +716,20 @@ class File:
         self.putkey('dir', parentdir.dir)
         self.putkey('path', self.path)
 
+        if not islink:
+            if isdir:
+                self.putkey('isdir', True)
+        else:
+            self.putkey('islink', True)
+            if isdir:
+                self.putkey('islinkdir', True)
+            else:
+                self.putkey('islinkfile', True)
+
     def __repr__(self):
-        return '<File %s>' % (self.name,)
+        linkstr = ' (link)' if self.islink else ''
+        dirstr = ' (dir)' if self.isdir else ''
+        return '<File %s%s%s>' % (self.name, linkstr, dirstr,)
 
     def complete(self, desclines):
         # Take the accumulated description text and stick it into our
@@ -830,19 +873,43 @@ def parse_master_index(indexpath, archtree):
 
             # Set up the new file, including a fresh filedesclines
             # accumulator.
+            # (If the file already exists, then it was found in the tree;
+            # we'll add to its entry. If not, we create a new entry,
+            # presumed to be as regular file.)
 
             filename = bx[2:].strip()
             bx = ''
             filedesclines = []
 
-            file = dir.files.get(filename)
-            if file is None:
-                file = File(filename, dir)
-            file.inmaster = True
+            if '/' not in filename:
+                file = dir.files.get(filename)
+                if file is None:
+                    file = File(filename, dir)
+                file.inmaster = True
+            else:
+                # Distant file reference, like "Comp/Games"
+                reldir, _, relfile = filename.rpartition('/')
+                reldir = dir.dir+'/'+reldir
+                rel = archtree.get_directory(reldir, oradd=False)
+                if not rel:
+                    sys.stderr.write('Compound file entry refers to a bad directory: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                relfile = rel.files.get(relfile)
+                if not relfile:
+                    sys.stderr.write('Compound file entry refers to a bad file: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                relfile.inmaster = True
+                file = dir.files.get(filename)
+                if file is not None:
+                    sys.stderr.write('Compound file entry appears twice: "%s" in %s' % (filename, dir.dir,))
+                    continue
+                file = File(filename, dir, isdir=relfile.isdir, islink=relfile.islink)
+                if file.isdir:
+                    file.putkey('linkdir', dir.dir+'/'+filename)
+            continue
 
-        else:
-            # Continuing a file block.
-            filedesclines.append(bx)
+        # Continuing a file block.
+        filedesclines.append(bx)
 
     # Finished reading Master-Index.
     infl.close()
@@ -876,11 +943,10 @@ def parse_directory_tree(treedir, archtree):
                 if ent.is_file(follow_symlinks=True):
                     file = dir.files.get(ent.name)
                     if file is None:
-                        file = File(ent.name, dir)
+                        file = File(ent.name, dir, islink=True, isdir=False)
                     file.intree = True
-                    file.putkey('islink', True)
-                    file.putkey('islinkfile', True)
-                    file.putkey('linkpath', linkname) ### canonicalize?
+                    file.putkey('linkpath', linkname)
+                    file.putkey('nlinkpath', os.path.normpath(os.path.join(dir.dir, linkname)))
                     file.putkey('date', str(int(sta2.st_mtime)))
                     tmdat = time.gmtime(sta2.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
@@ -888,11 +954,9 @@ def parse_directory_tree(treedir, archtree):
                     targetname = os.path.normpath(os.path.join(dirname, linkname))
                     file = dir.files.get(ent.name)
                     if file is None:
-                        file = File(ent.name, dir)
-                        file.complete(['Symlink to '+targetname])
+                        file = File(ent.name, dir, islink=True, isdir=True)
+                        #file.complete(['Symlink to '+targetname])
                     file.intree = True
-                    file.putkey('islink', True)
-                    file.putkey('islinkdir', True)
                     file.putkey('linkdir', targetname)
 
                 continue
@@ -916,14 +980,10 @@ def parse_directory_tree(treedir, archtree):
             if ent.is_dir():
                 dir2 = archtree.get_directory(dirname2, oradd=True)
                 file = dir.files.get(ent.name)
-                if file is not None:
-                    file.putkey('linkdir', dirname2)
-                    file.intree = True
-                if parentlist and parentdir:
-                    parentname = os.path.join(parentdir, ent.name)
-                    parentfile = parentlist.get(parentname)
-                    if parentfile is not None:
-                        parentfile.putkey('linkdir', dirname2)
+                if file is None:
+                    file = File(ent.name, dir, isdir=True)
+                file.putkey('linkdir', dirname2)
+                file.intree = True
                 scan_directory(dirname2, dir.files, ent.name)
                 continue
                         
@@ -944,16 +1004,16 @@ def construct_archtree(indexpath, treedir):
 
     rootdir = archtree.get_directory(ROOTNAME, oradd=True)
 
-    if indexpath:
-        parse_master_index(indexpath, archtree)
-
     if treedir:
         parse_directory_tree(treedir, archtree)
+
+    if indexpath:
+        parse_master_index(indexpath, archtree)
 
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
             
-    # Create the subdir list and count for each directory.
+    # Create the subdir list.
     for dir in archtree.dirmap.values():
         if dir.parentdirname:
             dir2 = archtree.get_directory(dir.parentdirname, oradd=False)
@@ -963,10 +1023,6 @@ def construct_archtree(indexpath, treedir):
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
                 
-    for dir in archtree.dirmap.values():
-        dir.putkey('count', len(dir.files))
-        dir.putkey('subdircount', len(dir.subdirs))
-        
     return archtree
 
 def check_missing_files(dirmap):
@@ -978,7 +1034,10 @@ def check_missing_files(dirmap):
     for dir in dirmap.values():
         for file in dir.files.values():
             if file.inmaster and not file.intree and file.getkey('linkdir') is None and file.getkey('islink') is None:
-                sys.stderr.write('Index entry without file: %s\n' % (file.path,))
+                val = file.name
+                if file.isdeep:
+                    val = '(%s)' % (val,)
+                sys.stderr.write('Index entry without file: %s/%s\n' % (dir.dir, val,))
             if file.intree and not file.inmaster and file.getkey('linkdir') is None:
                 if not noindexlist.check(file.path):
                     sys.stderr.write('File without index entry: %s\n' % (file.path,))
@@ -1018,7 +1077,11 @@ def generate_output_dirlist(dirmap):
     relroot = '..'
     general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
 
-    itermap = { '_dirs':dirlist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+    itermap = {
+        '_dirs':dirlist_thunk,
+        'footer':general_footer_thunk,
+        'rootdir':ROOTNAME, 'relroot':relroot
+    }
 
     filename = os.path.join(DESTDIR, 'dirlist.html')
     tempname = os.path.join(DESTDIR, '__temp')
@@ -1079,7 +1142,11 @@ def generate_output_datelist(dirmap):
                 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = {
+            '_files':filelist_thunk,
+            'footer':general_footer_thunk,
+            'rootdir':ROOTNAME, 'relroot':relroot
+        }
         if intname:
             itermap['interval'] = intname
             
@@ -1113,7 +1180,19 @@ def generate_output_indexes(dirmap):
         filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
         
         relroot = '..'
-        
+
+        # Divide up the directory's items into "files" and "subdirs".
+        # Note that we're not using dir.subdirs here; we're relying on
+        # dir.files and distinguishing the Files based on their flags.
+        filelist = dir.getitems(isdir=False, display=True)
+        filelist.sort(key=lambda file:file.name.lower())
+        subdirlist = dir.getitems(isdir=True, display=True)
+        subdirlist.sort(key=lambda file:file.name.lower())
+
+        # Divide each of these lists into  "regular" and "deep sublists.
+        filelist, alsofilelist = deepsplit(filelist)
+        subdirlist, alsosubdirlist = deepsplit(subdirlist)
+            
         def dirmetadata_thunk(outfl):
             itermap = dict(dir.metadata)
             Template.substitute(dirmetadata_body, itermap, outfl=outfl)
@@ -1131,11 +1210,9 @@ def generate_output_indexes(dirmap):
                 Template.substitute(dirlinkelement_body, itermap, outfl=outfl)
                 first = False
             
-        def filelist_thunk(outfl):
-            filelist = list(dir.files.values())
-            filelist.sort(key=lambda file:file.name.lower())
+        def filelist_thunk(outfl, fls):
             itermap = { 'relroot':relroot }
-            for file in filelist:
+            for file in fls:
                 parity_flip(itermap)
                 def metadata_thunk(outfl):
                     itermap = dict(file.metadata)
@@ -1166,19 +1243,27 @@ def generate_output_indexes(dirmap):
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
         
-        def subdirlist_thunk(outfl):
-            dirlist = list(dir.subdirs.values())
-            dirlist.sort(key=lambda dir:dir.dir.lower())
+        def subdirlist_thunk(outfl, dls):
             itermap = { 'relroot':relroot }
-            for subdir in dirlist:
+            for dfile in dls:
                 parity_flip(itermap)
-                Template.substitute(subdirlist_entry, ChainMap(itermap, subdir.submap), outfl=outfl)
+                Template.substitute(subdirlist_entry, ChainMap(itermap, dfile.submap), outfl=outfl)
                 outfl.write('\n')
 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
-        itermap = { '_files':filelist_thunk, '_subdirs':subdirlist_thunk, '_dirlinks':dirlinks_thunk, 'footer':general_footer_thunk, 'rootdir':ROOTNAME, 'relroot':relroot }
+        itermap = {
+            'count':len(filelist), 'subdircount':len(subdirlist),
+            'alsocount':len(alsofilelist), 'alsosubdircount':len(alsosubdirlist),
+            '_files': lambda outfl:filelist_thunk(outfl, filelist),
+            '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
+            '_subdirs': lambda outfl:subdirlist_thunk(outfl, subdirlist),
+            '_alsosubdirs': lambda outfl:subdirlist_thunk(outfl, alsosubdirlist),
+            '_dirlinks': dirlinks_thunk,
+            'footer': general_footer_thunk,
+            'rootdir':ROOTNAME, 'relroot':relroot
+        }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
         if dir.dir == ROOTNAME:
@@ -1227,15 +1312,21 @@ def generate_output_xml(dirmap):
         dirlist.sort(key=lambda dir:dir.dir.lower())
         
         for dir in dirlist:
+            filelist = dir.getitems(isdir=False, display=False)
+            filelist.sort(key=lambda file:file.name.lower())
+            subdirlist = dir.getitems(isdir=True, display=False)
+            subdirlist.sort(key=lambda file:file.name.lower())
             def filelist_thunk(outfl):
-                filelist = list(dir.files.values())
-                filelist.sort(key=lambda file:file.name.lower())
                 for file in filelist:
                     itermap = { '_metadata': lambda outfl:metadata_thunk(file, outfl) }
                     Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                     outfl.write('\n')
 
-            itermap = { '_files':filelist_thunk, '_metadata': lambda outfl:metadata_thunk(dir, outfl) }
+            itermap = {
+                'count':len(filelist), 'subdircount':len(subdirlist),
+                '_files':filelist_thunk,
+                '_metadata': lambda outfl:metadata_thunk(dir, outfl)
+            }
             Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
         
     itermap = { '_dirs':dirlist_thunk }
@@ -1303,7 +1394,7 @@ def generate_rss(dirmap, changedate):
     rss_entry = plan.get('RSS-Entry', '<item>{name}</item>')
     
     def filelist_thunk(outfl):
-        itermap = { }
+        itermap = {}
         for file in filelist:
             Template.substitute(rss_entry, ChainMap(itermap, file.submap), outfl=outfl)
             outfl.write('\n\n')

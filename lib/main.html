@@ -40,15 +40,41 @@
 
 {?subdircount}
 <h3 class="ListHeader" id="subdirheader">{subdircount} Subdirector{subdircount|plural_ies}</h3>
-<ul id="subdirlist" class="ItemList">
+<dl id="subdirlist" class="ItemList">
 {_subdirs}
-</ul>
+</dl>
+{/}
+
+{?alsosubdircount}
+{?subdircount}
+<h4 class="ListHeader">See Also</h4>
+{:}
+<h3 class="ListHeader">See Also Subdirector{alsocount|plural_ies}</h3>
+{/}
+<dl id="alsosubdirlist" class="ItemList">
+{_alsosubdirs}
+</dl>
 {/}
 
 {?count} 
+<<<<<<< HEAD
 <h3 class="ListHeader" id="itemheader">{count} Item{count|plural_s}</h3>
+=======
+<h3 class="ListHeader" id="itemheader">{count} File{count|plural_s}</h3>
+>>>>>>> newerdir
 <dl id="filelist" class="ItemList">
 {_files}
+</dl>
+{/}
+
+{?alsocount}
+{?count}
+<h4 class="ListHeader">See Also</h4>
+{:}
+<h3 class="ListHeader">See Also File{alsocount|plural_s}</h3>
+{/}
+<dl id="alsofilelist" class="ItemList">
+{_alsofiles}
 </dl>
 {/}
 

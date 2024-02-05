@@ -45,22 +45,20 @@
 </symlink>
 
 
-<description>
-Symlink to if-archive/comp/files
-</description>
+
 </file>
 
 <file>
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>792</size>
+<size>907</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>647c7bcc69d458426d93b379f1fef3c5</md5>
+<md5>52a9776c6a09e3485b33e6bb5a9e4263</md5>
 
-<sha512>5d59e02e57ebe361929711ceeb97f4a24a0157a7d271d6d5707fd55c313ef6b3b7a7c06f2443559fa023245d16769b57000a8bfa76c49466333d0bb2d641639b</sha512>
+<sha512>1dfa3543f359619e3e9e11acd08c0c1a9744bd1dc623eed9f71ea74d5de795ff5a2a95ba53934ce8545b9d7c9f4dac8bfee94afe3f3911ebc22fd7d0cd46f0c5</sha512>
 
 
 
@@ -308,7 +306,7 @@ Release 1 / Serial number 000000
 <name>if-archive/games</name>
 <xdir>if-archiveXgames</xdir>
 <parent>if-archive</parent>
-<filecount>7</filecount>
+<filecount>4</filecount>
 <subdircount>1</subdircount>
 
 
@@ -412,57 +410,6 @@ Game number 1.
  </item>
 </metadata>
 
-</file>
-
-<file>
-<name>old</name>
-<directory>if-archive/games</directory>
-<path>if-archive/games/old</path>
-
-
-
-
-
-
-
-<description>
-
-The directory of old stuff.
-</description>
-</file>
-
-<file>
-<name>old/older</name>
-<directory>if-archive/games</directory>
-<path>if-archive/games/old/older</path>
-
-
-
-
-
-
-
-<description>
-
-A double-depth directory.
-</description>
-</file>
-
-<file>
-<name>old/older/game1-pre</name>
-<directory>if-archive/games</directory>
-<path>if-archive/games/old/older/game1-pre</path>
-
-
-
-
-
-
-
-<description>
-
-Triple-depth file reference.
-</description>
 </file>
 
 
