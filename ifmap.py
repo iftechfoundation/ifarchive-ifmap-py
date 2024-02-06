@@ -1456,7 +1456,6 @@ if __name__ == '__main__':
         loader = FileSystemLoader(opts.libdir),
         extensions = [
             jenvfilter('isodate', isodate),
-            jenvfilter('xify', xify_dirname),
         ],
         autoescape = select_autoescape(),
         keep_trailing_newline = True,

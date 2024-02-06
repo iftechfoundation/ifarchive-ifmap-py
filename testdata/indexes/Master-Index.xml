@@ -27,7 +27,7 @@
 <directory>if-archive</directory>
 <path>if-archive/compfiles</path>
 <symlink type="dir">
-<name>if-archive/comp/files</name>
+  <name>if-archive/comp/files</name>
 </symlink>
 </file>
 

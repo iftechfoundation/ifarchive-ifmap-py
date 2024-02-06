@@ -5,7 +5,6 @@
 
 <directory>
 <name>{{ dir.dir }}</name>
-<xdir>{{ dir.dir |xify }}</xdir>
 <parent>{{ dir.parentdir }}</parent>
 <filecount>{% if dir.count %}{{ dir.count }}{% else %}0{% endif %}</filecount>
 <subdircount>{% if dir.subdircount %}{{ dir.subdircount }}{% else %}0{% endif %}</subdircount>
@@ -52,7 +51,6 @@
 {%- if file.islinkdir %}
 <symlink type="dir">
   <name>{{ file.linkdir }}</name>
-  <xdir>{{ file.linkdir |xify }}</xdir>
 </symlink>
 {%- endif %}
 {%- if file.hasmetadata %}
