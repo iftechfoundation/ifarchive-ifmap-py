@@ -1271,15 +1271,8 @@ def generate_output_indexes(dirmap):
             itermap['header'] = toplevel_body_thunk
             itermap['headerormeta'] = True
 
-        # Write out the Xdir.html version
-        xify_mode = True
-        tempname = os.path.join(DESTDIR, '__temp')
-        writer = SafeWriter(tempname, filename)
-        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
-        writer.resolve()
-
-        # Write out the dir/index.html version
         xify_mode = False
+        tempname = os.path.join(DESTDIR, '__temp')
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
         filename = os.path.join(DESTDIR, dir.dir, 'index.html')
