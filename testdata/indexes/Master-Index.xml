@@ -3,7 +3,6 @@
 
 <directory>
 <name>if-archive</name>
-<xdir>if-archive</xdir>
 <parent></parent>
 <filecount>3</filecount>
 <subdircount>4</subdircount>
@@ -41,7 +40,6 @@
 
 <symlink type="dir">
 <name>if-archive/comp/files</name>
-<xdir>if-archiveXcompXfiles</xdir>
 </symlink>
 
 
@@ -69,7 +67,6 @@
 
 <directory>
 <name>if-archive/art</name>
-<xdir>if-archiveXart</xdir>
 <parent>if-archive</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
@@ -174,7 +171,6 @@ Release 1 / Serial number 000000
 
 <directory>
 <name>if-archive/comp</name>
-<xdir>if-archiveXcomp</xdir>
 <parent>if-archive</parent>
 <filecount>2</filecount>
 <subdircount>1</subdircount>
@@ -221,7 +217,6 @@ Release 1 / Serial number 000000
 
 <directory>
 <name>if-archive/comp/files</name>
-<xdir>if-archiveXcompXfiles</xdir>
 <parent>if-archive/comp</parent>
 <filecount>4</filecount>
 <subdircount>0</subdircount>
@@ -304,7 +299,6 @@ Release 1 / Serial number 000000
 
 <directory>
 <name>if-archive/games</name>
-<xdir>if-archiveXgames</xdir>
 <parent>if-archive</parent>
 <filecount>4</filecount>
 <subdircount>1</subdircount>
@@ -415,7 +409,6 @@ Game number 1.
 
 <directory>
 <name>if-archive/games/old</name>
-<xdir>if-archiveXgamesXold</xdir>
 <parent>if-archive/games</parent>
 <filecount>1</filecount>
 <subdircount>1</subdircount>
@@ -444,7 +437,6 @@ Game number 1.
 
 <directory>
 <name>if-archive/games/old/older</name>
-<xdir>if-archiveXgamesXoldXolder</xdir>
 <parent>if-archive/games/old</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
@@ -473,7 +465,6 @@ Game number 1.
 
 <directory>
 <name>if-archive/space dir</name>
-<xdir>if-archiveXspace dir</xdir>
 <parent>if-archive</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>

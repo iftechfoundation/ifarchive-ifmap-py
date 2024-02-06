@@ -16,7 +16,6 @@
 {/}
 {?islinkdir}<symlink type="dir">
 <name>{linkdir|html}</name>
-<xdir>{linkdir|xify|html}</xdir>
 </symlink>
 {/}
 {?hasmetadata}<metadata>
