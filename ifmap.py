@@ -1143,9 +1143,6 @@ def generate_output_indexes(dirmap):
     filename = plan.get('Main-Template')
     main_body = read_lib_file(filename, '<html>Missing main template!</html>')
 
-    filename = plan.get('Top-Level-Template')
-    toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
-
     filename = plan.get('General-Footer')
     general_footer = read_lib_file(filename, '')
 
@@ -1229,7 +1226,6 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
-        toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
         itermap = {
             'count':len(filelist), 'subdircount':len(subdirlist),
