@@ -485,16 +485,6 @@ def isodate(val):
     # RFC 822 date format.
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
-
-def xify_dirname(val):
-    """Convert a directory name to an X-string, as used in the index.html
-    filenames. The "if-archive/games" directory is mapped to
-    "if-archiveXgames", for example.
-    We acknowledge that this is ugly and stupid. It's deprecated; we now
-    point people to dir/index.html indexes which don't use the X trick.
-    """
-    return val.replace('/', 'X')
-
 def indexuri_dirname(val):
     """Convert a directory name to the URI for its index file.
     (This used to implement the X trick, but we've dropped that.)
