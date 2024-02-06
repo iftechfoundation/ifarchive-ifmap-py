@@ -488,29 +488,11 @@ def isodate(val):
     # RFC 822 date format.
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
-
-xify_mode = None
-
-def xify_dirname(val):
-    """Convert a directory name to an X-string, as used in the index.html
-    filenames. The "if-archive/games" directory is mapped to
-    "if-archiveXgames", for example.
-    We acknowledge that this is ugly and stupid. It's deprecated; we now
-    point people to dir/index.html indexes which don't use the X trick.
-    """
-    return val.replace('/', 'X')
-
 def indexuri_dirname(val):
     """Convert a directory name to the URI for its index file.
-    The global xify_mode switch determines whether we use the X trick
-    (see above) or not.
+    (This used to implement the X trick, but we've dropped that.)
     """
-    if xify_mode is None:
-        raise Exception('xify not set')
-    if xify_mode:
-        return val.replace('/', 'X') + '.html'
-    else:
-        return val + '/'
+    return val + '/'
 
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
@@ -1160,8 +1142,6 @@ def generate_output_datelist(dirmap):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
-    global xify_mode
-    
     filename = plan.get('Main-Template')
     main_body = read_lib_file(filename, '<html>Missing main template!</html>')
 
@@ -1179,8 +1159,6 @@ def generate_output_indexes(dirmap):
     fileunboxlink_body = plan.get('File-Unbox-Link', '')
     
     for dir in dirmap.values():
-        filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
-        
         relroot = '..'
 
         # Divide up the directory's items into "files" and "subdirs".
@@ -1273,15 +1251,7 @@ def generate_output_indexes(dirmap):
             itermap['header'] = toplevel_body_thunk
             itermap['headerormeta'] = True
 
-        # Write out the Xdir.html version
-        xify_mode = True
         tempname = os.path.join(DESTDIR, '__temp')
-        writer = SafeWriter(tempname, filename)
-        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
-        writer.resolve()
-
-        # Write out the dir/index.html version
-        xify_mode = False
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
         filename = os.path.join(DESTDIR, dir.dir, 'index.html')
@@ -1328,8 +1298,6 @@ def generate_output_xml(dirmap, jenv):
 def generate_output(dirmap, jenv):
     """Write out all the index files.
     """
-    global xify_mode
-    
     if not os.path.exists(DESTDIR):
         os.mkdir(DESTDIR)
         
@@ -1341,7 +1309,6 @@ def generate_output(dirmap, jenv):
     if opts.verbose:
         print('Generating output...')
 
-    xify_mode = False
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
@@ -1474,7 +1441,6 @@ if __name__ == '__main__':
     Template.addfilter('slashwbr', slash_add_wbr)
     Template.addfilter('wikipage', escape_wikipage)
     Template.addfilter('url', escape_url_string)
-    Template.addfilter('xify', xify_dirname)
     Template.addfilter('isodate', isodate)
     Template.addfilter('indexuri', indexuri_dirname)
     Template.addfilter('plural_s', pluralize_s)
