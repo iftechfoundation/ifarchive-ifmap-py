@@ -486,8 +486,6 @@ def isodate(val):
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
 
-xify_mode = None
-
 def xify_dirname(val):
     """Convert a directory name to an X-string, as used in the index.html
     filenames. The "if-archive/games" directory is mapped to
@@ -499,15 +497,9 @@ def xify_dirname(val):
 
 def indexuri_dirname(val):
     """Convert a directory name to the URI for its index file.
-    The global xify_mode switch determines whether we use the X trick
-    (see above) or not.
+    (This used to implement the X trick, but we've dropped that.)
     """
-    if xify_mode is None:
-        raise Exception('xify not set')
-    if xify_mode:
-        return val.replace('/', 'X') + '.html'
-    else:
-        return val + '/'
+    return val + '/'
 
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
@@ -1158,8 +1150,6 @@ def generate_output_datelist(dirmap):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
-    global xify_mode
-    
     filename = plan.get('Main-Template')
     main_body = read_lib_file(filename, '<html>Missing main template!</html>')
 
@@ -1271,7 +1261,6 @@ def generate_output_indexes(dirmap):
             itermap['header'] = toplevel_body_thunk
             itermap['headerormeta'] = True
 
-        xify_mode = False
         tempname = os.path.join(DESTDIR, '__temp')
         relroot = relroot_for_dirname(dir.dir)
         itermap['relroot'] = relroot
@@ -1333,8 +1322,6 @@ def generate_output_xml(dirmap):
 def generate_output(dirmap):
     """Write out all the index files.
     """
-    global xify_mode
-    
     if not os.path.exists(DESTDIR):
         os.mkdir(DESTDIR)
         
@@ -1346,7 +1333,6 @@ def generate_output(dirmap):
     if opts.verbose:
         print('Generating output...')
 
-    xify_mode = False
     generate_output_dirlist(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
