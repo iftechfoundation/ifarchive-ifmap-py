@@ -1167,8 +1167,6 @@ def generate_output_indexes(dirmap):
     fileunboxlink_body = plan.get('File-Unbox-Link', '')
     
     for dir in dirmap.values():
-        filename = os.path.join(DESTDIR, xify_dirname(dir.dir)+'.html')
-        
         relroot = '..'
 
         # Divide up the directory's items into "files" and "subdirs".
@@ -1472,7 +1470,6 @@ if __name__ == '__main__':
     Template.addfilter('slashwbr', slash_add_wbr)
     Template.addfilter('wikipage', escape_wikipage)
     Template.addfilter('url', escape_url_string)
-    Template.addfilter('xify', xify_dirname)
     Template.addfilter('isodate', isodate)
     Template.addfilter('indexuri', indexuri_dirname)
     Template.addfilter('plural_s', pluralize_s)
