@@ -1,5 +1,4 @@
 Main-Template: main.html
-Top-Level-Template: toplevel.html
 General-Footer: footer.html
 XML-Template: xmlbase.xml
 XML-Dir-Template: xmldir.xml
