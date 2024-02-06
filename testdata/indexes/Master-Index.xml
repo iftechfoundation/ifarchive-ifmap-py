@@ -8,6 +8,31 @@
 <subdircount>4</subdircount>
 
 
+<description>
+
+&gt; _You feel somewhat disoriented as you pass through..._
+
+This is the Interactive Fiction Archive at
+[ifarchive.org](/).
+
+You may be interested in...
+
+- The [README file for the Archive](/if-archive/README)
+- An [ASCII directory tree map](/if-archive/directory-tree)
+- [Master-Index.xml](/indexes/Master-Index.xml), which describes every file in the Archive (very large XML file!)
+
+The [list of all directories](/indexes/dirlist.html)
+is a table of contents of the entire Archive, in order. The
+[list of files, sorted by date](/indexes/date.html)
+is a (long) index of every file. You can also see the entries of the
+[past week](/indexes/date_1.html),
+[past month](/indexes/date_2.html),
+[past three months](/indexes/date_3.html), or
+[past year](/indexes/date_4.html).
+
+Or, go delving into the hierarchical tree shown here.
+</description>
+
 </directory>
 
 <file>
@@ -50,13 +75,13 @@
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>907</size>
+<size>1733</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
 
-<md5>52a9776c6a09e3485b33e6bb5a9e4263</md5>
+<md5>e6898486a8471ada3fdcfaf43b5ebce4</md5>
 
-<sha512>1dfa3543f359619e3e9e11acd08c0c1a9744bd1dc623eed9f71ea74d5de795ff5a2a95ba53934ce8545b9d7c9f4dac8bfee94afe3f3911ebc22fd7d0cd46f0c5</sha512>
+<sha512>0e35f690dd919d1c2ecd53c490acdf462aa1163e3a01b0d46615b6f64d85146a3a8a3760a9dda266200505982c47d5b9010201da3d9040c1bc1135ed556bca97</sha512>
 
 
 

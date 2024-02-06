@@ -1244,10 +1244,6 @@ def generate_output_indexes(dirmap):
         }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
-        if dir.dir == ROOTNAME:
-            itermap['hasdesc'] = True
-            itermap['header'] = toplevel_body_thunk
-            itermap['headerormeta'] = True
 
         tempname = os.path.join(DESTDIR, '__temp')
         relroot = relroot_for_dirname(dir.dir)
