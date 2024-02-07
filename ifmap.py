@@ -1499,6 +1499,7 @@ if __name__ == '__main__':
     noindexlist = NoIndexEntry()
     nounboxlinklist = DirList('no-unbox-link')
     mapskippatternlist = DirList('map-skip-patterns')
+    # The skip-patterns are regexes, not pathnames.
     
     Template.addfilter('html', escape_html_string)
     Template.addfilter('slashwbr', slash_add_wbr)
