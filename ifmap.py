@@ -610,9 +610,11 @@ class Directory:
         pos = dirname.rfind('/')
         if pos < 0:
             self.parentdirname = None
+            self.barename = dirname
         else:
-            parentdirname = dirname[0:pos]
+            parentdirname = dirname[ 0 : pos ]
             self.parentdirname = parentdirname
+            self.barename = dirname[ pos+1 : ]
             self.putkey('parentdir', parentdirname)
 
         # To be filled in later
@@ -1004,6 +1006,11 @@ def construct_archtree(indexpath, treedir):
                 continue
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
+
+            fdir = dir2.files.get(dir.barename)
+            if fdir.submap.get('hasdesc'):
+                dir.putkey('hasparentdesc', True)
+                dir.putkey('parentdesc', fdir.submap.get('desc'))
                 
     return archtree
 
