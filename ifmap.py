@@ -1071,6 +1071,49 @@ def generate_output_dirlist(dirmap):
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
     writer.resolve()
     
+def generate_output_dirmap(dirmap):
+    """Write out the dirlist.html index.
+    """
+    skiplist = [ re.compile(val) for val in mapskippatternlist.ls ]
+    filename = plan.get('Dir-List-Template')
+    dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
+
+    dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
+    
+    filename = plan.get('General-Footer')
+    general_footer = read_lib_file(filename, '')
+
+    def dirlist_thunk(outfl):
+        dirlist = list(dirmap.values())
+        dirlist.sort(key=lambda dir:dir.dir.lower())
+        itermap = {}
+        for dir in dirlist:
+            skip = False
+            for pat in skiplist:
+                if pat.match(dir.dir):
+                    skip = True
+                    break
+            if skip:
+                continue
+            parity_flip(itermap)
+            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
+            outfl.write('\n')
+            
+    relroot = '..'
+    general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
+
+    itermap = {
+        '_dirs':dirlist_thunk,
+        'footer':general_footer_thunk,
+        'rootdir':ROOTNAME, 'relroot':relroot
+    }
+
+    filename = os.path.join(DESTDIR, 'dirmap.html')
+    tempname = os.path.join(DESTDIR, '__temp')
+    writer = SafeWriter(tempname, filename)
+    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    writer.resolve()
+    
 def generate_output_datelist(dirmap):
     """Write out the date.html indexes.
     """
@@ -1314,6 +1357,7 @@ def generate_output(dirmap):
         print('Generating output...')
 
     generate_output_dirlist(dirmap)
+    generate_output_dirmap(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap)
@@ -1447,6 +1491,7 @@ if __name__ == '__main__':
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
     nounboxlinklist = DirList('no-unbox-link')
+    mapskippatternlist = DirList('map-skip-patterns')
     
     Template.addfilter('html', escape_html_string)
     Template.addfilter('slashwbr', slash_add_wbr)
