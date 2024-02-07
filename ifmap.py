@@ -1082,10 +1082,10 @@ def generate_output_dirmap(dirmap):
     """Write out the dirlist.html index.
     """
     skiplist = [ re.compile(val) for val in mapskippatternlist.ls ]
-    filename = plan.get('Dir-List-Template')
+    filename = plan.get('Dir-Map-Template')
     dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
 
-    dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
+    dirlist_entry = plan.get('Dir-Map-Entry', '<li>{dir}')
     
     filename = plan.get('General-Footer')
     general_footer = read_lib_file(filename, '')
