@@ -614,9 +614,11 @@ class Directory:
         pos = dirname.rfind('/')
         if pos < 0:
             self.parentdirname = None
+            self.barename = dirname
         else:
-            parentdirname = dirname[0:pos]
+            parentdirname = dirname[ 0 : pos ]
             self.parentdirname = parentdirname
+            self.barename = dirname[ pos+1 : ]
             self.putkey('parentdir', parentdirname)
 
         # To be filled in later
@@ -1006,6 +1008,11 @@ def construct_archtree(indexpath, treedir):
                 continue
             dir.parentdir = dir2
             dir2.subdirs[dir.dir] = dir
+
+            fdir = dir2.files.get(dir.barename)
+            if fdir.submap.get('hasdesc'):
+                dir.putkey('hasparentdesc', True)
+                dir.putkey('parentdesc', fdir.submap.get('desc'))
                 
     return archtree
 
@@ -1068,6 +1075,49 @@ def generate_output_dirlist(dirmap):
     }
 
     filename = os.path.join(DESTDIR, 'dirlist.html')
+    tempname = os.path.join(DESTDIR, '__temp')
+    writer = SafeWriter(tempname, filename)
+    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    writer.resolve()
+    
+def generate_output_dirmap(dirmap):
+    """Write out the dirlist.html index.
+    """
+    skiplist = [ re.compile(val) for val in mapskippatternlist.ls ]
+    filename = plan.get('Dir-Map-Template')
+    dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
+
+    dirlist_entry = plan.get('Dir-Map-Entry', '<li>{dir}')
+    
+    filename = plan.get('General-Footer')
+    general_footer = read_lib_file(filename, '')
+
+    def dirlist_thunk(outfl):
+        dirlist = list(dirmap.values())
+        dirlist.sort(key=lambda dir:dir.dir.lower())
+        itermap = {}
+        for dir in dirlist:
+            skip = False
+            for pat in skiplist:
+                if pat.match(dir.dir):
+                    skip = True
+                    break
+            if skip:
+                continue
+            parity_flip(itermap)
+            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
+            outfl.write('\n')
+            
+    relroot = '..'
+    general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
+
+    itermap = {
+        '_dirs':dirlist_thunk,
+        'footer':general_footer_thunk,
+        'rootdir':ROOTNAME, 'relroot':relroot
+    }
+
+    filename = os.path.join(DESTDIR, 'dirmap.html')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
     Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
@@ -1144,9 +1194,6 @@ def generate_output_indexes(dirmap):
     """
     filename = plan.get('Main-Template')
     main_body = read_lib_file(filename, '<html>Missing main template!</html>')
-
-    filename = plan.get('Top-Level-Template')
-    toplevel_body = read_lib_file(filename, 'Welcome to the archive.\n')
 
     filename = plan.get('General-Footer')
     general_footer = read_lib_file(filename, '')
@@ -1231,7 +1278,6 @@ def generate_output_indexes(dirmap):
                 outfl.write('\n')
 
         general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
-        toplevel_body_thunk = lambda outfl: Template.substitute(toplevel_body, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
         
         itermap = {
             'count':len(filelist), 'subdircount':len(subdirlist),
@@ -1246,10 +1292,6 @@ def generate_output_indexes(dirmap):
         }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
-        if dir.dir == ROOTNAME:
-            itermap['hasdesc'] = True
-            itermap['header'] = toplevel_body_thunk
-            itermap['headerormeta'] = True
 
         tempname = os.path.join(DESTDIR, '__temp')
         relroot = relroot_for_dirname(dir.dir)
@@ -1310,6 +1352,7 @@ def generate_output(dirmap, jenv):
         print('Generating output...')
 
     generate_output_dirlist(dirmap)
+    generate_output_dirmap(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap, jenv=jenv)
@@ -1436,6 +1479,8 @@ if __name__ == '__main__':
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
     nounboxlinklist = DirList('no-unbox-link')
+    mapskippatternlist = DirList('map-skip-patterns')
+    # The skip-patterns are regexes, not pathnames.
     
     Template.addfilter('html', escape_html_string)
     Template.addfilter('slashwbr', slash_add_wbr)
