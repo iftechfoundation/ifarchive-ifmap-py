@@ -1,2 +1,3 @@
 ^if-archive/games/competition\d+/
 ^if-archive/games/springthing/\d+/
+^.*/old$
