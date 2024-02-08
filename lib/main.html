@@ -1,17 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Index: {dir|html}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/misc/icon-144.png" rel="apple-touch-icon" sizes="144x144" type="image/png">
-<link href="/misc/icon-64.png" rel="icon" sizes="64x64" type="image/png">
-<link href="/misc/icon-32.png" rel="icon" sizes="32x32" type="image/png">
-<link href="/misc/icon-16.png" rel="icon" sizes="16x16" type="image/png">
-<link rel="stylesheet" href="{relroot}/misc/ifarchive.css" type="text/css">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/indexes/archive.rss">
-</head>
-<body><div id="indexpage" class="Page">
+{% extends "page.html" %}
+{% from 'macros.html' import wbrslash %}
+
+{% block header %}
 
 <div class="Header">
 <h1>Index: {_dirlinks}</h1>
@@ -28,15 +18,22 @@
 </div>
 {/}
 
-{?headerormeta}
-<div class="Description">
-{header}
-{?_metadata}{_metadata}{/}
-<hr>
-</div>
-{/}
+{% endblock %}
 
-<div class="Body">
+{% block description %}
+
+{%- autoescape false %}
+{{ header }}
+{%- endautoescape %}
+
+{%- if _metadata %}
+{{ _metadata }}
+{%- endif %}
+<hr>
+
+{% endblock %}
+
+{% block body %}
 
 {?subdircount}
 <h3 class="ListHeader" id="subdirheader">{subdircount} Subdirector{subdircount|plural_ies}</h3>
@@ -74,8 +71,5 @@
 </dl>
 {/}
 
-</div>
+{% endblock %}
 
-{footer}
-
-</div></body></html>

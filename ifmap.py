@@ -1162,12 +1162,8 @@ def generate_output_datelist(dirmap, jenv):
 def generate_output_indexes(dirmap):
     """Write out the general (per-directory) indexes.
     """
-    filename = plan.get('Main-Template')
-    main_body = read_lib_file(filename, '<html>Missing main template!</html>')
-
-    filename = plan.get('General-Footer')
-    general_footer = read_lib_file(filename, '')
-
+    template = jenv.get_template('main.html')
+    
     dirmetadata_body = plan.get('Dir-Metadata', '')
     filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
     subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
@@ -1247,18 +1243,17 @@ def generate_output_indexes(dirmap):
                 Template.substitute(subdirlist_entry, ChainMap(itermap, dfile.submap), outfl=outfl)
                 outfl.write('\n')
 
-        general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(dir.submap, { 'relroot':relroot }), outfl=outfl)
-        
         itermap = {
-            'count':len(filelist), 'subdircount':len(subdirlist),
-            'alsocount':len(alsofilelist), 'alsosubdircount':len(alsosubdirlist),
+            'pageid': 'indexpage',
+            'title': 'Index: ' + dir.dir,
+            'count': len(filelist), 'subdircount': len(subdirlist),
+            'alsocount': len(alsofilelist), 'alsosubdircount': len(alsosubdirlist),
             '_files': lambda outfl:filelist_thunk(outfl, filelist),
             '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
             '_subdirs': lambda outfl:subdirlist_thunk(outfl, subdirlist),
             '_alsosubdirs': lambda outfl:subdirlist_thunk(outfl, alsosubdirlist),
             '_dirlinks': dirlinks_thunk,
-            'footer': general_footer_thunk,
-            'rootdir':ROOTNAME, 'relroot':relroot
+            'rootdir': ROOTNAME,
         }
         if dir.metadata:
             itermap['_metadata'] = dirmetadata_thunk
@@ -1268,7 +1263,7 @@ def generate_output_indexes(dirmap):
         itermap['relroot'] = relroot
         filename = os.path.join(DESTDIR, dir.dir, 'index.html')
         writer = SafeWriter(tempname, filename)
-        Template.substitute(main_body, ChainMap(itermap, dir.submap), outfl=writer.stream())
+        template.stream(ChainMap(itermap, dir.submap)).dump(writer.stream())
         writer.resolve()
 
 
