@@ -41,7 +41,7 @@ Please do not consider them infallible.
 <ul id="datelist">
 {% set parity = cycler("Even", "Odd") %}
 {% for file in _files %}
-<li class="Par{{ parity.next() }}"><span class="Date">[{{ file.datestr }}]</span> <a href="/{{ file.dir |urlencode }}/{{ file.name |urlencode }}">{{ wbrslash(file.dir.split('/')) }}/<wbr>{{ file.name }}</a>
+<li class="Par{{ parity.next() }}"><span class="Date">[{{ file.datestr }}]</span> <a href="/{{ file.dir |urlencode }}/{{ file.name |urlencode }}">{{ wbrslash(file.dir) }}/<wbr>{{ file.name }}</a>
 {% endfor %}
 </ul>
 

@@ -24,7 +24,7 @@
 <dl id="alldirlist" class="ItemList">
 {% set parity = cycler("Even", "Odd") %}
 {% for dir in _dirs %}
-<dt class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir.split('/')) }}</a>
+<dt class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir) }}</a>
 {%- if dir.hasparentdesc %}
 <dd>{% autoescape false %}{{ dir.parentdesc }}{% endautoescape %}
 {%- endif %}

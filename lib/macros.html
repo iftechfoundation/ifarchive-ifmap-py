@@ -1,7 +1,7 @@
 
 {%- macro wbrslash(ls) -%}
   {%- set slash = joiner('/<wbr>') -%}
-  {%- for el in ls -%}
+  {%- for el in ls.split('/') -%}
     {{ slash()|safe }}{{ el }}
   {%- endfor -%}
 {%- endmacro -%}
