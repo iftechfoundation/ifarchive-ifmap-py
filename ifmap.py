@@ -1053,11 +1053,12 @@ def generate_output_dirlist(dirmap, jenv):
 
     dirlist = list(dirmap.values())
     dirlist.sort(key=lambda dir:dir.dir.lower())
+    finaldirlist = [ dir.submap for dir in dirlist ]
             
     itermap = {
         'title': 'Complete Index of Directories',
         'pageid': 'dirpage',
-        '_dirs': dirlist,
+        '_dirs': finaldirlist,
         'rootdir': ROOTNAME,
     }
 
