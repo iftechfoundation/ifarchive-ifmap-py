@@ -1,0 +1,7 @@
+
+{%- macro wbrslash(ls) -%}
+  {%- set slash = joiner('/<wbr>') -%}
+  {%- for el in ls -%}
+    {{ slash()|safe }}{{ el }}
+  {%- endfor -%}
+{%- endmacro -%}

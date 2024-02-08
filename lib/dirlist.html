@@ -1,4 +1,5 @@
 {% extends "page.html" %}
+{% from 'macros.html' import wbrslash %}
 
 {% block description %}
 <p>
@@ -23,7 +24,8 @@
 <ul id="alldirlist">
 {% set parity = cycler("Even", "Odd") %}
 {% for dir in _dirs %}
-<li class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ dir.dir }}</a>
+{% set dirsplit = dir.dir.split('/') %}
+<li class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dirsplit) }}</a>
 {% endfor %}
 </ul>
 
