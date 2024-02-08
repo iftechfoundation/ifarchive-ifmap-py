@@ -24,8 +24,7 @@
 <ul id="alldirlist">
 {% set parity = cycler("Even", "Odd") %}
 {% for dir in _dirs %}
-{% set dirsplit = dir.dir.split('/') %}
-<li class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dirsplit) }}</a>
+<li class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir.split('/')) }}</a>
 {% endfor %}
 </ul>
 
