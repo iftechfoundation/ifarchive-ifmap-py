@@ -21,8 +21,9 @@
 {% block body %}
 
 <ul id="alldirlist">
+{% set parity = cycler("Even", "Odd") %}
 {% for dir in _dirs %}
-<li class="Par{parity}"><a href="{{ dir.dir |urlencode }}/">{{ dir.dir }}</a>
+<li class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ dir.dir }}</a>
 {% endfor %}
 </ul>
 
