@@ -1068,7 +1068,7 @@ def generate_output_dirlist(dirmap, jenv):
     template.stream(itermap).dump(writer.stream())
     writer.resolve()
     
-def generate_output_dirmap(dirmap):
+def generate_output_dirmap(dirmap, jenv):
     """Write out the dirlist.html index.
     """
     skiplist = [ re.compile(val) for val in mapskippatternlist.ls ]
@@ -1330,7 +1330,7 @@ def generate_output(dirmap, jenv):
         print('Generating output...')
 
     generate_output_dirlist(dirmap, jenv)
-    generate_output_dirmap(dirmap)
+    generate_output_dirmap(dirmap, jenv)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap, jenv=jenv)
