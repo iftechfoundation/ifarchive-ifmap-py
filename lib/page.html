@@ -13,9 +13,11 @@
 </head>
 <body><div {% if pageid %}id="{{ pageid }}"{% endif %} class="Page">
 
+{% block header %}
 <div class="Header">
 <h1>{% if title %}{{ title }}{% else %}IF Archive{% endif %}</h1>
 </div>
+{% endblock %}
 
 <div class="Description">
 {% block description %}
