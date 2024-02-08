@@ -1,31 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>{?interval}Files by Date (past {interval}){:}All Files by Date{/}</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/misc/icon-144.png" rel="apple-touch-icon" sizes="144x144" type="image/png">
-<link href="/misc/icon-64.png" rel="icon" sizes="64x64" type="image/png">
-<link href="/misc/icon-32.png" rel="icon" sizes="32x32" type="image/png">
-<link href="/misc/icon-16.png" rel="icon" sizes="16x16" type="image/png">
-<link rel="stylesheet" href="{relroot}/misc/ifarchive.css" type="text/css">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/indexes/archive.rss">
-</head>
-<body><div id="datepage" class="Page">
+{% extends "page.html" %}
+{% from 'macros.html' import wbrslash %}
 
-<div class="Header">
-<h1>{?interval}Files by Date (past {interval}){:}All Files by Date{/}</h1>
-</div>
-
-<div class="Description">
-
+{% block description %}
 <p>
-{?interval}
-This page lists the most recent {interval} of files in the Archive, 
+{% if interval %}
+This page lists the most recent {{ interval }} of files in the Archive, 
 sorted by date.
-{:}
+{% else %}
 This page lists every file in the Archive, sorted by date.
-{/}
+{% endif %}
 (The last update of the file, not the date it first entered the
 Archive.) Note that this list is based on filesystem timestamps,
 which may be inaccurate -- or just plain wrong -- for various reasons.
@@ -33,35 +16,33 @@ Please do not consider them infallible.
 </p>
 
 <ul id="indexlist">
-<li><a href="{relroot}/indexes/date_1.html">Past week</a>
-<li><a href="{relroot}/indexes/date_2.html">past month</a>
-<li><a href="{relroot}/indexes/date_3.html">past three months</a>
-<li><a href="{relroot}/indexes/date_4.html">past year</a>
-<li><a href="{relroot}/indexes/date.html">all files</a>, sorted by date.
+<li><a href="/indexes/date_1.html">Past week</a>
+<li><a href="/indexes/date_2.html">past month</a>
+<li><a href="/indexes/date_3.html">past three months</a>
+<li><a href="/indexes/date_4.html">past year</a>
+<li><a href="/indexes/date.html">all files</a>, sorted by date.
 </ul>
 
 <p>
-<a href="{relroot}/index.html">About the IF-Archive</a>.
+<a href="/index.html">About the IF-Archive</a>.
 </p>
 
 <p>
-<a href="{relroot}/indexes/dirlist.html">List of all directories</a>.
+<a href="/indexes/dirlist.html">List of all directories</a>.
 </p>
 
 <p>
-<a href="{relroot}/indexes/{rootdir|indexuri|url}">Enter the Archive</a>
+<a href="/indexes/{{ rootdir |urlencode }}">Enter the Archive</a>
 </p>
+{% endblock %}
 
-</div>
-
-<div class="Body">
+{% block body %}
 
 <ul id="datelist">
-{_files}
+{% set parity = cycler("Even", "Odd") %}
+{% for file in _files %}
+<li class="Par{{ parity.next() }}"><span class="Date">[{{ datestr }}]</span> <a href="/{{ dir |urlencode }}/{{ name |urlencode }}">{{ dir }}/<wbr>{{ name }}</a>
+{% endfor %}
 </ul>
 
-</div>
-
-{footer}
-
-</div></body></html>
+{% endblock %}

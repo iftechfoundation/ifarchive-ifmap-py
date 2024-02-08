@@ -1101,7 +1101,7 @@ def generate_output_dirmap(dirmap, jenv):
     template.stream(itermap).dump(writer.stream())
     writer.resolve()
     
-def generate_output_datelist(dirmap):
+def generate_output_datelist(dirmap, jenv):
     """Write out the date.html indexes.
     """
     intervals = [
@@ -1112,6 +1112,8 @@ def generate_output_datelist(dirmap):
         (4, 366*24*60*60, 'year')
     ]
 
+    template = jenv.get_template('datelist.html')
+    
     # Create a list of all files sorted by date, newest to oldest.
     
     filelist = []
@@ -1126,14 +1128,6 @@ def generate_output_datelist(dirmap):
     # a tertiary key of directory name.
     filelist.sort(key=lambda file: (-int(file.getkey('date')), file.name.lower(), file.path.lower()))
 
-    filename = plan.get('Date-List-Template')
-    datelist_body = read_lib_file(filename, '<html><body>\n{_files}\n</body></html>\n')
-
-    datelist_entry = plan.get('Date-List-Entry', '<li>{name}')
-
-    filename = plan.get('General-Footer')
-    general_footer = read_lib_file(filename, '')
-
     for (intkey, intlen, intname) in intervals:
         if intkey:
             filename = os.path.join(DESTDIR, 'date_%d.html' % (intkey,))
@@ -1141,30 +1135,28 @@ def generate_output_datelist(dirmap):
             filename = os.path.join(DESTDIR, 'date.html')
 
         relroot = '..'
-        
-        def filelist_thunk(outfl):
-            itermap = { 'relroot':relroot }
-            for file in filelist:
-                parity_flip(itermap)
-                if intlen:
-                    if int(file.getkey('date')) + intlen < curdate:
-                        break
-                Template.substitute(datelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
-                outfl.write('\n')
+
+        finalfilelist = []
+        for file in filelist:
+            if intlen:
+                if int(file.getkey('date')) + intlen < curdate:
+                    break
+            finalfilelist.append(file.submap)
                 
-        general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
-        
         itermap = {
-            '_files':filelist_thunk,
-            'footer':general_footer_thunk,
-            'rootdir':ROOTNAME, 'relroot':relroot
+            'pageid': 'datepage',
+            '_files': finalfilelist,
+            'rootdir': ROOTNAME,
         }
         if intname:
             itermap['interval'] = intname
+            itermap['title'] = 'Files by Date (past %s)' % (intname,)
+        else:
+            itermap['title'] = 'All Files by Date'
             
         tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
-        Template.substitute(datelist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+        template.stream(itermap).dump(writer.stream())
         writer.resolve()
     
 def generate_output_indexes(dirmap):
@@ -1331,7 +1323,7 @@ def generate_output(dirmap, jenv):
 
     generate_output_dirlist(dirmap, jenv)
     generate_output_dirmap(dirmap, jenv)
-    generate_output_datelist(dirmap)
+    generate_output_datelist(dirmap, jenv)
     generate_output_indexes(dirmap)
     generate_output_xml(dirmap, jenv=jenv)
 
