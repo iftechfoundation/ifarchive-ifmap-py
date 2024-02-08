@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>{% if title %}{{ title }}{% else %}IF Archive{% endif %}</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="/misc/icon-144.png" rel="apple-touch-icon" sizes="144x144" type="image/png">
+<link href="/misc/icon-64.png" rel="icon" sizes="64x64" type="image/png">
+<link href="/misc/icon-32.png" rel="icon" sizes="32x32" type="image/png">
+<link href="/misc/icon-16.png" rel="icon" sizes="16x16" type="image/png">
+<link rel="stylesheet" href="/misc/ifarchive.css" type="text/css">
+<link rel="alternate" type="application/rss+xml" title="RSS" href="/indexes/archive.rss">
+</head>
+<body><div {% if pageid %}id="{{ pageid }}"{% endif %} class="Page">
+
+<div class="Header">
+<h1>{% if title %}{{ title }}{% else %}IF Archive{% endif %}</h1>
+</div>
+
+<div class="Description">
+{% block description %}
+{% endblock %}
+</div>
+
+<div class="Body">
+{% block body %}
+{% endblock %}
+</div>
+
+{% include "tmpfooter.html" %}
+
+</div></body></html>

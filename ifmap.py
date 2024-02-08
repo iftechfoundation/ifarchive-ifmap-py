@@ -1045,39 +1045,25 @@ def parity_flip(map):
     else:
         map['parity'] = 'Even'
 
-def generate_output_dirlist(dirmap):
+def generate_output_dirlist(dirmap, jenv):
     """Write out the dirlist.html index.
     """
-    filename = plan.get('Dir-List-Template')
-    dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
+    template = jenv.get_template('dirlist.html')
 
-    dirlist_entry = plan.get('Dir-List-Entry', '<li>{dir}')
-    
-    filename = plan.get('General-Footer')
-    general_footer = read_lib_file(filename, '')
-
-    def dirlist_thunk(outfl):
-        dirlist = list(dirmap.values())
-        dirlist.sort(key=lambda dir:dir.dir.lower())
-        itermap = {}
-        for dir in dirlist:
-            parity_flip(itermap)
-            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
-            outfl.write('\n')
+    dirlist = list(dirmap.values())
+    dirlist.sort(key=lambda dir:dir.dir.lower())
             
-    relroot = '..'
-    general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
-
     itermap = {
-        '_dirs':dirlist_thunk,
-        'footer':general_footer_thunk,
-        'rootdir':ROOTNAME, 'relroot':relroot
+        'title': 'Index of Directories',
+        'pageid': 'dirpage',
+        '_dirs': dirlist,
+        'rootdir': ROOTNAME,
     }
 
     filename = os.path.join(DESTDIR, 'dirlist.html')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    template.stream(itermap).dump(writer.stream())
     writer.resolve()
     
 def generate_output_dirmap(dirmap):
@@ -1351,7 +1337,7 @@ def generate_output(dirmap, jenv):
     if opts.verbose:
         print('Generating output...')
 
-    generate_output_dirlist(dirmap)
+    generate_output_dirlist(dirmap, jenv)
     generate_output_dirmap(dirmap)
     generate_output_datelist(dirmap)
     generate_output_indexes(dirmap)
