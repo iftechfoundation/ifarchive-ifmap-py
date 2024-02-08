@@ -518,6 +518,7 @@ def pluralize_ies(val):
     else:
         return 'ies'
 
+### will go away? ###
 def slash_add_wbr(val):
     """Add a silent wordwrap-point after every slash.
     """
@@ -1054,7 +1055,7 @@ def generate_output_dirlist(dirmap, jenv):
     dirlist.sort(key=lambda dir:dir.dir.lower())
             
     itermap = {
-        'title': 'Index of Directories',
+        'title': 'Complete Index of Directories',
         'pageid': 'dirpage',
         '_dirs': dirlist,
         'rootdir': ROOTNAME,
@@ -1070,43 +1071,33 @@ def generate_output_dirmap(dirmap):
     """Write out the dirlist.html index.
     """
     skiplist = [ re.compile(val) for val in mapskippatternlist.ls ]
-    filename = plan.get('Dir-Map-Template')
-    dirlist_body = read_lib_file(filename, '<html><body>\n{_dirs}\n</body></html>\n')
-
-    dirlist_entry = plan.get('Dir-Map-Entry', '<li>{dir}')
     
-    filename = plan.get('General-Footer')
-    general_footer = read_lib_file(filename, '')
+    template = jenv.get_template('dirmap.html')
 
-    def dirlist_thunk(outfl):
-        dirlist = list(dirmap.values())
-        dirlist.sort(key=lambda dir:dir.dir.lower())
-        itermap = {}
-        for dir in dirlist:
-            skip = False
-            for pat in skiplist:
-                if pat.match(dir.dir):
-                    skip = True
-                    break
-            if skip:
-                continue
-            parity_flip(itermap)
-            Template.substitute(dirlist_entry, ChainMap(itermap, dir.submap), outfl=outfl)
-            outfl.write('\n')
-            
-    relroot = '..'
-    general_footer_thunk = lambda outfl: Template.substitute(general_footer, ChainMap(plan.map, { 'relroot':relroot }), outfl=outfl)
+    finaldirlist = []
+    dirlist = list(dirmap.values())
+    dirlist.sort(key=lambda dir:dir.dir.lower())
+    itermap = {}
+    for dir in dirlist:
+        skip = False
+        for pat in skiplist:
+            if pat.match(dir.dir):
+                skip = True
+                break
+        if not skip:
+            finaldirlist.append(dir.submap)
 
     itermap = {
-        '_dirs':dirlist_thunk,
-        'footer':general_footer_thunk,
-        'rootdir':ROOTNAME, 'relroot':relroot
+        'title': 'Index of Directories',
+        'pageid': 'dirpage',
+        '_dirs': finaldirlist,
+        'rootdir': ROOTNAME,
     }
 
     filename = os.path.join(DESTDIR, 'dirmap.html')
     tempname = os.path.join(DESTDIR, '__temp')
     writer = SafeWriter(tempname, filename)
-    Template.substitute(dirlist_body, ChainMap(itermap, plan.map), outfl=writer.stream())
+    template.stream(itermap).dump(writer.stream())
     writer.resolve()
     
 def generate_output_datelist(dirmap):

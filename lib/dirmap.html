@@ -1,50 +1,34 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Index of Directories</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link href="/misc/icon-144.png" rel="apple-touch-icon" sizes="144x144" type="image/png">
-<link href="/misc/icon-64.png" rel="icon" sizes="64x64" type="image/png">
-<link href="/misc/icon-32.png" rel="icon" sizes="32x32" type="image/png">
-<link href="/misc/icon-16.png" rel="icon" sizes="16x16" type="image/png">
-<link rel="stylesheet" href="{relroot}/misc/ifarchive.css" type="text/css">
-<link rel="alternate" type="application/rss+xml" title="RSS" href="/indexes/archive.rss">
-</head>
-<body><div id="dirpage" class="Page">
+{% extends "page.html" %}
+{% from 'macros.html' import wbrslash %}
 
-<div class="Header">
-<h1>Index of Directories</h1>
-</div>
-
-<div class="Description">
-
+{% block description %}
 <p>
-<a href="{relroot}/index.html">About the IF-Archive</a>.
+<a href="/">About the IF-Archive</a>.
 </p>
 
 <ul id="indexlist">
-<li><a href="{relroot}/indexes/date_1.html">Past week</a>
-<li><a href="{relroot}/indexes/date_2.html">past month</a>
-<li><a href="{relroot}/indexes/date_3.html">past three months</a>
-<li><a href="{relroot}/indexes/date_4.html">past year</a>
-<li><a href="{relroot}/indexes/date.html">all files</a>, sorted by date.
+<li><a href="/indexes/date_1.html">Past week</a>
+<li><a href="/indexes/date_2.html">past month</a>
+<li><a href="/indexes/date_3.html">past three months</a>
+<li><a href="/indexes/date_4.html">past year</a>
+<li><a href="/indexes/date.html">all files</a>, sorted by date.
 </ul>
 
 <p>
-<a href="{relroot}/indexes/{rootdir|indexuri|url}">Enter the Archive</a>
+<a href="/indexes/{{ rootdir |urlencode }}/">Enter the Archive</a>
 </p>
+{% endblock %}
 
-</div>
-
-<div class="Body">
+{% block body %}
 
 <dl id="alldirlist" class="ItemList">
-{_dirs}
+{% set parity = cycler("Even", "Odd") %}
+{% for dir in _dirs %}
+<dt class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir.split('/')) }}</a>
+{%- if dir.hasparentdesc %}
+<dd>{% autoescape false %}{{ dir.parentdesc }}{% endautoescape %}
+{%- endif %}
+{% endfor %}
 </dl>
 
-</div>
-
-{footer}
-
-</div></body></html>
+{% endblock %}
