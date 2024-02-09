@@ -506,12 +506,20 @@ html_entities = {
     # XML escaping. So let's not.
 }
 
+def pluralize(val, singular='', plural='s'):
+    if val == 1 or val == '1':
+        return singular
+    else:
+        return plural
+
+### will go away? ###
 def pluralize_s(val):
     if val == 1 or val == '1':
         return ''
     else:
         return 's'
 
+### will go away? ###
 def pluralize_ies(val):
     if val == 1 or val == '1':
         return 'y'
@@ -1454,6 +1462,7 @@ if __name__ == '__main__':
         loader = FileSystemLoader(opts.libdir),
         extensions = [
             jenvfilter('isodate', isodate),
+            jenvfilter('pluralize', pluralize),
         ],
         autoescape = select_autoescape(),
         keep_trailing_newline = True,
