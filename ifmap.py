@@ -1185,19 +1185,11 @@ def generate_output_indexes(dirmap):
         # Divide each of these lists into  "regular" and "deep sublists.
         filelist, alsofilelist = deepsplit(filelist)
         subdirlist, alsosubdirlist = deepsplit(subdirlist)
-            
-        def dirlinks_thunk(outfl):
-            els = dir.dir.split('/')
-            val = ''
-            first = True
-            for el in els:
-                if first:
-                    val = el
-                else:
-                    val = val + '/' + el
-                itermap = { 'dir':val, 'name':el, 'first':first, 'relroot':relroot }
-                Template.substitute(dirlinkelement_body, itermap, outfl=outfl)
-                first = False
+
+        dirlinkels = []
+        els = dir.dir.split('/')
+        for ix in range(0, len(els)):
+            dirlinkels.append( ('/'.join(els[:ix+1]), els[ix]) )
             
         def filelist_thunk(outfl, fls):
             itermap = { 'relroot':relroot }
@@ -1248,7 +1240,7 @@ def generate_output_indexes(dirmap):
             '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
             '_subdirs': lambda outfl:subdirlist_thunk(outfl, subdirlist),
             '_alsosubdirs': lambda outfl:subdirlist_thunk(outfl, alsosubdirlist),
-            '_dirlinks': dirlinks_thunk,
+            '_dirlinkels': dirlinkels,
             'rootdir': ROOTNAME,
         }
         if dir.metadata:
