@@ -39,41 +39,41 @@
 
 {% block body %}
 
-{?subdircount}
-<h3 class="ListHeader" id="subdirheader">{subdircount} Subdirector{subdircount|plural_ies}</h3>
+{%- if subdircount %}
+<h3 class="ListHeader" id="subdirheader">{{ subdircount }} Subdirector{{ subdircount|pluralize('y', 'ies') }}</h3>
 <dl id="subdirlist" class="ItemList">
 {_subdirs}
 </dl>
-{/}
+{%- endif %}
 
-{?alsosubdircount}
-{?subdircount}
+{%- if alsosubdircount %}
+{%- if subdircount %}
 <h4 class="ListHeader">See Also</h4>
-{:}
-<h3 class="ListHeader">See Also Subdirector{alsocount|plural_ies}</h3>
-{/}
+{% else %}
+<h3 class="ListHeader">See Also Subdirector{{ alsocount|pluralize('y', 'ies') }}</h3>
+{%- endif %}
 <dl id="alsosubdirlist" class="ItemList">
 {_alsosubdirs}
 </dl>
-{/}
+{%- endif %}
 
-{?count} 
-<h3 class="ListHeader" id="itemheader">{count} File{count|plural_s}</h3>
+{%- if count %}
+<h3 class="ListHeader" id="itemheader">{{ count }} File{{ count|pluralize }}</h3>
 <dl id="filelist" class="ItemList">
 {_files}
 </dl>
-{/}
+{%- endif %}
 
-{?alsocount}
-{?count}
+{%- if alsocount %}
+{%- if count %}
 <h4 class="ListHeader">See Also</h4>
-{:}
-<h3 class="ListHeader">See Also File{alsocount|plural_s}</h3>
-{/}
+{% else %}
+<h3 class="ListHeader">See Also File{{ alsocount|pluralize }}</h3>
+{%- endif %}
 <dl id="alsofilelist" class="ItemList">
 {_alsofiles}
 </dl>
-{/}
+{%- endif %}
 
 {% endblock %}
 
