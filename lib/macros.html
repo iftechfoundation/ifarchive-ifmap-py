@@ -5,3 +5,10 @@
     {{ slash()|safe }}{{ el }}
   {%- endfor -%}
 {%- endmacro -%}
+
+{%- macro wbrlinkslash(ls) -%}
+  {%- set slash = joiner('/<wbr>') -%}
+  {%- for totel, el in ls -%}
+    <a href="/indexes/{{ totel|urlencode }}">{{ slash()|safe }}{{ el }}</a>
+  {%- endfor -%}
+{%- endmacro -%}
