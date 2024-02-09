@@ -42,7 +42,16 @@
 {%- if subdircount %}
 <h3 class="ListHeader" id="subdirheader">{{ subdircount }} Subdirector{{ subdircount|pluralize('y', 'ies') }}</h3>
 <dl id="subdirlist" class="ItemList">
-{_subdirs}
+{% set parity = cycler("Even", "Odd") %}
+{% for subdir in _subdirs %}
+<dt class="Par{{ parity.next() }}"><a href={% if subdir.islink %}"/indexes/{{ subdir.linkdir |urlencode }}/"{% else %}"/indexes/{{ subdir.path |urlencode }}/"{% endif %}>{{ wbrslash(subdir.path) }}</a>
+{%- if subdir.islink %}
+<span class="SymLinkRef">[link to <a href="/indexes/{{ subdir.linkdir |urlencode }}/">{{ subdir.linkdir }}</a>]</span>
+{%- endif %}
+{%- if subdir.hasdesc %}
+<dd>{% autoescape false %}{{ subdir.desc }}{% endautoescape %}
+{%- endif %}
+{% endfor %}
 </dl>
 {%- endif %}
 

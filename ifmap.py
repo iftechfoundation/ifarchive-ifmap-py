@@ -1231,13 +1231,6 @@ def generate_output_indexes(dirmap):
                 itermap['_unboxlink'] = unboxlink_thunk
                 Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
                 outfl.write('\n')
-        
-        def subdirlist_thunk(outfl, dls):
-            itermap = { 'relroot':relroot }
-            for dfile in dls:
-                parity_flip(itermap)
-                Template.substitute(subdirlist_entry, ChainMap(itermap, dfile.submap), outfl=outfl)
-                outfl.write('\n')
 
         itermap = {
             'pageid': 'indexpage',
@@ -1246,8 +1239,8 @@ def generate_output_indexes(dirmap):
             'alsocount': len(alsofilelist), 'alsosubdircount': len(alsosubdirlist),
             '_files': lambda outfl:filelist_thunk(outfl, filelist),
             '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
-            '_subdirs': lambda outfl:subdirlist_thunk(outfl, subdirlist),
-            '_alsosubdirs': lambda outfl:subdirlist_thunk(outfl, alsosubdirlist),
+            '_subdirs': [ sdir.submap for sdir in subdirlist ],
+            '_alsosubdirs': [ sdir.submap for sdir in alsosubdirlist ],
             '_dirlinkels': dirlinkels,
             'rootdir': ROOTNAME,
         }
