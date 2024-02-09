@@ -27,10 +27,10 @@
 {%- endautoescape %}
 
 {%- if _metadata %}
-{%- set dat = _metadata -%}
-<dl class="ItemList">
+{% set dat = _metadata %} {% set datel = 'li' %}
+<ul class="PropList">
 {% include "metadata.html" %}
-</dl>
+</ul>
 {%- endif %}
 <hr>
 
