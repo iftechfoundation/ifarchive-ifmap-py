@@ -8,16 +8,16 @@
 <h1>Index: {{ wbrlinkslash(_dirlinkels) }}</h1>
 </div>
 
-{?parentdir}
+{% if parentdir %}
 <div class="ParentLinks">
 <ul id="parentlist">
-<li><a href="{relroot}/indexes/{parentdir|indexuri|url}">Up to parent</a>
-<li><a href="{relroot}/indexes/{rootdir|indexuri|url}">Up to root</a>
-<li><a href="/{dir|url}">See raw files</a>
+<li><a href="/indexes/{{ parentdir|urlencode }}/">Up to parent</a>
+<li><a href="/indexes/{{ rootdir|urlencode }}/">Up to root</a>
+<li><a href="/{{ dir|urlencode }}/">See raw files</a>
 </ul>
 <hr>
 </div>
-{/}
+{% endif %}
 
 {% endblock %}
 
