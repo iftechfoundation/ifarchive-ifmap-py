@@ -1186,10 +1186,6 @@ def generate_output_indexes(dirmap):
         filelist, alsofilelist = deepsplit(filelist)
         subdirlist, alsosubdirlist = deepsplit(subdirlist)
             
-        def dirmetadata_thunk(outfl):
-            itermap = dict(dir.metadata)
-            Template.substitute(dirmetadata_body, itermap, outfl=outfl)
-        
         def dirlinks_thunk(outfl):
             els = dir.dir.split('/')
             val = ''
@@ -1256,7 +1252,7 @@ def generate_output_indexes(dirmap):
             'rootdir': ROOTNAME,
         }
         if dir.metadata:
-            itermap['_metadata'] = dirmetadata_thunk
+            itermap['_metadata'] = dir.metadata
 
         tempname = os.path.join(DESTDIR, '__temp')
         relroot = relroot_for_dirname(dir.dir)

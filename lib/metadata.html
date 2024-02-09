@@ -1,0 +1,24 @@
+{%- if dat.tuid %}
+{%- set comma = joiner(', ') -%}
+<dd class="FileData">
+{%- for val in dat.tuid -%}
+{{ comma() }}<a href="https://ifdb.org/viewgame?id={{ val|urlencode }}">{% if loop.first %}IFDB {% endif %}entry</a>
+{%- endfor -%}
+{%- endif %}
+
+{%- if dat.tuidcomp %}
+{%- set comma = joiner(', ') -%}
+<dd class="FileData">
+{%- for val in dat.tuidcomp -%}
+{{ comma() }}<a href="https://ifdb.org/viewcomp?id={{ val|urlencode }}">{% if loop.first %}IFDB {% endif %}comp</a>
+{%- endfor -%}
+{%- endif %}
+
+{%- if dat.ifwiki %}
+{%- set comma = joiner(', ') -%}
+<dd class="FileData">IFWiki: 
+{% for val in dat.ifwiki -%}
+{{ comma() }}<a href="https://www.ifwiki.org/{{ val|urlencode }}">{{ val }}</a>
+{%- endfor -%}
+{%- endif %}
+
