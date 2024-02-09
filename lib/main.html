@@ -56,7 +56,10 @@
 <h3 class="ListHeader">See Also Subdirector{{ alsocount|pluralize('y', 'ies') }}</h3>
 {%- endif %}
 <dl id="alsosubdirlist" class="ItemList">
-{_alsosubdirs}
+{% set parity = cycler("Even", "Odd") %}
+{% for subdir in _alsosubdirs %}
+{%- include "subdirentry.html" %}
+{% endfor %}
 </dl>
 {%- endif %}
 
