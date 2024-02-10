@@ -1172,13 +1172,6 @@ def generate_output_indexes(dirmap):
     """
     template = jenv.get_template('main.html')
     
-    dirmetadata_body = plan.get('Dir-Metadata', '')
-    filelist_entry = plan.get('File-List-Entry', '<li>{name}\n{desc}')
-    subdirlist_entry = plan.get('Subdir-List-Entry', '<li>{dir}')
-    dirlinkelement_body = plan.get('Dir-Link-Element', '')
-    filemetadata_body = plan.get('File-Metadata', '')
-    fileunboxlink_body = plan.get('File-Unbox-Link', '')
-    
     for dir in dirmap.values():
         relroot = '..'
 
@@ -1426,8 +1419,6 @@ if __name__ == '__main__':
         tup = datetime.datetime.fromisoformat(opts.curdate)
         curdate = int(tup.timestamp())
 
-    plan = ParamFile(os.path.join(opts.libdir, 'index'))
-    
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
     nounboxlinklist = DirList('no-unbox-link')
