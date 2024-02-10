@@ -1199,13 +1199,10 @@ def generate_output_indexes(dirmap):
         for ix in range(0, len(els)):
             dirlinkels.append( ('/'.join(els[:ix+1]), els[ix]) )
             
-        def filelist_thunk(outfl, fls):
-            itermap = { 'relroot':relroot }
+        def prepare_filelist(fls):
+            res = []
             for file in fls:
-                parity_flip(itermap)
-                def metadata_thunk(outfl):
-                    itermap = dict(file.metadata)
-                    Template.substitute(filemetadata_body, itermap, outfl=outfl)
+                itermap = {}
                 def unboxlink_thunk(outfl):
                     # We show the unbox link based on the "unbox-link"
                     # metadata key ("true" or otherwise). If that's not
@@ -1227,18 +1224,19 @@ def generate_output_indexes(dirmap):
                         flag = false
                     itermap = { 'name':file.name, 'path':file.path, 'hasunboxlink':flag }
                     Template.substitute(fileunboxlink_body, itermap, outfl=outfl)
-                itermap['_metadata'] = metadata_thunk
-                itermap['_unboxlink'] = unboxlink_thunk
-                Template.substitute(filelist_entry, ChainMap(itermap, file.submap), outfl=outfl)
-                outfl.write('\n')
+                if file.metadata:
+                    itermap['_metadata'] = file.metadata
+                ###itermap['_unboxlink'] = unboxlink_thunk
+                res.append(ChainMap(itermap, file.submap))
+            return res
 
         itermap = {
             'pageid': 'indexpage',
             'title': 'Index: ' + dir.dir,
             'count': len(filelist), 'subdircount': len(subdirlist),
             'alsocount': len(alsofilelist), 'alsosubdircount': len(alsosubdirlist),
-            '_files': lambda outfl:filelist_thunk(outfl, filelist),
-            '_alsofiles': lambda outfl:filelist_thunk(outfl, alsofilelist),
+            '_files': prepare_filelist(filelist),
+            '_alsofiles': prepare_filelist(alsofilelist),
             '_subdirs': [ sdir.submap for sdir in subdirlist ],
             '_alsosubdirs': [ sdir.submap for sdir in alsosubdirlist ],
             '_dirlinkels': dirlinkels,

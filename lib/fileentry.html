@@ -1,0 +1,8 @@
+<dt class="Par{{ parity.next() }}"><a href="{?linkdir}{relroot}/indexes/{linkdir|indexuri|url}{:}{relroot}/{dir|url}/{name|url}{/}">{name|html}</a>
+{?date} <span class="Date">[{datestr}]</span>{/}
+{?islink}<span class="SymLinkRef">[link to <a href="{relroot}/{nlinkpath|url}">{nlinkpath|html}</a>]</span>{/}
+{_unboxlink}
+{_metadata}
+{%- if file.hasdesc %}
+<dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
+{%- endif %}
