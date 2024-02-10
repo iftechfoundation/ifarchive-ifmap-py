@@ -3,7 +3,9 @@
 {%- if file.islink %}
 <span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>
 {%- endif %}
-{_unboxlink}
+{%- if file.hasunboxlink %}
+<dd class="FileData"><a href="https://unbox.ifarchive.org?url=/{{ file.path|urlencode }}">View contents</a>
+{%- endif %}
 {_metadata}
 {%- if file.hasdesc %}
 <dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
