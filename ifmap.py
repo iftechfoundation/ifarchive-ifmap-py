@@ -273,47 +273,6 @@ class Template:
                 else:
                     outfl.write('[NOT-PRINTABLE]')
                     print('Problem: unprintable brace-tag type: %s=%r' % (tag.value, val))
-    
-class ParamFile:
-    """ParamFile: Store the contents of the lib/index file. This is a bunch
-    of key-value pairs, followed by a plain text body.
-    """
-    def __init__(self, filename):
-        self.filename = filename
-        self.map = {}
-        self.body = ''
-        lastkey = None
-        
-        fl = open(filename, encoding='utf-8')
-        while True:
-            ln = fl.readline()
-            if not ln:
-                break
-            ln = ln.rstrip()
-            if not ln:
-                break
-            if ln.startswith('    '):
-                if not lastkey:
-                    print('Problem: header line start with continuation: %s' % (ln,))
-                    continue
-                self.map[lastkey] = self.map[lastkey] + '\n' + ln.strip()
-                continue
-            key, dummy, val = ln.partition(':')
-            if not dummy:
-                print('Problem: no colon in header line: %s' % (ln,))
-                continue
-            key = key.strip()
-            lastkey = key
-            self.map[key] = val.strip()
-
-        self.body = fl.read()
-        fl.close()
-
-    def get(self, key, default=None):
-        return self.map.get(key, default)
-
-    def put(self, key, val):
-        self.map[key] = val
 
 class DirList:
     """DirList: A list of directories, loaded from a source file.
