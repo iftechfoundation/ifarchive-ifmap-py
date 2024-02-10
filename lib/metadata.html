@@ -18,6 +18,6 @@
 {%- set comma = joiner(', ') %}
 <{{ datel }} class="FileData">IFWiki: 
 {% for val in dat.ifwiki -%}
-{{ comma() }}<a href="https://www.ifwiki.org/{{ val|urlencode }}">{{ val }}</a>
+{{ comma() }}<a href="https://www.ifwiki.org/{{ val|replace(' ','_')|urlencode }}">{{ val }}</a>
 {%- endfor %}
 {%- endif %}
