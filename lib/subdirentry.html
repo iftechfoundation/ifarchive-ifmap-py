@@ -1,7 +1,9 @@
 <dt class="Par{{ parity.next() }}"><a href={% if subdir.islink %}"/indexes/{{ subdir.linkdir |urlencode }}/"{% else %}"/indexes/{{ subdir.path |urlencode }}/"{% endif %}>{{ wbrslash(subdir.path) }}</a>
+
 {%- if subdir.islink %}
-<span class="SymLinkRef">[link to <a href="/indexes/{{ subdir.linkdir |urlencode }}/">{{ subdir.linkdir }}</a>]</span>
+  <span class="SymLinkRef">[link to <a href="/indexes/{{ subdir.linkdir |urlencode }}/">{{ subdir.linkdir }}</a>]</span>
 {%- endif %}
+
 {%- if subdir.hasdesc %}
-<dd>{% autoescape false %}{{ subdir.desc }}{% endautoescape %}
+  <dd>{% autoescape false %}{{ subdir.desc }}{% endautoescape %}
 {%- endif %}
