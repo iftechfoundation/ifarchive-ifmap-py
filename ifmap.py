@@ -216,11 +216,11 @@ def isodate(val):
     # RFC 822 date format.
     return time.strftime('%a, %d %b %Y %H:%M:%S +0000', tup)
     
-def indexuri_dirname(val):
-    """Convert a directory name to the URI for its index file.
-    (This used to implement the X trick, but we've dropped that.)
-    """
-    return val + '/'
+def pluralize(val, singular='', plural='s'):
+    if val == 1 or val == '1':
+        return singular
+    else:
+        return plural
 
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
@@ -233,19 +233,6 @@ html_entities = {
     # Actually, if we do, we'd have to distinguish HTML escaping from
     # XML escaping. So let's not.
 }
-
-def pluralize(val, singular='', plural='s'):
-    if val == 1 or val == '1':
-        return singular
-    else:
-        return plural
-
-def escape_wikipage(val):
-    """Convert a wiki page title to its URI form. I think this just
-    means converting spaces to underscores.
-    (This does *not* include percent-encoding; that's a later stage.)
-    """
-    return val.replace(' ', '_')
 
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
