@@ -1,6 +1,8 @@
 <dt class="Par{{ parity.next() }}"><a href="{% if file.linkdir %}/indexes/{{ file.linkdir|urlencode }}/{% else %}/{{ file.dir|urlencode }}/{{ file.name|urlencode }}{% endif %}">{{ file.name }}</a>
 {% if file.date %} <span class="Date">[{{ file.datestr }}]</span>{% endif %}
-{% if file.islink %}<span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>{% endif %}
+{%- if file.islink %}
+<span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>
+{%- endif %}
 {_unboxlink}
 {_metadata}
 {%- if file.hasdesc %}
