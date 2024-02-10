@@ -1,15 +1,22 @@
 <dt class="Par{{ parity.next() }}"><a href="{% if file.linkdir %}/indexes/{{ file.linkdir|urlencode }}/{% else %}/{{ file.dir|urlencode }}/{{ file.name|urlencode }}{% endif %}">{{ file.name }}</a>
-{% if file.date %} <span class="Date">[{{ file.datestr }}]</span>{% endif %}
+
+{%- if file.date %}
+  <span class="Date">[{{ file.datestr }}]</span>
+{%- endif %}
+
 {%- if file.islink %}
-<span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>
+  <span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>
 {%- endif %}
+
 {%- if file.hasunboxlink %}
-<dd class="FileData"><a href="https://unbox.ifarchive.org?url=/{{ file.path|urlencode }}">View contents</a>
+  <dd class="FileData"><a href="https://unbox.ifarchive.org?url=/{{ file.path|urlencode }}">View contents</a>
 {%- endif %}
+
 {%- if file._metadata %}
-{% set dat = file._metadata %} {% set datel = 'dd' %}
-{% include "metadata.html" %}
+  {% set dat = file._metadata %} {% set datel = 'dd' %}
+  {% include "metadata.html" %}
 {%- endif %}
+
 {%- if file.hasdesc %}
-<dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
+  <dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
 {%- endif %}
