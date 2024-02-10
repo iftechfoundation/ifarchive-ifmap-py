@@ -240,26 +240,6 @@ def pluralize(val, singular='', plural='s'):
     else:
         return plural
 
-### will go away? ###
-def pluralize_s(val):
-    if val == 1 or val == '1':
-        return ''
-    else:
-        return 's'
-
-### will go away? ###
-def pluralize_ies(val):
-    if val == 1 or val == '1':
-        return 'y'
-    else:
-        return 'ies'
-
-### will go away? ###
-def slash_add_wbr(val):
-    """Add a silent wordwrap-point after every slash.
-    """
-    return val.replace('/', '/<wbr>')
-
 def escape_wikipage(val):
     """Convert a wiki page title to its URI form. I think this just
     means converting spaces to underscores.
@@ -267,7 +247,6 @@ def escape_wikipage(val):
     """
     return val.replace(' ', '_')
 
-### will go away? ###
 def escape_html_string(val):
     """Apply the basic HTML/XML &-escapes to a string. Also &#x...; escapes
     for Unicode characters.
@@ -289,24 +268,6 @@ def escape_html_string(val):
             pos += 1
     return ''.join(res)
 
-urlable_pattern = re.compile('[,-;@-z]+')
-
-def escape_url_string(val):
-    """Apply URL escaping (percent escapes) to a string.
-    """
-    res = []
-    pos = 0
-    while pos < len(val):
-        match = urlable_pattern.match(val, pos=pos)
-        if match:
-            res.append(match.group())
-            pos = match.end()
-        else:
-            ch = val[pos]
-            for chenc in ch.encode('utf8'):
-              res.append('%%%02X' % (chenc,))
-            pos += 1
-    return ''.join(res)
 
 def findfile(path):
     """Locate the File object for a given pathname.
