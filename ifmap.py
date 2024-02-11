@@ -307,6 +307,7 @@ class Directory:
             self.putkey('parentdir', parentdirname)
 
         # To be filled in later
+        self.lastchange = 0
         self.files = {}
         self.subdirs = {}
         self.parentdir = None
@@ -633,7 +634,11 @@ def parse_directory_tree(treedir, archtree):
                 continue
                     
             if ent.is_file():
+                if sta.st_mtime > dir.lastchange:
+                    # All files, including Index, count towards lastchange
+                    dir.lastchange = sta.st_mtime
                 if ent.name == 'Index':
+                    # But we don't create a File entry for Index
                     continue
                 file = dir.files.get(ent.name)
                 if file is None:
