@@ -8,5 +8,5 @@ python3 make-master-index.py testdata > testdata/if-archive/Master-Index
 python3 testdata/set-timestamps.py
 
 # Generate the index files.
-python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --curdate 2018-11-15T12:00:00Z
+python3 ifmap.py --src lib --index testdata/if-archive/Master-Index --tree testdata --curdate 2018-11-15T12:00:00+00:00
 
