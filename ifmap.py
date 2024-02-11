@@ -36,7 +36,7 @@ popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
 popt.add_option('-v', '--verbose',
-                action='count', dest='verbose',
+                action='count', dest='verbose', default=0,
                 help='print verbose output (repeat for more)')
 popt.add_option('--curdate',
                 action='store', dest='curdate', metavar='ISODATE',
