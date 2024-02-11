@@ -36,8 +36,8 @@ popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
 popt.add_option('-v', '--verbose',
-                action='store_true', dest='verbose',
-                help='print verbose output')
+                action='count', dest='verbose',
+                help='print verbose output (repeat for more)')
 popt.add_option('--curdate',
                 action='store', dest='curdate', metavar='ISODATE',
                 help='timestamp to use as "now" (for testing)')
@@ -476,7 +476,7 @@ def parse_master_index(indexpath, archtree):
                     file = None
 
                 dirname = dir.dir
-                if opts.verbose:
+                if opts.verbose > 1:
                     print('Finishing %s...' % (dirname,))
 
                 headerstr = '\n'.join(headerlines)
@@ -505,7 +505,7 @@ def parse_master_index(indexpath, archtree):
                 # Beginning of a directory block.
                 assert(match is not None)
                 dirname = match.group(1)
-                if opts.verbose:
+                if opts.verbose > 1:
                     print('Starting  %s...' % (dirname,))
                 dir = archtree.get_directory(dirname, oradd=True)
                 
@@ -594,7 +594,7 @@ def parse_directory_tree(treedir, archtree):
     def scan_directory(dirname, parentlist=None, parentdir=None):
         """Internal recursive function.
         """
-        if opts.verbose:
+        if opts.verbose > 1:
             print('Scanning %s...' % (dirname,))
         dir = archtree.get_directory(dirname, oradd=True)
         
@@ -854,6 +854,8 @@ def generate_output_indexes(dirmap):
     template = jenv.get_template('main.html')
     
     for dir in dirmap.values():
+        if opts.verbose > 1:
+            print('For %s...' % (dir.dir,))
         relroot = '..'
 
         # Divide up the directory's items into "files" and "subdirs".
@@ -1045,6 +1047,8 @@ def generate_metadata(dirmap):
         print('Generating metadata...')
 
     for dir in dirlist:
+        if opts.verbose > 1:
+            print('For %s...' % (dir.dir,))
         dirname = os.path.join(metadir, dir.dir)
         tempname = os.path.join(dirname, '__temp')
         
