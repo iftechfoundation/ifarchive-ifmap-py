@@ -18,7 +18,7 @@ Related files in this repo:
 
 ## Setup
 
-The generator uses the Python Markdown package. To install this:
+The generator uses the Python Markdown and Jinja packages. To install these:
 
 ```
 pip3 install -r requirements.txt
