@@ -313,6 +313,7 @@ class Directory:
 
         # To be filled in later
         self.lastchange = 0
+        self.doit = True
         self.files = {}
         self.subdirs = {}
         self.parentdir = None
@@ -859,7 +860,7 @@ def generate_output_indexes(dirmap):
     template = jenv.get_template('main.html')
     
     for dir in dirmap.values():
-        if dirsince is not None and dir.lastchange < dirsince:
+        if not dir.doit:
             continue
         if opts.verbose > 1:
             print('For %s...' % (dir.dir,))
@@ -1054,7 +1055,7 @@ def generate_metadata(dirmap):
         print('Generating metadata...')
 
     for dir in dirlist:
-        if dirsince is not None and dir.lastchange < dirsince:
+        if not dir.doit:
             continue
         if opts.verbose > 1:
             print('For %s...' % (dir.dir,))
@@ -1153,9 +1154,20 @@ if __name__ == '__main__':
     indexmtime = int(stat.st_mtime)
     
     check_missing_files(archtree.dirmap)
+
+    if dirsince is not None:
+        for dir in archtree.dirmap.values():
+            dir.doit = (dir.lastchange >= dirsince)
     
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
-    
+
+    if dirsince is None:
+        print('Rebuilt all directories.')
+    else:
+        ls = [ dir for dir in archtree.dirmap.values() if dir.doit ]
+        print('Rebuilt %d directories:' % (len(ls),))
+        for dir in ls:
+            print(dir.dir)
