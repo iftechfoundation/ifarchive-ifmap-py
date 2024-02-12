@@ -44,8 +44,8 @@ popt.add_option('--curdate',
                 action='store', dest='curdate', metavar='ISODATE',
                 help='timestamp to use as "now" (for testing)')
 popt.add_option('--since',
-                action='store', dest='dirsince', metavar='ISODATE',
-                help='only build index/metadata for directories changed since this timestamp')
+                action='store', dest='sincefile',
+                help='only build index/metadata for directories changed since this file')
 
 
 class DirList:
@@ -1114,10 +1114,11 @@ if __name__ == '__main__':
         tup = datetime.datetime.fromisoformat(opts.curdate)
         curdate = int(tup.timestamp())
 
-    if not opts.dirsince:
-        dirsince = None
-    else:
-        dirsince = int(datetime.datetime.fromisoformat(opts.dirsince).timestamp())
+    dirsince = None
+    if opts.sincefile:
+        if os.path.exists(opts.sincefile):
+            sta = os.stat(opts.sincefile)
+            dirsince = int(sta.st_mtime)
 
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
