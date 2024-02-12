@@ -17,6 +17,8 @@ from jinja2.ext import Extension
 
 ROOTNAME = 'if-archive'
 DESTDIR = None
+curdate = None
+dirsince = None
 
 popt = optparse.OptionParser(usage='ifmap.py')
 
@@ -41,6 +43,9 @@ popt.add_option('-v', '--verbose',
 popt.add_option('--curdate',
                 action='store', dest='curdate', metavar='ISODATE',
                 help='timestamp to use as "now" (for testing)')
+popt.add_option('--since',
+                action='store', dest='dirsince', metavar='ISODATE',
+                help='only build index/metadata for directories changed since this timestamp')
 
 
 class DirList:
@@ -854,6 +859,8 @@ def generate_output_indexes(dirmap):
     template = jenv.get_template('main.html')
     
     for dir in dirmap.values():
+        if dirsince is not None and dir.lastchange < dirsince:
+            continue
         if opts.verbose > 1:
             print('For %s...' % (dir.dir,))
         relroot = '..'
@@ -1047,6 +1054,8 @@ def generate_metadata(dirmap):
         print('Generating metadata...')
 
     for dir in dirlist:
+        if dirsince is not None and dir.lastchange < dirsince:
+            continue
         if opts.verbose > 1:
             print('For %s...' % (dir.dir,))
         dirname = os.path.join(metadir, dir.dir)
@@ -1103,6 +1112,11 @@ if __name__ == '__main__':
     else:
         tup = datetime.datetime.fromisoformat(opts.curdate)
         curdate = int(tup.timestamp())
+
+    if not opts.dirsince:
+        dirsince = None
+    else:
+        dirsince = int(datetime.datetime.fromisoformat(opts.dirsince).timestamp())
 
     hasher = FileHasher()
     noindexlist = NoIndexEntry()
