@@ -611,6 +611,12 @@ def parse_directory_tree(treedir, archtree):
         dir = archtree.get_directory(dirname, oradd=True)
         
         pathname = os.path.join(treedir, dirname)
+        
+        sta = os.stat(pathname)
+        if sta.st_mtime > dir.lastchange:
+            # Get the directory mod time.
+            dir.lastchange = sta.st_mtime
+        
         for ent in os.scandir(pathname):
             if ent.name.startswith('.'):
                 continue
