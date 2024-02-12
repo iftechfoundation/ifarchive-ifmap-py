@@ -27,7 +27,11 @@ set +o noclobber
 
 echo 'Rebuilding indexes...'
 
-/var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs
+touch /var/ifarchive/htdocs/build.lasttime.tmp
+
+/var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs --since /var/ifarchive/htdocs/build.lasttime
+
+mv /var/ifarchive/htdocs/build.lasttime.tmp /var/ifarchive/htdocs/build.lasttime
 
 # Make sure those files have the correct group and mode.
 
