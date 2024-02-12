@@ -1150,6 +1150,7 @@ if __name__ == '__main__':
         
     archtree = construct_archtree(opts.indexpath, opts.treedir)
 
+    # We'll use the Master-Index timestamp for the RSS pubDate.
     stat = os.stat(opts.indexpath)
     indexmtime = int(stat.st_mtime)
     
