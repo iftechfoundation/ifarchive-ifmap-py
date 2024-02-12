@@ -1172,4 +1172,4 @@ if __name__ == '__main__':
         ls = [ dir for dir in archtree.dirmap.values() if dir.doit ]
         print('Rebuilt %d directories:' % (len(ls),))
         for dir in ls:
-            print(dir.dir)
+            print('- %s' % (dir.dir,))
