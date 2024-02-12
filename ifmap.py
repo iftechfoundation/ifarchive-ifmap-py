@@ -448,6 +448,9 @@ def parse_master_index(indexpath, archtree):
     """Read through the Master-Index file and create directories and files.
     """
     
+    if opts.verbose:
+        print('Reading Master-Index...')
+        
     dirname_pattern = re.compile('^#[ ]*(%s.*):$' % (re.escape(ROOTNAME),))
     filename_pattern = re.compile('^##[^#]')
     dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
@@ -597,6 +600,9 @@ def parse_directory_tree(treedir, archtree):
     files. We also take the opportunity to scan file dates and sizes.
     """
 
+    if opts.verbose:
+        print('Walking directory tree...')
+        
     def scan_directory(dirname, parentlist=None, parentdir=None):
         """Internal recursive function.
         """
