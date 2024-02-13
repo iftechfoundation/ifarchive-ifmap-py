@@ -4,7 +4,17 @@
 # but in the background. This script can therefore be invoked by the
 # admin server tool without blocking httpd.
 
+# The --all argument removes build.lasttime, which means that the
+# build-indexes script (when we get there) will regenerate all index
+# pages instead of just the most recent changes. It's hacky to delete
+# this outside the build.lock, but it would be more hacky to pass
+# an argument all the way down to ifmap.py.
+
 (
+    if [ "$1" == "--all" ]; then
+	rm -f /var/ifarchive/htdocs/build.lasttime
+    fi
+
     /var/ifarchive/bin/make-master-index
     /var/ifarchive/bin/build-indexes
 ) &> /var/ifarchive/htdocs/build.out &
