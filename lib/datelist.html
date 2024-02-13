@@ -39,6 +39,10 @@ Or,
 
 {% block body %}
 
+{% if not _files %}
+<p>There have been no new uploads in the past {{ interval }}.</p>
+{% endif %}
+
 <ul id="datelist">
 {% set parity = cycler("Even", "Odd") %}
 {% for file in _files %}
