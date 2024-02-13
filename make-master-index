@@ -18,6 +18,8 @@ else
 fi
 set +o noclobber
 
+echo 'Building Master-Index...'
+
 # Create ls-lR and Master-Index.
 
 cd /var/ifarchive/htdocs
