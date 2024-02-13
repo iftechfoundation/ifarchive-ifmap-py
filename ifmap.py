@@ -846,6 +846,10 @@ def generate_output_datelist(dirmap, jenv):
         finalfilelist = []
         for file in filelist:
             if intlen:
+                if file.path == 'if-archive/ls-lR':
+                    continue
+                if file.path == 'if-archive/Master-Index':
+                    continue
                 if int(file.getkey('date')) + intlen < curdate:
                     break
             finalfilelist.append(file.submap)
