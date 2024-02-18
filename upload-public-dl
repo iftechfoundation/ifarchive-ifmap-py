@@ -1,0 +1,9 @@
+#!/bin/bash
+
+# Compress the entire (public) contents of the Archive and stream it to
+# a (public) AWS bucket.
+#
+# This requires secret credentials, so it must be run as root.
+
+cd /var/ifarchive/htdocs
+tar -czf - index.html misc indexes metadata if-archive | python3 /var/ifarchive/bin/aws-put.py --config /var/ifarchive/lib/aws.config --stdin ifarchive-all.tar.gz iftf-ifarchive-download
