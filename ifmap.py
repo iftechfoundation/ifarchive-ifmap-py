@@ -579,16 +579,16 @@ def parse_master_index(indexpath, archtree):
                 reldir = dir.dir+'/'+reldir
                 rel = archtree.get_directory(reldir, oradd=False)
                 if not rel:
-                    sys.stderr.write('Compound file entry refers to a bad directory: "%s" in %s' % (filename, dir.dir,))
+                    sys.stderr.write('Compound file entry refers to a bad directory: "%s" in %s\n' % (filename, dir.dir,))
                     continue
                 relfile = rel.files.get(relfile)
                 if not relfile:
-                    sys.stderr.write('Compound file entry refers to a bad file: "%s" in %s' % (filename, dir.dir,))
+                    sys.stderr.write('Compound file entry refers to a bad file: "%s" in %s\n' % (filename, dir.dir,))
                     continue
                 relfile.inmaster = True
                 file = dir.files.get(filename)
                 if file is not None:
-                    sys.stderr.write('Compound file entry appears twice: "%s" in %s' % (filename, dir.dir,))
+                    sys.stderr.write('Compound file entry appears twice: "%s" in %s\n' % (filename, dir.dir,))
                     continue
                 file = File(filename, dir, isdir=relfile.isdir, islink=relfile.islink)
                 if file.isdir:
