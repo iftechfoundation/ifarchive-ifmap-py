@@ -456,6 +456,7 @@ def parse_master_index(indexpath, archtree):
     dashline_pattern = re.compile('^[ ]*[-+=#*]+[ -+=#*]*$')
     
     dir = None
+    direntryset = None
     file = None
     filedesclines = None
     inheader = True
@@ -517,6 +518,7 @@ def parse_master_index(indexpath, archtree):
                 if opts.verbose > 1:
                     print('Starting  %s...' % (dirname,))
                 dir = archtree.get_directory(dirname, oradd=True)
+                direntryset = set()
                 
                 filedesclines = None
                 inheader = True
@@ -561,6 +563,10 @@ def parse_master_index(indexpath, archtree):
             filename = bx[2:].strip()
             bx = ''
             filedesclines = []
+
+            if filename in direntryset:
+                sys.stderr.write('Duplicate Index entry: "%s" in %s\n' % (filename, dir.dir,))
+            direntryset.add(filename)
 
             if '/' not in filename:
                 file = dir.files.get(filename)
