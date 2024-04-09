@@ -137,7 +137,7 @@ if opts.dryrun:
     sys.exit()
 
 cmd = 'purge_cache'
-url = 'https://api.cloudflare.com/client/v4/zones/%s/%s' % (zone_id, cmd)
+requrl = 'https://api.cloudflare.com/client/v4/zones/%s/%s' % (zone_id, cmd)
 headers = {
     'Content-Type': 'application/json',
     'X-Auth-Key': api_secret_key,
@@ -147,11 +147,18 @@ data = json.dumps({ 'files':urls }).encode()
 
 # Transmit the API request.
 
-req = urllib.request.Request(url, method='POST', data=data, headers=headers)
+try:
+    req = urllib.request.Request(requrl, method='POST', data=data, headers=headers)
 
-with urllib.request.urlopen(req) as res:
-    dat = res.read()
-    dat = json.loads(dat.decode())
-    print(res.getcode(), 'success:', dat.get('success'))
-    
+    with urllib.request.urlopen(req) as res:
+        dat = res.read()
+        dat = json.loads(dat.decode())
+        print(res.getcode(), 'success:', dat.get('success'))
+
+except urllib.error.HTTPError as ex:
+    dat = ex.fp.read()
+    msg = dat.decode()
+    print('%s: %s' % (ex, msg,))
+except Exception as ex:
+    print('%s' % (ex,))
 
