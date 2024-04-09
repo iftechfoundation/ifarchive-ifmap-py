@@ -59,6 +59,8 @@ zone_id = config['zone_id']
 account_email = config['account_email']
 archivedir = config.get('archivedir', '/var/ifarchive/htdocs/if-archive')
 
+MAXFILES = 16
+
 def path_to_hash(path):
     # Convert a path to a hash string. This algorithm follows Unbox; see:
     # https://github.com/iftechfoundation/ifarchive-unbox/blob/main/doc/spec.md
@@ -143,18 +145,22 @@ headers = {
     'X-Auth-Key': api_secret_key,
     'X-Auth-Email': account_email,
 }
-data = json.dumps({ 'files':urls }).encode()
 
-# Transmit the API request.
+# Transmit the API request(s).
 
 try:
-    req = urllib.request.Request(requrl, method='POST', data=data, headers=headers)
+    urlsleft = list(urls)
+    while urlsleft:
+        sendurls, urlsleft = urlsleft[ : MAXFILES ], urlsleft[ MAXFILES : ]
 
-    with urllib.request.urlopen(req) as res:
-        dat = res.read()
-        dat = json.loads(dat.decode())
-        print(res.getcode(), 'success:', dat.get('success'))
-
+        data = json.dumps({ 'files':sendurls }).encode()
+        req = urllib.request.Request(requrl, method='POST', data=data, headers=headers)
+    
+        with urllib.request.urlopen(req) as res:
+            dat = res.read()
+            dat = json.loads(dat.decode())
+            print(res.getcode(), 'success:', dat.get('success'))
+    
 except urllib.error.HTTPError as ex:
     dat = ex.fp.read()
     msg = dat.decode()
