@@ -129,7 +129,9 @@ if opts.zip:
             print('%s: %s' % (path, ex,))
 
 # Got all the URLs.
-print(urls)
+print('Purging %d urls:' % (len(urls),))
+for val in urls:
+    print(val)
 
 if opts.dryrun:
     sys.exit()
