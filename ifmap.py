@@ -126,7 +126,7 @@ class FileHasher:
             fl.close()
         
         fl = open(self.cachefile, encoding='utf-8')
-        pattern = re.compile('^([0-9]+)\s([0-9]+)\s([0-9a-f]+)\s([0-9a-f]+)\s(.*)$')
+        pattern = re.compile(r'^([0-9]+)\s([0-9]+)\s([0-9a-f]+)\s([0-9a-f]+)\s(.*)$')
         while True:
             ln = fl.readline()
             if not ln:
@@ -341,7 +341,7 @@ class Directory:
         return ls
 
 metadata_pattern = re.compile('^[ ]*[a-zA-Z0-9_-]+:')
-unbox_suffix_pattern = re.compile('\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
+unbox_suffix_pattern = re.compile(r'\.(tar\.gz|tgz|tar\.z|zip)$', re.IGNORECASE)
 
 def stripmetadata(lines):
     """Given a list of lines, remove the metadata lines (lines at the
