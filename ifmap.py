@@ -10,6 +10,9 @@ import hashlib
 from collections import ChainMap, OrderedDict
 import optparse
 import markdown
+import markdown.inlinepatterns
+import markdown.extensions
+import xml.etree
 import json
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -261,6 +264,33 @@ def escape_html_string(val):
     return ''.join(res)
 
 
+class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
+    def handleMatch(self, m, data):
+        val = m.group(1)
+        if val == '' or val == '/':
+            val = 'if-archive'
+            link = '/indexes/if-archive'
+        elif val.endswith('/'):
+            link = '/indexes/if-archive'+val
+        else:
+            link = '/if-archive'+val
+        el = xml.etree.ElementTree.Element('a')
+        el.text = val
+        el.set('href', link)
+        return el, m.start(0), m.end(0)
+
+class InternalLinkExt(markdown.extensions.Extension):
+    """Special case for Markdown: convert "</if-archive/foo/>" and
+    "</if-archive/foo/bar.txt>" into Archive internal links.
+    (Server-relative but path-absolute.)
+
+    Note that this does not affect "<http://foo.com>", which is
+    handled as a regular URL link.
+    """
+    def extendMarkdown(self, md):
+        PATTERN = r'</if-archive([^>]*)>'
+        md.inlinePatterns.register(InternalLinkProc(PATTERN, md), 'intlink', 175)
+    
 def findfile(path):
     """Locate the File object for a given pathname.
     This is a debugging function; call it after the global dirmap
@@ -1164,7 +1194,7 @@ if __name__ == '__main__':
         keep_trailing_newline = True,
     )
     
-    convertermeta = markdown.Markdown(extensions = ['meta'])
+    convertermeta = markdown.Markdown(extensions = ['meta', InternalLinkExt()])
     
     if not opts.treedir:
         DESTDIR = os.path.join('.', opts.destdir)
