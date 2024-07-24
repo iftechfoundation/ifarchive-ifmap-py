@@ -272,8 +272,10 @@ class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
             link = '/indexes/if-archive'
         elif val.endswith('/'):
             link = '/indexes/if-archive'+val
+            val = val[1:]  # remove slash
         else:
             link = '/if-archive'+val
+            val = val[1:]  # remove slash
         el = xml.etree.ElementTree.Element('a')
         el.text = val
         el.set('href', link)
