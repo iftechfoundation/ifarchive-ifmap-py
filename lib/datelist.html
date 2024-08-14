@@ -47,12 +47,12 @@ Or,
 <p>There have been no new uploads in the past {{ interval }}.</p>
 {% endif %}
 
-<ul id="datelist">
+<dl id="datelist" class="ItemList">
 {% set parity = cycler("Even", "Odd") %}
 {% for file in _files %}
-<li class="Par{{ parity.next() }}"><span class="Date">[{{ file.datestr }}]</span>
+<dt class="Par{{ parity.next() }}"><span class="Date">[{{ file.datestr }}]</span>
 <a href="/{{ file.dir |urlencode }}/{{ file.name |urlencode }}">{{ wbrslash(file.dir) }}/<wbr>{{ file.name }}</a>
 {% endfor %}
-</ul>
+</dl>
 
 {% endblock %}
