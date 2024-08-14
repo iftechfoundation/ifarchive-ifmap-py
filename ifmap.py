@@ -791,6 +791,37 @@ def parity_flip(map):
     else:
         map['parity'] = 'Even'
 
+def file_detail_map(file):
+    """Create a map which has the file info plus some extra details.
+    """
+    itermap = {}
+    
+    # We show the unbox link based on the "unbox-link"
+    # metadata key ("true" or otherwise). If that's not
+    # present, we check whether the parent dir is listed in
+    # no-unbox-link. Failing that, we default to showing it
+    # for zip/tar.gz/tgz files.
+    val = file.getmetadata_string('unbox-link')
+    if val:
+        flag = (val.lower() == 'true')
+    elif file.parentdir.dir in nounboxlinklist.set:
+        flag = False
+    else:
+        flag = bool(unbox_suffix_pattern.search(file.name))
+    # But if "unbox-block" is set, definitely no link.
+    # (Unbox pays attention to "unbox-block" and refuses to
+    # unbox the file. "unbox-link:false" only affects the
+    # index page.)
+    if file.getmetadata_string('unbox-block') == 'true':
+        flag = false
+    if flag:
+        itermap['hasunboxlink'] = True
+        
+    if file.metadata:
+        itermap['_metadata'] = file.metadata
+
+    return ChainMap(itermap, file.submap)
+
 def generate_output_dirlist(dirmap, jenv):
     """Write out the dirlist.html index.
     """
@@ -940,32 +971,7 @@ def generate_output_indexes(dirmap):
         def prepare_filelist(fls):
             res = []
             for file in fls:
-                itermap = {}
-
-                # We show the unbox link based on the "unbox-link"
-                # metadata key ("true" or otherwise). If that's not
-                # present, we check whether the parent dir is listed in
-                # no-unbox-link. Failing that, we default to showing it
-                # for zip/tar.gz/tgz files.
-                val = file.getmetadata_string('unbox-link')
-                if val:
-                    flag = (val.lower() == 'true')
-                elif file.parentdir.dir in nounboxlinklist.set:
-                    flag = False
-                else:
-                    flag = bool(unbox_suffix_pattern.search(file.name))
-                # But if "unbox-block" is set, definitely no link.
-                # (Unbox pays attention to "unbox-block" and refuses to
-                # unbox the file. "unbox-link:false" only affects the
-                # index page.)
-                if file.getmetadata_string('unbox-block') == 'true':
-                    flag = false
-                if flag:
-                    itermap['hasunboxlink'] = True
-                    
-                if file.metadata:
-                    itermap['_metadata'] = file.metadata
-                res.append(ChainMap(itermap, file.submap))
+                res.append(file_detail_map(file))
             return res
 
         itermap = {
