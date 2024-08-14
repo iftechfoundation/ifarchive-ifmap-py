@@ -52,6 +52,18 @@ Or,
 {% for file in _files %}
 <dt class="Par{{ parity.next() }}"><span class="Date">[{{ file.datestr }}]</span>
 <a href="/{{ file.dir |urlencode }}/{{ file.name |urlencode }}">{{ wbrslash(file.dir) }}/<wbr>{{ file.name }}</a>
+{%- if showdetails %}
+  {%- if file.hasunboxlink %}
+    <dd class="FileData"><a href="https://unbox.ifarchive.org?url=/{{ file.path|urlencode }}">View contents</a>
+  {%- endif %}
+  {%- if file._metadata %}
+    {% set dat = file._metadata %} {% set datel = 'dd' %}
+    {% include "metadata.html" %}
+  {%- endif %}
+  {%- if file.hasdesc %}
+    <dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
+  {%- endif %}
+{%- endif %}
 {% endfor %}
 </dl>
 

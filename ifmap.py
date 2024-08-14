@@ -921,7 +921,7 @@ def generate_output_datelist(dirmap, jenv):
                     continue
                 if int(file.getkey('date')) + intlen < curdate:
                     break
-            finalfilelist.append(file.submap)
+            finalfilelist.append(file_detail_map(file))
                 
         itermap = {
             'pageid': 'datepage',
