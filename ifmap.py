@@ -907,8 +907,10 @@ def generate_output_datelist(dirmap, jenv):
     for (intkey, intlen, intname) in intervals:
         if intkey:
             filename = os.path.join(DESTDIR, 'date_%d.html' % (intkey,))
+            vfilename = os.path.join(DESTDIR, 'datev_%d.html' % (intkey,))
         else:
             filename = os.path.join(DESTDIR, 'date.html')
+            vfilename = os.path.join(DESTDIR, 'datev.html')
 
         relroot = '..'
 
@@ -936,6 +938,12 @@ def generate_output_datelist(dirmap, jenv):
             
         tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
+        template.stream(itermap).dump(writer.stream())
+        writer.resolve()
+
+        itermap['showdetails'] = True
+        tempname = os.path.join(DESTDIR, '__temp')
+        writer = SafeWriter(tempname, vfilename)
         template.stream(itermap).dump(writer.stream())
         writer.resolve()
     
