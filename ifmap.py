@@ -230,6 +230,20 @@ def pluralize(val, singular='', plural='s'):
     else:
         return plural
 
+filehash_pattern = re.compile('([^a-zA-Z0-9_.,;:()@/-])')
+filehash_escaper = lambda match: '=%02X=' % (ord(match.group(1)),)
+def filehash(val):
+    """Escape a filename in a way that can appear in a DOM id or URL
+    fragment (dir#filename).
+    (Nothing in the system needs to reverse this mapping, but it
+    should be unique.)
+    This is a bit arbitrary. Almost any non-whitspace character is legal
+    in those domains; you just have to HTML-escape or URL-escape it.
+    However, we want to pass dir#file URLs around with a minimum of fuss,
+    so it's worth encoding Unicode and the fussier punctuation.
+    """
+    return filehash_pattern.sub(filehash_escaper, val)
+    
 # All ASCII characters except <&>
 htmlable_pattern = re.compile("[ -%'-;=?-~]+")
 html_entities = {
@@ -1208,6 +1222,7 @@ if __name__ == '__main__':
         extensions = [
             jenvfilter('isodate', isodate),
             jenvfilter('pluralize', pluralize),
+            jenvfilter('filehash', filehash),
         ],
         autoescape = select_autoescape(),
         keep_trailing_newline = True,
