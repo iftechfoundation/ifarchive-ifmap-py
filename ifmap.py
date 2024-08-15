@@ -932,9 +932,10 @@ def generate_output_datelist(dirmap, jenv):
         }
         if intname:
             itermap['interval'] = intname
-            itermap['title'] = 'Files by Date (past %s)' % (intname,)
+            title = 'Files by Date (past %s)' % (intname,)
         else:
-            itermap['title'] = 'All Files by Date'
+            title = 'All Files by Date'
+        itermap['title'] = title + ' (names only)'
             
         tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, filename)
@@ -942,6 +943,8 @@ def generate_output_datelist(dirmap, jenv):
         writer.resolve()
 
         itermap['showdetails'] = True
+        itermap['title'] = title
+        
         tempname = os.path.join(DESTDIR, '__temp')
         writer = SafeWriter(tempname, vfilename)
         template.stream(itermap).dump(writer.stream())
