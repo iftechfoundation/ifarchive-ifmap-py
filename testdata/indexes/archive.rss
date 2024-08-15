@@ -16,6 +16,9 @@
     <link>https://ifarchive.org/if-archive/games/bothgames</link>
     <guid>if-archive/games/bothgames::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/games/bothgames]
+    </description>
     </item>
 
     <item>
@@ -24,9 +27,12 @@
     <guid>if-archive/art/foo.z5::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
     <description>
+    
 *Foo*: An Art Project
 Release 1 / Serial number 000000
-</description>
+
+    [at: if-archive/art/foo.z5]
+    </description>
     </item>
 
     <item>
@@ -35,8 +41,11 @@ Release 1 / Serial number 000000
     <guid>if-archive/games/game1::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
     <description>
+    
 Game number 1.
-</description>
+
+    [at: if-archive/games/game1]
+    </description>
     </item>
 
     <item>
@@ -44,6 +53,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/games/game2</link>
     <guid>if-archive/games/game2::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/games/game2]
+    </description>
     </item>
 
     <item>
@@ -51,6 +63,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/leftfoot.blorb</link>
     <guid>if-archive/comp/leftfoot.blorb::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/leftfoot.blorb]
+    </description>
     </item>
 
     <item>
@@ -58,6 +73,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/rightfoot.blorb</link>
     <guid>if-archive/comp/rightfoot.blorb::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/rightfoot.blorb]
+    </description>
     </item>
 
     <item>
@@ -65,6 +83,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/space%20dir/space%20file.txt</link>
     <guid>if-archive/space%20dir/space%20file.txt::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/space%20dir/space%20file.txt]
+    </description>
     </item>
 
     <item>
@@ -72,6 +93,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/art/x%26all.zip</link>
     <guid>if-archive/art/x%26all.zip::1540000000</guid>
     <pubDate>Sat, 20 Oct 2018 01:46:40 +0000</pubDate>
+    <description>
+    [at: if-archive/art/x%26all.zip]
+    </description>
     </item>
 
     <item>
@@ -79,6 +103,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/files/all.zip</link>
     <guid>if-archive/comp/files/all.zip::1539700000</guid>
     <pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/files/all.zip]
+    </description>
     </item>
 
     <item>
@@ -86,6 +113,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/files/file-3.txt</link>
     <guid>if-archive/comp/files/file-3.txt::1539700000</guid>
     <pubDate>Tue, 16 Oct 2018 14:26:40 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/files/file-3.txt]
+    </description>
     </item>
 
     <item>
@@ -93,6 +123,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/files/file-2.txt</link>
     <guid>if-archive/comp/files/file-2.txt::1539600000</guid>
     <pubDate>Mon, 15 Oct 2018 10:40:00 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/files/file-2.txt]
+    </description>
     </item>
 
     <item>
@@ -100,6 +133,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/comp/files/file-1.txt</link>
     <guid>if-archive/comp/files/file-1.txt::1539500000</guid>
     <pubDate>Sun, 14 Oct 2018 06:53:20 +0000</pubDate>
+    <description>
+    [at: if-archive/comp/files/file-1.txt]
+    </description>
     </item>
 
     <item>
@@ -107,6 +143,9 @@ Game number 1.
     <link>https://ifarchive.org/if-archive/games/old/older/game1-pre</link>
     <guid>if-archive/games/old/older/game1-pre::1538800000</guid>
     <pubDate>Sat, 06 Oct 2018 04:26:40 +0000</pubDate>
+    <description>
+    [at: if-archive/games/old/older/game1-pre]
+    </description>
     </item>
 
 
