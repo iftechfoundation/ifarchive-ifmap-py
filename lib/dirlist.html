@@ -16,11 +16,11 @@ Or,
 
 {% block body %}
 
-<ul id="alldirlist">
+<dl id="alldirlist" class="ItemList">
 {% set parity = cycler("Even", "Odd") %}
 {% for dir in _dirs %}
-  <li id="{{ dir.dir|filehash }}" class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir) }}</a>
+  <dt id="{{ dir.dir|filehash }}" class="Par{{ parity.next() }}"><a href="{{ dir.dir |urlencode }}/">{{ wbrslash(dir.dir) }}</a>
 {% endfor %}
-</ul>
+</dl>
 
 {% endblock %}
