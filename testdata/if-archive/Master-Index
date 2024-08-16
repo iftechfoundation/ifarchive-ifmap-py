@@ -8,20 +8,14 @@ This is the Interactive Fiction Archive at
 
 You may be interested in...
 
-- The [README file for the Archive](/if-archive/README)
-- An [ASCII directory tree map](/if-archive/directory-tree)
-- [Master-Index.xml](/indexes/Master-Index.xml), which describes every file in the Archive (very large XML file!) 
+- The [README file for the Archive](/if-archive/README).
+- The [list of directories](/indexes/dirmap.html) in the Archive.
+- New arrivals in the [past week](/indexes/datev_1.html), [past month](/indexes/datev_2.html), [past three months](/indexes/datev_3.html), or [past year](/indexes/datev_4.html).
+- An [RSS feed](/indexes/archive.rss) of recent arrivals.
+- A list of [every file in the archive](/indexes/date.html) (tens of thousands!)
+- [Master-Index.xml](/indexes/Master-Index.xml), which describes every file in the Archive (very large XML file!)
 
-The [list of all directories](/indexes/dirlist.html)
-is a table of contents of the entire Archive, in order. The
-[list of files, sorted by date](/indexes/date.html)
-is a (long) index of every file. You can also see the entries of the
-[past week](/indexes/date_1.html),
-[past month](/indexes/date_2.html),
-[past three months](/indexes/date_3.html), or
-[past year](/indexes/date_4.html).
-
-Or, go delving into the hierarchical tree shown here. 
+Or, go delving into the hierarchical tree shown here.
 
 ## art
 

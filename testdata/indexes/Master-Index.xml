@@ -17,18 +17,12 @@ This is the Interactive Fiction Archive at
 
 You may be interested in...
 
-- The [README file for the Archive](/if-archive/README)
-- An [ASCII directory tree map](/if-archive/directory-tree)
+- The [README file for the Archive](/if-archive/README).
+- The [list of directories](/indexes/dirmap.html) in the Archive.
+- New arrivals in the [past week](/indexes/datev_1.html), [past month](/indexes/datev_2.html), [past three months](/indexes/datev_3.html), or [past year](/indexes/datev_4.html).
+- An [RSS feed](/indexes/archive.rss) of recent arrivals.
+- A list of [every file in the archive](/indexes/date.html) (tens of thousands!)
 - [Master-Index.xml](/indexes/Master-Index.xml), which describes every file in the Archive (very large XML file!)
-
-The [list of all directories](/indexes/dirlist.html)
-is a table of contents of the entire Archive, in order. The
-[list of files, sorted by date](/indexes/date.html)
-is a (long) index of every file. You can also see the entries of the
-[past week](/indexes/date_1.html),
-[past month](/indexes/date_2.html),
-[past three months](/indexes/date_3.html), or
-[past year](/indexes/date_4.html).
 
 Or, go delving into the hierarchical tree shown here.
 </description>
@@ -59,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>1733</size>
+<size>1668</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>e6898486a8471ada3fdcfaf43b5ebce4</md5>
-<sha512>0e35f690dd919d1c2ecd53c490acdf462aa1163e3a01b0d46615b6f64d85146a3a8a3760a9dda266200505982c47d5b9010201da3d9040c1bc1135ed556bca97</sha512>
+<md5>74a5f6f81de56a5299e9c36e0b859ea0</md5>
+<sha512>40994b2c6814f40cd689ce5785a0df44ca94567b36e01d89e10115614006b01bbc3d2bca3d016da63a04da66f34dc79dd0a7ab7e45a50b170ea1228ea19af0d9</sha512>
 </file>
 
 
