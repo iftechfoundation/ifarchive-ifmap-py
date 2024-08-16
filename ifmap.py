@@ -281,6 +281,15 @@ def escape_html_string(val):
 class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
     def handleMatch(self, m, data):
         val = m.group(1)
+        dval, _, dfrag = val.rpartition('#')
+        if dval and dfrag:
+            # The hash case. We presume the pre-hash part is a directory.
+            val = dval
+            if not val.endswith('/'):
+                val += '/'
+        else:
+            dfrag = None
+
         if val == '' or val == '/':
             val = 'if-archive'
             link = '/indexes/if-archive'
@@ -290,15 +299,23 @@ class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
         else:
             link = '/if-archive'+val
             val = val[1:]  # remove slash
+        
+        if dfrag:
+            val = '%s%s' % (val, dfrag,)
+            link = '%s#%s' % (link, filehash(dfrag),)
         el = xml.etree.ElementTree.Element('a')
         el.text = val
         el.set('href', link)
         return el, m.start(0), m.end(0)
 
 class InternalLinkExt(markdown.extensions.Extension):
-    """Special case for Markdown: convert "</if-archive/foo/>" and
-    "</if-archive/foo/bar.txt>" into Archive internal links.
-    (Server-relative but path-absolute.)
+    """Special case for Markdown: convert "</if-archive/foo/>",
+    "</if-archive/foo/bar.txt>", "</if-archive/foo#bar.txt>"
+    into Archive internal links. (Server-relative but path-absolute.)
+
+    Note that "<dir/file>" links to the file itself. "<dir#file>"
+    (or "<dir/#file>") links to the file's listing on its index page.
+    "<dir/>" just links to the index page of the named directory.
 
     Note that this does not affect "<http://foo.com>", which is
     handled as a regular URL link.
