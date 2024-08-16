@@ -62,6 +62,10 @@ unbox-link: false
 
 Hey: these are some game files.
 
+- A directory link: </if-archive/comp/files/>
+- And a file link: </if-archive/comp/files/file-1.txt>
+- And a file index link: </if-archive/comp/files#file-1.txt> or </if-archive/comp/files/#file-1.txt>
+
 ## game1
 tuid: xyz111
 ifwiki: Adventure

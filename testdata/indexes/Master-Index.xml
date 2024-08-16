@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>1668</size>
+<size>1871</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>74a5f6f81de56a5299e9c36e0b859ea0</md5>
-<sha512>40994b2c6814f40cd689ce5785a0df44ca94567b36e01d89e10115614006b01bbc3d2bca3d016da63a04da66f34dc79dd0a7ab7e45a50b170ea1228ea19af0d9</sha512>
+<md5>fd6e0257db5c973427979e5badf6616e</md5>
+<sha512>0e2eb762209ce21b79bc23ac2ae06f83c63831c35d245f212dd7de2b6e54d765d50bd197dbfe814c5ca4b1c15b04a651f9ac0ecabb99227bd5fc417a70cb585d</sha512>
 </file>
 
 
@@ -238,6 +238,10 @@ Release 1 / Serial number 000000
 <description>
 
 Hey: these are some game files.
+
+- A directory link: &lt;/if-archive/comp/files/&gt;
+- And a file link: &lt;/if-archive/comp/files/file-1.txt&gt;
+- And a file index link: &lt;/if-archive/comp/files#file-1.txt&gt; or &lt;/if-archive/comp/files/#file-1.txt&gt;
 </description>
 </directory>
 
