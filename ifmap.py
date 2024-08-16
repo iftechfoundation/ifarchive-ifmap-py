@@ -13,6 +13,7 @@ import markdown
 import markdown.inlinepatterns
 import markdown.extensions
 import xml.etree
+import urllib.parse
 import json
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
@@ -298,10 +299,13 @@ class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
         else:
             link = '/if-archive'+val
             val = val[1:]  # remove slash
+        link = urllib.parse.quote(link)
         
         if dfrag:
+            # Note that the fragment is *not* urlquoted
             val = '%s%s' % (val, dfrag,)
-            link = '%s#%s' % (link, filehash(dfrag),)
+            link += '#%s' % (filehash(dfrag),)
+            
         el = xml.etree.ElementTree.Element('a')
         el.text = val
         el.set('href', link)
