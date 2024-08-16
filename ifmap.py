@@ -281,10 +281,9 @@ def escape_html_string(val):
 class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
     def handleMatch(self, m, data):
         val = m.group(1)
-        dval, _, dfrag = val.rpartition('#')
-        if dval and dfrag:
+        if '#' in val:
             # The hash case. We presume the pre-hash part is a directory.
-            val = dval
+            val, _, dfrag = val.rpartition('#')
             if not val.endswith('/'):
                 val += '/'
         else:
