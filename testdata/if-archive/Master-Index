@@ -96,3 +96,31 @@ A double-depth directory.
 Triple-depth file reference.
 
 ------------------------------------------------------
+
+# if-archive/space dir:
+
+This directory tests funny filenames.
+
+## aaa1
+
+These first few are just for spacing.
+
+## aaa2
+
+Test...
+
+## aaa3
+
+Test...
+
+## aaa4
+
+Test...
+
+## αβγδε
+
+## “author’s quotes”
+
+## 😀
+
+------------------------------------------------------

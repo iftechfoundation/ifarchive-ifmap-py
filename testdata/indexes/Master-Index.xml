@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>1871</size>
+<size>2145</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>fd6e0257db5c973427979e5badf6616e</md5>
-<sha512>0e2eb762209ce21b79bc23ac2ae06f83c63831c35d245f212dd7de2b6e54d765d50bd197dbfe814c5ca4b1c15b04a651f9ac0ecabb99227bd5fc417a70cb585d</sha512>
+<md5>82b271e757b18dc288ccb4d4c7e56bb6</md5>
+<sha512>1678407d95b7027c40bc7780bd6383060ce34ad5322faac708c2d5beb0f76a9b3a132f9967a7dda35cd4ff93187e5ab7e914bbe1a385d8857b6536f3db84a4b2</sha512>
 </file>
 
 
@@ -367,10 +367,65 @@ Game number 1.
 <directory>
 <name>if-archive/space dir</name>
 <parent>if-archive</parent>
-<filecount>1</filecount>
+<filecount>10</filecount>
 <subdircount>0</subdircount>
+<description>
+
+This directory tests funny filenames.
+</description>
 </directory>
 
+
+<file>
+<name>aaa1</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/aaa1</path>
+<description>
+
+These first few are just for spacing.
+</description>
+</file>
+
+<file>
+<name>aaa2</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/aaa2</path>
+<description>
+
+Test...
+</description>
+</file>
+
+<file>
+<name>aaa3</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/aaa3</path>
+<description>
+
+Test...
+</description>
+</file>
+
+<file>
+<name>aaa4</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/aaa4</path>
+<description>
+
+Test...
+</description>
+</file>
+
+<file>
+<name>hello?!</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/hello?!</path>
+<size>0</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
+</file>
 
 <file>
 <name>space file.txt</name>
@@ -381,6 +436,35 @@ Game number 1.
 <rawdate>1540000000</rawdate>
 <md5>b2f57c0b2f38ff7ad928bbba01e3ecf4</md5>
 <sha512>5bca54049e9114f5f3cf22599b0688b9e1db23f81cfe0fe5d12a622209169024e3bc3871667d7fee5f6ae70139dd3bec291c8408ad61c2d5b2bb6adc5adedbe9</sha512>
+</file>
+
+<file>
+<name>~&amp;amp;&lt;br&gt;</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/~&amp;amp;&lt;br&gt;</path>
+<size>0</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
+</file>
+
+<file>
+<name>αβγδε</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/αβγδε</path>
+</file>
+
+<file>
+<name>“author’s quotes”</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/“author’s quotes”</path>
+</file>
+
+<file>
+<name>😀</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/😀</path>
 </file>
 
 
