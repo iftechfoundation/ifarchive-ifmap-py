@@ -315,6 +315,8 @@ class InternalLinkExt(markdown.extensions.Extension):
     Note that "<dir/file>" links to the file itself. "<dir#file>"
     (or "<dir/#file>") links to the file's listing on its index page.
     "<dir/>" just links to the index page of the named directory.
+    (If you want to link to the raw directory, "<dir>" will work, but
+    I don't know why you'd want that.)
 
     Note that this does not affect "<http://foo.com>", which is
     handled as a regular URL link.
