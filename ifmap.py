@@ -303,7 +303,7 @@ class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
             val = '%s%s' % (val, dfrag,)
             link = '%s#%s' % (link, filehash(dfrag),)
         el = xml.etree.ElementTree.Element('a')
-        el.text = escape_html_string(val)
+        el.text = val
         el.set('href', link)
         return el, m.start(0), m.end(0)
 
