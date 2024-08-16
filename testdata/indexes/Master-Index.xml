@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>2367</size>
+<size>2399</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>722e7662079d95e7d7aa4e06daa1a62d</md5>
-<sha512>e49670899130f487780594c1073fdb289cd6394e15dd6c77fa862f16f26d652151f05a5bc06eea78b71522a9905ba19b42e6ca181cff673e1eca65e3eb189245</sha512>
+<md5>c87313876b2c5baf30f61530b7f55c9e</md5>
+<sha512>96ca4edc3288f7a49f3c02b15568e0e484420a5935a293905175cd6c7ea374bd5492ce6d41d929c7467ba84ecacd6e33745a47e75eaefb3cedb6d090b2bbbae0</sha512>
 </file>
 
 
@@ -367,7 +367,7 @@ Game number 1.
 <directory>
 <name>if-archive/space dir</name>
 <parent>if-archive</parent>
-<filecount>10</filecount>
+<filecount>11</filecount>
 <subdircount>0</subdircount>
 <description>
 
@@ -378,6 +378,7 @@ Here are some index links:
 - &lt;/if-archive/space dir#space file.txt&gt;
 - &lt;/if-archive/space dir#αβγδε&gt;
 - &lt;/if-archive/space dir#hello?!&gt;
+- &lt;/if-archive/space dir#q&amp;&amp;&amp;r&gt;
 - &lt;/if-archive/space dir#“author’s quotes”&gt;
 - &lt;/if-archive/space dir#😀&gt;
 </description>
@@ -428,6 +429,17 @@ Test...
 <name>hello?!</name>
 <directory>if-archive/space dir</directory>
 <path>if-archive/space dir/hello?!</path>
+<size>0</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
+</file>
+
+<file>
+<name>q&amp;&amp;&amp;r</name>
+<directory>if-archive/space dir</directory>
+<path>if-archive/space dir/q&amp;&amp;&amp;r</path>
 <size>0</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
