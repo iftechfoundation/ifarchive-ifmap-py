@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>2145</size>
+<size>2367</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>82b271e757b18dc288ccb4d4c7e56bb6</md5>
-<sha512>1678407d95b7027c40bc7780bd6383060ce34ad5322faac708c2d5beb0f76a9b3a132f9967a7dda35cd4ff93187e5ab7e914bbe1a385d8857b6536f3db84a4b2</sha512>
+<md5>722e7662079d95e7d7aa4e06daa1a62d</md5>
+<sha512>e49670899130f487780594c1073fdb289cd6394e15dd6c77fa862f16f26d652151f05a5bc06eea78b71522a9905ba19b42e6ca181cff673e1eca65e3eb189245</sha512>
 </file>
 
 
@@ -372,6 +372,14 @@ Game number 1.
 <description>
 
 This directory tests funny filenames.
+
+Here are some index links:
+
+- &lt;/if-archive/space dir#space file.txt&gt;
+- &lt;/if-archive/space dir#αβγδε&gt;
+- &lt;/if-archive/space dir#hello?!&gt;
+- &lt;/if-archive/space dir#“author’s quotes”&gt;
+- &lt;/if-archive/space dir#😀&gt;
 </description>
 </directory>
 

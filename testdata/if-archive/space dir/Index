@@ -1,6 +1,14 @@
 
 This directory tests funny filenames.
 
+Here are some index links:
+
+- </if-archive/space dir#space file.txt>
+- </if-archive/space dir#αβγδε>
+- </if-archive/space dir#hello?!>
+- </if-archive/space dir#“author’s quotes”>
+- </if-archive/space dir#😀>
+
 # aaa1
 
 These first few are just for spacing.
