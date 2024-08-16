@@ -237,7 +237,7 @@ def filehash(val):
     fragment (dir#filename). This also works on full pathnames.
     (Nothing in the system needs to reverse this mapping, but it
     should be unique.)
-    This is a bit arbitrary. Almost any non-whitspace character is legal
+    This is a bit arbitrary. Almost any non-whitespace character is legal
     in those domains; you just have to HTML-escape or URL-escape it.
     However, we want to pass dir#file URLs around with a minimum of fuss,
     so it's worth encoding Unicode and the fussier punctuation.
@@ -318,6 +318,9 @@ class InternalLinkExt(markdown.extensions.Extension):
 
     Note that this does not affect "<http://foo.com>", which is
     handled as a regular URL link.
+
+    Minor bug: For regex reasons, this messes up filenames that contain ">"
+    or "#".
     """
     def extendMarkdown(self, md):
         PATTERN = r'</if-archive([^>]*)>'
