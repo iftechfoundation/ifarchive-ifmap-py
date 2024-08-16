@@ -1,5 +1,7 @@
 <dt id="{{ subdir.name|filehash }}" class="Par{{ parity.next() }}"><a href={% if subdir.islink %}"/indexes/{{ subdir.linkdir |urlencode }}/"{% else %}"/indexes/{{ subdir.path |urlencode }}/"{% endif %}>{{ subdir.name }}</a>
 
+<a class="PermaLink" href="#{{ subdir.name|filehash }}">&#x25C6;</a>
+
 {%- if subdir.islink %}
   <span class="SymLinkRef">[link to <a href="/indexes/{{ subdir.linkdir |urlencode }}/">{{ subdir.linkdir }}</a>]</span>
 {%- endif %}

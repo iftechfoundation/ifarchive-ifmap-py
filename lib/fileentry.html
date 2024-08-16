@@ -1,5 +1,7 @@
 <dt id="{{ file.name|filehash }}" class="Par{{ parity.next() }}"><a href="{% if file.linkdir %}/indexes/{{ file.linkdir|urlencode }}/{% else %}/{{ file.dir|urlencode }}/{{ file.name|urlencode }}{% endif %}">{{ file.name }}</a>
 
+<a class="PermaLink" href="#{{ file.name|filehash }}">&#x25C6;</a>
+
 {%- if file.date %}
   <span class="Date">[{{ file.datestr }}]</span>
 {%- endif %}
