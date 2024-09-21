@@ -762,7 +762,43 @@ def parse_directory_tree(treedir, archtree):
 
     # Call the above function recursively.
     scan_directory(ROOTNAME)
-    
+
+def merge_deep_files(dirmap):
+    for path in dirmap:
+        dir = dirmap[path]
+        for filename in dir.files:
+            file = dir.files[filename]
+            if file.isdeep:
+                if file.path in dirmap:
+                    shallow_dir = dirmap[file.path]
+                    if file.getkey('hasmetadata'):
+                        for key in file.metadata:
+                            shallow_dir.metadata[key] = file.metadata[key]
+                        shallow_dir.putkey('hasmetadata', True)
+                    if shallow_dir.getkey('hasdesc'):
+                        sys.stderr.write('Deep file %s %s clobbering shallow dir description\n' % (path, file.filename))
+                    shallow_dir.putkey('hasdesc', file.getkey('hasdesc'))
+                    shallow_dir.putkey('hasxmldesc', file.getkey('hasxmldesc'))
+                    shallow_dir.putkey('header', file.getkey('desc'))
+                    shallow_dir.putkey('xmlheader', file.getkey('xmldesc'))
+                    shallow_dir.putkey('headerormeta', (bool(shallow_dir.metadata) or file.getkey('hasdesc')))
+                else:
+                    parts = file.path.split('/')
+                    shallow_name = parts.pop()
+                    shallow_parent_path = '/'.join(parts)
+                    shallow_parent_dir = dirmap[shallow_parent_path]
+                    shallow_file = shallow_parent_dir.files[shallow_name]
+                    if shallow_file.getkey('hasdesc'):
+                        sys.stderr.write('Deep file %s %s clobbering shallow file description\n' % (path, file.filename))
+                    if file.getkey('hasmetadata'):
+                        for key in file.metadata:
+                            shallow_file.metadata[key] = file.metadata[key]
+                        shallow_file.putkey('hasmetadata', True)
+                    shallow_file.putkey('desc', file.getkey('desc'))
+                    shallow_file.putkey('hasdesc', file.getkey('hasdesc'))
+                    shallow_file.putkey('xmldesc', file.getkey('xmldesc'))
+                    shallow_file.putkey('hasxmldesc', file.getkey('hasxmldesc'))
+
 def construct_archtree(indexpath, treedir):
     """Parse the Master-Index file, and then go through the directory
     tree to find more files. Return all the known directories as a dict.
@@ -1267,6 +1303,7 @@ if __name__ == '__main__':
     indexmtime = int(stat.st_mtime)
     
     check_missing_files(archtree.dirmap)
+    merge_deep_files(archtree.dirmap)
 
     if dirsince is not None:
         for dir in archtree.dirmap.values():
