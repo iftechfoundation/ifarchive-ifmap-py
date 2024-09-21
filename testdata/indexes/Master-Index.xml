@@ -347,6 +347,10 @@ Game number 1.
 <parent>if-archive/games/old</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
+<description>
+
+A double-depth directory.
+</description>
 </directory>
 
 
@@ -359,6 +363,10 @@ Game number 1.
 <rawdate>1538800000</rawdate>
 <md5>9ddfc5003ba50de6ab967c67a92a78f9</md5>
 <sha512>427f788dfb72c2878413c627d03bbd43de8e0bf0cff46347ebec7c0865c5abf1d7121d0c7e335bf41f1217abd4c07893d6219d6abecec29d91c6b2c901c9fdf7</sha512>
+<description>
+
+Triple-depth file reference.
+</description>
 </file>
 
 
