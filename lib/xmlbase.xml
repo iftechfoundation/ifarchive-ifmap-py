@@ -68,6 +68,11 @@
 <description>
 {{ file.xmldesc }}</description>
 {%- endif %}
+{%- for key, val in file._parentdescs %}
+<parentdesc dir="{{ key }}">
+{{ val }}
+</parentdesc>
+{%- endfor %}
 </file>
 {% endfor %}
 
