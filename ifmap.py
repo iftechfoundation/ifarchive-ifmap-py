@@ -1134,6 +1134,7 @@ def generate_output_xml(dirmap, jenv):
             'count':len(filelist), 'subdircount':len(subdirlist),
             '_files': fileentlist,
             '_metadata': list(dir.metadata.items()),
+            '_parentdescs': list(dir.parentdescs.items()),
         }
         dirents.append(ChainMap(itermap, dir.submap))
 

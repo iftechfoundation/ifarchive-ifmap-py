@@ -23,6 +23,10 @@
 <description>
 {{ dir.xmlheader }}</description>
 {%- endif %}
+{%- for key, val in dir._parentdescs %}
+<parentdesc dir="{{ key }}">
+{{ val }}</parentdesc>
+{%- endfor %}
 </directory>
 
 {% for file in dir._files %}
