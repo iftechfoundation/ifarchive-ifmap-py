@@ -363,7 +363,7 @@ class ArchiveTree:
             return dir
         return None
 
-    def get_file_by_path(self, path):
+    def get_file_by_path(self, path, ordir=False):
         dirname, _, filename = path.rpartition('/')
         if not (dirname and filename):
             return None
@@ -371,6 +371,10 @@ class ArchiveTree:
         if not dir:
             return None
         file = dir.files.get(filename)
+        if not file:
+            return None
+        if file.isdir and ordir:
+            return self.dirmap.get(file.path)
         return file
 
 class Directory:
@@ -831,7 +835,7 @@ def construct_archtree(indexpath, treedir):
         for file in dir.files.values():
             if file.isdeep:
                 realpath = dir.dir+'/'+file.name
-                realfile = archtree.get_file_by_path(realpath)
+                realfile = archtree.get_file_by_path(realpath, ordir=True)
                 if not realfile:
                     sys.stderr.write('Deep file reference to nonexistent target: %s in %s\n' % (file.name, dir.dir,))
                     continue
