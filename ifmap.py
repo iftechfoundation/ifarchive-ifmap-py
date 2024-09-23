@@ -412,7 +412,7 @@ class Directory:
         self.files = {}
         self.subdirs = {}
         self.parentdir = None
-        self.parentdescs = OrderedDict()
+        self.parentdescs = OrderedDict()  # xmldescs really
         self.metadata = OrderedDict()
 
     def __repr__(self):
@@ -493,7 +493,7 @@ class File:
 
         self.name = filename
         self.path = parentdir.dir+'/'+filename
-        self.parentdescs = OrderedDict()
+        self.parentdescs = OrderedDict()  # xmldescs really
         self.metadata = OrderedDict()
         self.isdir = isdir
         self.islink = islink
@@ -838,7 +838,8 @@ def construct_archtree(indexpath, treedir):
             if fdir.submap.get('hasdesc'):
                 dir.putkey('hasparentdesc', True)
                 dir.putkey('parentdesc', fdir.submap.get('desc'))
-                dir.parentdescs[dir2.dir] = fdir.submap.get('desc')
+            if fdir.submap.get('hasxmldesc'):
+                dir.parentdescs[dir2.dir] = fdir.submap.get('xmldesc')
             merge_in_metadata(dir.metadata, fdir.metadata)
 
     # Connect up deep references to the actual files/dirs they refer to.
@@ -850,8 +851,8 @@ def construct_archtree(indexpath, treedir):
                 if not realfile:
                     sys.stderr.write('Deep file reference to nonexistent target: %s in %s\n' % (file.name, dir.dir,))
                     continue
-                if file.submap.get('hasdesc'):
-                    realfile.parentdescs[file.parentdir.dir] = file.submap.get('desc')
+                if file.submap.get('hasxmldesc'):
+                    realfile.parentdescs[file.parentdir.dir] = file.submap.get('xmldesc')
                 merge_in_metadata(realfile.metadata, file.metadata)
 
     return archtree
@@ -1126,6 +1127,7 @@ def generate_output_xml(dirmap, jenv):
         for file in filelist:
             itermap = {
                 '_metadata': list(file.metadata.items()),
+                '_parentdescs': list(file.parentdescs.items()),
             }
             fileentlist.append(ChainMap(itermap, file.submap))
 
