@@ -788,7 +788,8 @@ def construct_archtree(indexpath, treedir):
     if opts.verbose:
         print('Creating subdirectory lists and counts...')
             
-    # Create the subdir list.
+    # Connect up each directory to its parent. When we're done, every
+    # dir will have its subdirs list.
     for dir in archtree.dirmap.values():
         if dir.parentdirname:
             dir2 = archtree.get_directory(dir.parentdirname, oradd=False)
