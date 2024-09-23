@@ -735,6 +735,10 @@ def parse_directory_tree(treedir, archtree):
                 if ent.name == 'Index':
                     # But we don't create a File entry for Index
                     continue
+                if ent.name == 'Index~':
+                    # We also skip Index~, because I edit files in Emacs
+                    # and it's a nuisance deleting the leftovers.
+                    continue
                 file = dir.files.get(ent.name)
                 if file is None:
                     file = File(ent.name, dir)
