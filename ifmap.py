@@ -363,6 +363,16 @@ class ArchiveTree:
             return dir
         return None
 
+    def get_file_by_path(self, path):
+        dirname, _, filename = path.rpartition('/')
+        if not (dirname and filename):
+            return None
+        dir = self.dirmap.get(dirname)
+        if not dir:
+            return None
+        file = dir.files.get(filename)
+        return file
+
 class Directory:
     """Directory: one directory in the big directory map.
     """
@@ -440,7 +450,19 @@ def deepsplit(ls):
         else:
             undeepls.append(val)
     return undeepls, deepls
-        
+
+def merge_in_metadata(dest, src):
+    """Copy metadata entries from src into dest, discarding duplicates.
+    The arguments should be OrderedDicts.
+    """
+    for key, srcls in src.items():
+        if key not in dest:
+            dest[key] = []
+        destls = dest[key]
+        for val in srcls:
+            if val not in destls:
+                destls.append(val)
+
 class File:
     """File: one entry in a directory.
     The name is a bit of a misnomer; this could represent a file,
@@ -803,6 +825,17 @@ def construct_archtree(indexpath, treedir):
             if fdir.submap.get('hasdesc'):
                 dir.putkey('hasparentdesc', True)
                 dir.putkey('parentdesc', fdir.submap.get('desc'))
+
+    # Connect up deep references to the actual files/dirs they refer to.
+    for dir in archtree.dirmap.values():
+        for file in dir.files.values():
+            if file.isdeep:
+                realpath = dir.dir+'/'+file.name
+                realfile = archtree.get_file_by_path(realpath)
+                if not realfile:
+                    sys.stderr.write('Deep file reference to nonexistent target: %s in %s\n' % (file.name, dir.dir,))
+                    continue
+                merge_in_metadata(realfile.metadata, file.metadata)
                 
     return archtree
 
@@ -1024,7 +1057,7 @@ def generate_output_indexes(dirmap):
         subdirlist = dir.getitems(isdir=True, display=True)
         subdirlist.sort(key=lambda file:file.name.lower())
 
-        # Divide each of these lists into  "regular" and "deep sublists.
+        # Divide each of these lists into  "regular" and "deep" sublists.
         filelist, alsofilelist = deepsplit(filelist)
         subdirlist, alsosubdirlist = deepsplit(subdirlist)
 
