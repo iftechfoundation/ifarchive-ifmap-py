@@ -354,6 +354,10 @@ class ArchiveTree:
         self.dirmap = {}
 
     def get_directory(self, dirname, oradd=False):
+        """Get a Directory by name (e.g. "if-archive/games").
+        If oradd is true, the Directory is created if not found.
+        Otherwise a missing Directory just returns None.
+        """
         dir = self.dirmap.get(dirname)
         if dir:
             return dir
@@ -364,6 +368,12 @@ class ArchiveTree:
         return None
 
     def get_file_by_path(self, path, ordir=False):
+        """Get a File by its full path (e.g. "if-archive/games/foo.z5").
+        If not found, return None.
+        If the File turns out to be a directory and ordir is true,
+        we return the Directory instead. Otherwise we return the
+        File in the parent dir.
+        """
         dirname, _, filename = path.rpartition('/')
         if not (dirname and filename):
             return None
