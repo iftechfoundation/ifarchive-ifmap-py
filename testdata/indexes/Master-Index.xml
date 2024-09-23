@@ -351,6 +351,9 @@ Game number 1.
   <item><key>ifwiki</key>
     <value>Folder</value>
   </item>
+  <item><key>tuid</key>
+    <value>def56789</value>
+  </item>
 </metadata>
 <description>
 
@@ -371,6 +374,9 @@ Directory description (in the directory).
 <metadata>
   <item><key>ifwiki</key>
     <value>Game</value>
+  </item>
+  <item><key>tuid</key>
+    <value>ghi98765</value>
   </item>
 </metadata>
 <description>
