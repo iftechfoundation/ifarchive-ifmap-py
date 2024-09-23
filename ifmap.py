@@ -278,6 +278,11 @@ def escape_html_string(val):
             pos += 1
     return ''.join(res)
 
+def escape_html_attr(val):
+    """Just like escape_html_string(), but it also escapes " as &quot;.
+    """
+    val = escape_html_string(val)
+    return val.replace('"', '&quot;')
 
 class InternalLinkProc(markdown.inlinepatterns.InlineProcessor):
     def handleMatch(self, m, data):
@@ -1127,7 +1132,7 @@ def generate_output_xml(dirmap, jenv):
         for file in filelist:
             itermap = {
                 '_metadata': list(file.metadata.items()),
-                '_parentdescs': list(file.parentdescs.items()),
+                '_parentdescs': [ (escape_html_attr(key), val) for key, val in file.parentdescs.items() ],
             }
             fileentlist.append(ChainMap(itermap, file.submap))
 
