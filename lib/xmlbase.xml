@@ -70,8 +70,7 @@
 {%- endif %}
 {%- for key, val in file._parentdescs %}
 <parentdesc dir="{{ key }}">
-{{ val }}
-</parentdesc>
+{{ val }}</parentdesc>
 {%- endfor %}
 </file>
 {% endfor %}

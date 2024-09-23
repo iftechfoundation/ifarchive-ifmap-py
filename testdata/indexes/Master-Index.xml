@@ -392,12 +392,10 @@ Game description.
 <parentdesc dir="if-archive/games">
 
 Triple-depth file reference.
-
 </parentdesc>
 <parentdesc dir="if-archive/games/old">
 
 Double-depth file reference (from lower down).
-
 </parentdesc>
 </file>
 
