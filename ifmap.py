@@ -839,6 +839,7 @@ def construct_archtree(indexpath, treedir):
             if fdir.submap.get('hasdesc'):
                 dir.putkey('hasparentdesc', True)
                 dir.putkey('parentdesc', fdir.submap.get('desc'))
+            merge_in_metadata(dir.metadata, fdir.metadata)
 
     # Connect up deep references to the actual files/dirs they refer to.
     for dir in archtree.dirmap.values():
@@ -849,6 +850,7 @@ def construct_archtree(indexpath, treedir):
                 if not realfile:
                     sys.stderr.write('Deep file reference to nonexistent target: %s in %s\n' % (file.name, dir.dir,))
                     continue
+                ### copy in desc?
                 merge_in_metadata(realfile.metadata, file.metadata)
                 
     return archtree
