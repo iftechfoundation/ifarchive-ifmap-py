@@ -325,6 +325,11 @@ Game number 1.
 <parent>if-archive/games</parent>
 <filecount>1</filecount>
 <subdircount>1</subdircount>
+<metadata>
+  <item><key>tuid</key>
+    <value>abc12345</value>
+  </item>
+</metadata>
 </directory>
 
 
