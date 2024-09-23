@@ -23,10 +23,12 @@ tuid: xyz111
 Linked to comp/files.
 
 # old
+tuid: abc12345
 
 The directory of old stuff.
 
 # old/older
+tuid: def56789
 
 A double-depth directory.
 
