@@ -6,6 +6,11 @@
   <span class="SymLinkRef">[link to <a href="/indexes/{{ subdir.linkdir |urlencode }}/">{{ subdir.linkdir }}</a>]</span>
 {%- endif %}
 
+{%- if subdir._metadata %}
+  {% set dat = subdir._metadata %} {% set datel = 'dd' %}
+  {% include "metadata.html" %}
+{%- endif %}
+
 {%- if subdir.hasdesc %}
   <dd>{% autoescape false %}{{ subdir.desc }}{% endautoescape %}
 {%- endif %}
