@@ -1022,19 +1022,13 @@ def generate_output_indexes(dirmap):
         for ix in range(0, len(els)):
             dirlinkels.append( ('/'.join(els[:ix+1]), els[ix]) )
             
-        def prepare_filelist(fls):
-            res = []
-            for file in fls:
-                res.append(file_detail_map(file))
-            return res
-
         itermap = {
             'pageid': 'indexpage',
             'title': 'Index: ' + dir.dir,
             'count': len(filelist), 'subdircount': len(subdirlist),
             'alsocount': len(alsofilelist), 'alsosubdircount': len(alsosubdirlist),
-            '_files': prepare_filelist(filelist),
-            '_alsofiles': prepare_filelist(alsofilelist),
+            '_files': [ file_detail_map(sfil) for sfil in filelist ],
+            '_alsofiles': [ file_detail_map(sfil) for sfil in alsofilelist ],
             '_subdirs': [ sdir.submap for sdir in subdirlist ],
             '_alsosubdirs': [ sdir.submap for sdir in alsosubdirlist ],
             '_dirlinkels': dirlinkels,
