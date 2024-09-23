@@ -865,6 +865,16 @@ def file_detail_map(file):
 
     return ChainMap(itermap, file.submap)
 
+def subdir_detail_map(subdir):
+    """Create a map which has the directory info plus some extra details.
+    """
+    itermap = {}
+    
+    if subdir.metadata:
+        itermap['_metadata'] = subdir.metadata
+
+    return ChainMap(itermap, subdir.submap)
+
 def generate_output_dirlist(dirmap, jenv):
     """Write out the dirlist.html index.
     """
@@ -1029,8 +1039,8 @@ def generate_output_indexes(dirmap):
             'alsocount': len(alsofilelist), 'alsosubdircount': len(alsosubdirlist),
             '_files': [ file_detail_map(sfil) for sfil in filelist ],
             '_alsofiles': [ file_detail_map(sfil) for sfil in alsofilelist ],
-            '_subdirs': [ sdir.submap for sdir in subdirlist ],
-            '_alsosubdirs': [ sdir.submap for sdir in alsosubdirlist ],
+            '_subdirs': [ subdir_detail_map(sdir) for sdir in subdirlist ],
+            '_alsosubdirs': [ subdir_detail_map(sdir) for sdir in alsosubdirlist ],
             '_dirlinkels': dirlinkels,
             'rootdir': ROOTNAME,
         }
