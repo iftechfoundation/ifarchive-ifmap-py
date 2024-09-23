@@ -1135,7 +1135,6 @@ def generate_output_xml(dirmap, jenv):
             '_files': fileentlist,
             '_metadata': list(dir.metadata.items()),
             'hasmetadata': bool(dir.metadata),
-            'headerormeta': bool(dir.metadata) or bool(dir.getkey('header'))
         }
         dirents.append(ChainMap(itermap, dir.submap))
 
