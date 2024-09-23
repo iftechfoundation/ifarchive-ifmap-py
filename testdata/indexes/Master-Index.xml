@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>2806</size>
+<size>2898</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>85db13b61944120954484efe6091c79b</md5>
-<sha512>978da4fd9d86d444c76f1e50303b98f007d9b143a997d3e366deb0f8cc5257e7cb9883017903e0fd2b4674a85bac9bb811ee7886f57a709e8430f043e25ec3aa</sha512>
+<md5>6ae7ad3cc3dbb2746e36bf7f57620a0d</md5>
+<sha512>db7e9125e070335a09c2274647e787ef0ab5e4a5a9d9a13d2cd8141ed2908c329d57ea234d4cdfe75137962fafd4d56e133f072887fd0f7139aacbde190c9e63</sha512>
 </file>
 
 
@@ -406,7 +406,7 @@ Double-depth file reference (from lower down).
 <name>if-archive/space dir</name>
 <parent>if-archive</parent>
 <filecount>11</filecount>
-<subdircount>0</subdircount>
+<subdircount>1</subdircount>
 <description>
 
 This directory tests funny filenames.
@@ -523,6 +523,39 @@ Test...
 <name>😀</name>
 <directory>if-archive/space dir</directory>
 <path>if-archive/space dir/😀</path>
+</file>
+
+
+
+
+<directory>
+<name>if-archive/space dir/&#34;ascquot&#34;</name>
+<parent>if-archive/space dir</parent>
+<filecount>0</filecount>
+<subdircount>1</subdircount>
+</directory>
+
+
+
+
+
+<directory>
+<name>if-archive/space dir/&#34;ascquot&#34;/dir</name>
+<parent>if-archive/space dir/&#34;ascquot&#34;</parent>
+<filecount>1</filecount>
+<subdircount>0</subdircount>
+</directory>
+
+
+<file>
+<name>&#34;file&#34;</name>
+<directory>if-archive/space dir/&#34;ascquot&#34;/dir</directory>
+<path>if-archive/space dir/&#34;ascquot&#34;/dir/&#34;file&#34;</path>
+<size>0</size>
+<date>20-Oct-2018</date>
+<rawdate>1540000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
 </file>
 
 
