@@ -78,6 +78,10 @@ Or, go delving into the hierarchical tree shown here.
 Files from an art show:
 &lt;http://example.com/art/&gt;
 </description>
+<parentdesc dir="if-archive">
+
+Art stuff.
+</parentdesc>
 </directory>
 
 
@@ -243,6 +247,10 @@ Hey: these are some game files.
 - And a file link: &lt;/if-archive/comp/files/file-1.txt&gt;
 - And a file index link: &lt;/if-archive/comp/files#file-1.txt&gt; or &lt;/if-archive/comp/files/#file-1.txt&gt;
 </description>
+<parentdesc dir="if-archive">
+
+Games stuff.
+</parentdesc>
 </directory>
 
 
@@ -330,6 +338,10 @@ Game number 1.
     <value>abc12345</value>
   </item>
 </metadata>
+<parentdesc dir="if-archive/games">
+
+The directory of old stuff.
+</parentdesc>
 </directory>
 
 
@@ -364,6 +376,10 @@ Game number 1.
 
 Directory description (in the directory).
 </description>
+<parentdesc dir="if-archive/games">
+
+A double-depth directory.
+</parentdesc>
 </directory>
 
 
