@@ -530,7 +530,6 @@ class File:
                 self.metadata[mkey] = list(mls)
             convertermeta.Meta.clear()
             ### sort metadata?
-            self.putkey('hasmetadata', bool(self.metadata))
             
             self.putkey('desc', filestr)
             self.putkey('hasdesc', is_string_nonwhite(filestr))
@@ -612,8 +611,6 @@ def parse_master_index(indexpath, archtree):
                         dir.metadata[mkey] = list(mls)
                     convertermeta.Meta.clear()
                     ### sort metadata?
-                    dir.putkey('hasmetadata', bool(dir.metadata))
-                    dir.putkey('headerormeta', (bool(dir.metadata) or bool(val)))
                     dir.putkey('header', val)
                     # For XML, we just escape.
                     val = stripmetadata(headerstr.split('\n'))
@@ -856,7 +853,15 @@ def construct_archtree(indexpath, treedir):
                 if file.submap.get('hasdesc'):
                     realfile.parentdescs[file.parentdir.dir] = file.submap.get('desc')
                 merge_in_metadata(realfile.metadata, file.metadata)
-                
+
+    # Set the hasmetadata and headerormeta flags (now that all the metadata
+    # is in place).
+    for dir in archtree.dirmap.values():
+        dir.putkey('hasmetadata', bool(dir.metadata))
+        dir.putkey('headerormeta', (bool(dir.metadata) or bool(dir.getkey('header'))))
+        for file in dir.files.values():
+            file.putkey('hasmetadata', bool(file.metadata))
+                    
     return archtree
 
 def check_missing_files(dirmap):
