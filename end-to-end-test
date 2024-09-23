@@ -1,5 +1,7 @@
 #!/bin/bash
 
+rm -rf testdata/indexes testdata/metadata
+
 python3 make-master-index.py testdata > testdata/if-archive/Master-Index
 
 # The ifmap.py script looks at file timestamps to decide the "last updated"
