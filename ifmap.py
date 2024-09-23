@@ -854,14 +854,6 @@ def construct_archtree(indexpath, treedir):
                     realfile.parentdescs[file.parentdir.dir] = file.submap.get('desc')
                 merge_in_metadata(realfile.metadata, file.metadata)
 
-    # Set the hasmetadata and headerormeta flags (now that all the metadata
-    # is in place).
-    for dir in archtree.dirmap.values():
-        dir.putkey('hasmetadata', bool(dir.metadata))
-        dir.putkey('headerormeta', (bool(dir.metadata) or bool(dir.getkey('header'))))
-        for file in dir.files.values():
-            file.putkey('hasmetadata', bool(file.metadata))
-                    
     return archtree
 
 def check_missing_files(dirmap):
@@ -1132,13 +1124,18 @@ def generate_output_xml(dirmap, jenv):
 
         fileentlist = []
         for file in filelist:
-            itermap = { '_metadata': list(file.metadata.items()) }
+            itermap = {
+                '_metadata': list(file.metadata.items()),
+                'hasmetadata': bool(file.metadata),
+            }
             fileentlist.append(ChainMap(itermap, file.submap))
 
         itermap = {
             'count':len(filelist), 'subdircount':len(subdirlist),
             '_files': fileentlist,
             '_metadata': list(dir.metadata.items()),
+            'hasmetadata': bool(dir.metadata),
+            'headerormeta': bool(dir.metadata) or bool(dir.getkey('header'))
         }
         dirents.append(ChainMap(itermap, dir.submap))
 
