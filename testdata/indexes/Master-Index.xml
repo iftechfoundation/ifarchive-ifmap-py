@@ -53,11 +53,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>2404</size>
+<size>2595</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>2078ca7321f72378330ff0f8d66a555a</md5>
-<sha512>791672485f9cdf2043e4537f061b8ae53dc36470b275a4220298a7ae4d1b3492e3482836d25e185ed287187cede8adb3d7ca3ae9bf5dd2a1ab04cd8ad0842c5d</sha512>
+<md5>28d93afcf4aefee2682cff2149e5fc39</md5>
+<sha512>8dbb6a9e652110a499f4e8e207a7ff93a166241171d785e42ab1b2c9bbbb50ce23b9ea11411e3ed3d2f31876267daf5ef4d334e3da4e36084450adc19fb262dc</sha512>
 </file>
 
 
@@ -347,6 +347,15 @@ Game number 1.
 <parent>if-archive/games/old</parent>
 <filecount>1</filecount>
 <subdircount>0</subdircount>
+<metadata>
+  <item><key>ifwiki</key>
+    <value>Folder</value>
+  </item>
+</metadata>
+<description>
+
+Directory description (in the directory).
+</description>
 </directory>
 
 
@@ -359,6 +368,15 @@ Game number 1.
 <rawdate>1538800000</rawdate>
 <md5>9ddfc5003ba50de6ab967c67a92a78f9</md5>
 <sha512>427f788dfb72c2878413c627d03bbd43de8e0bf0cff46347ebec7c0865c5abf1d7121d0c7e335bf41f1217abd4c07893d6219d6abecec29d91c6b2c901c9fdf7</sha512>
+<metadata>
+  <item><key>ifwiki</key>
+    <value>Game</value>
+  </item>
+</metadata>
+<description>
+
+Game description.
+</description>
 </file>
 
 

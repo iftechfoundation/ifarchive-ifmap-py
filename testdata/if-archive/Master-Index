@@ -97,6 +97,18 @@ Triple-depth file reference.
 
 ------------------------------------------------------
 
+# if-archive/games/old/older:
+ifwiki: Folder
+
+Directory description (in the directory).
+
+## game1-pre
+ifwiki: Game
+
+Game description.
+
+------------------------------------------------------
+
 # if-archive/space dir:
 
 This directory tests funny filenames.
