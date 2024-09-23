@@ -8,7 +8,7 @@
 <parent>{{ dir.parentdir }}</parent>
 <filecount>{% if dir.count %}{{ dir.count }}{% else %}0{% endif %}</filecount>
 <subdircount>{% if dir.subdircount %}{{ dir.subdircount }}{% else %}0{% endif %}</subdircount>
-{%- if dir._hasmetadata %}
+{%- if dir._metadata %}
 <metadata>
 {%- for key, valls in dir._metadata %}
   <item><key>{{ key }}</key>
@@ -53,7 +53,7 @@
   <name>{{ file.linkdir }}</name>
 </symlink>
 {%- endif %}
-{%- if file._hasmetadata %}
+{%- if file._metadata %}
 <metadata>
 {%- for key, valls in file._metadata %}
   <item><key>{{ key }}</key>
