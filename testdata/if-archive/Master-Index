@@ -100,6 +100,15 @@ Triple-depth file reference.
 
 ------------------------------------------------------
 
+# if-archive/games/old:
+
+## older/game1-pre
+tuid: ghij987654
+
+Double-depth file reference (from lower down).
+
+------------------------------------------------------
+
 # if-archive/games/old/older:
 ifwiki: Folder
 

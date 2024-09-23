@@ -1,3 +1,4 @@
 # if-archive/games/old/older/game1-pre
 ifwiki: Game
 tuid: ghi98765
+tuid: ghij987654
