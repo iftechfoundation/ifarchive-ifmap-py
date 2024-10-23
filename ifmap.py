@@ -498,6 +498,8 @@ class File:
         self.islink = islink
         self.isdeep = ('/' in filename)
 
+        self.backsymlinks = []
+
         self.intree = False
         self.inmaster = False
         self.putkey('name', filename)
@@ -847,6 +849,7 @@ def construct_archtree(indexpath, treedir):
             merge_in_metadata(dir.metadata, fdir.metadata)
 
     # Connect up deep references to the actual files/dirs they refer to.
+    # Also create backlinks for file symlinks.
     for dir in archtree.dirmap.values():
         for file in dir.files.values():
             if file.isdeep:
@@ -858,6 +861,13 @@ def construct_archtree(indexpath, treedir):
                 if file.submap.get('hasxmldesc'):
                     realfile.parentdescs[file.parentdir.dir] = file.submap.get('xmldesc')
                 merge_in_metadata(realfile.metadata, file.metadata)
+            if file.islink and not file.isdir:
+                nlinkpath = file.getkey('nlinkpath')
+                dfile = archtree.get_file_by_path(nlinkpath)
+                if not dfile:
+                    sys.stderr.write('Symlink file reference to nonexistent target: %s in %s\n' % (file.name, dir.dir,))
+                else:
+                    dfile.backsymlinks.append(file)
 
     return archtree
 
@@ -918,6 +928,12 @@ def file_detail_map(file):
         
     if file.metadata:
         itermap['_metadata'] = file.metadata
+    if file.backsymlinks:
+        ls = []
+        for dfile in file.backsymlinks:
+            ls.append(dfile)
+        ls.sort(key=lambda dfile: dfile.path)
+        itermap['_backsymlinks'] = ls
 
     return ChainMap(itermap, file.submap)
 

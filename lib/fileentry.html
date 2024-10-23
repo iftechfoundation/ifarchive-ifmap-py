@@ -22,3 +22,9 @@
 {%- if file.hasdesc %}
   <dd>{% autoescape false %}{{ file.desc }}{% endautoescape %}
 {%- endif %}
+
+{%- if file._backsymlinks %}
+  {% for dfile in file._backsymlinks %}
+    <dd><span class="SymLinkRef">[linked from <a href="/indexes/{{ dfile.parentdir.dir|urlencode }}#{{ dfile.name|filehash }}">{{ dfile.path }}</a>]</span>
+  {% endfor %}
+{%- endif %}
