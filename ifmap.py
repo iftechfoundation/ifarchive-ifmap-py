@@ -929,9 +929,7 @@ def file_detail_map(file):
     if file.metadata:
         itermap['_metadata'] = file.metadata
     if file.backsymlinks:
-        ls = []
-        for dfile in file.backsymlinks:
-            ls.append(dfile)
+        ls = list(file.backsymlinks)
         ls.sort(key=lambda dfile: dfile.path)
         itermap['_backsymlinks'] = ls
 
