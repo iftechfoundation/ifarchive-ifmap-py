@@ -747,7 +747,12 @@ def parse_directory_tree(treedir, archtree):
                         file = File(ent.name, dir, islink=True, isdir=False)
                     file.intree = True
                     file.putkey('linkpath', linkname)
-                    file.putkey('nlinkpath', os.path.normpath(os.path.join(dir.dir, linkname)))
+                    nlinkpath = os.path.normpath(os.path.join(dir.dir, linkname))
+                    nlinkdir, nlinkfile = os.path.split(nlinkpath)
+                    # nlinkfile is normally the same as ent.name, but we don't rely on that.
+                    file.putkey('nlinkpath', nlinkpath)
+                    file.putkey('nlinkdir', nlinkdir)
+                    file.putkey('nlinkfile', nlinkfile)
                     file.putkey('date', str(int(sta2.st_mtime)))
                     tmdat = time.gmtime(sta2.st_mtime)
                     file.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))

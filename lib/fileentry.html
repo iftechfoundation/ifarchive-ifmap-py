@@ -7,7 +7,7 @@
 {%- endif %}
 
 {%- if file.islink %}
-  <span class="SymLinkRef">[link to <a href="/{{ file.nlinkpath|urlencode }}">{{ file.nlinkpath }}</a>]</span>
+  <span class="SymLinkRef">[link to <a href="/indexes/{{ file.nlinkdir|urlencode }}#{{ file.nlinkfile|filehash }}">{{ file.nlinkpath }}</a>]</span>
 {%- endif %}
 
 {%- if file.hasunboxlink %}
