@@ -10,6 +10,6 @@
 # /var/ifarchive/lib/rclone.conf: rclone configuration (names AWS as the provider)
 # /var/ifarchive/lib/aws.config: AWS access keys (must be root to read)
 
-rclone --verbose --config /var/ifarchive/lib/rclone.conf --s3-shared-credentials-file /var/ifarchive/lib/aws.config sync /var/ifarchive/htdocs/if-archive s3:iftf-ifarchive-backup --checksum --links &> /var/ifarchive/logs/nightly-backup.log
+rclone --verbose --config /var/ifarchive/lib/rclone.conf --s3-shared-credentials-file /var/ifarchive/lib/aws.config sync /var/ifarchive/htdocs/if-archive s3:iftf-ifarchive-backup --checksum --links &>> /var/ifarchive/logs/nightly-backup.log
 
 
