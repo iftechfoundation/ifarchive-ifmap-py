@@ -15,6 +15,7 @@ Related files in this repo:
 - `build-indexes`: Shell script wrapper to run `ifmap.py` on the Archive.
 - `build-indexes-bg`: Another shell script wrapper to run both `make-master-index` and `build-indexes` sequentially in the background. (This is used by the admin web interface.)
 - `uncache.py`: Cloudflare API request to purge an Archive file from the CDN cache.
+- `nightly-backup`: Shell script wrapper for the `rclone` nightly backup to AWS.
 
 ## Setup
 

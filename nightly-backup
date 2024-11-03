@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Sync the files tree (not indexes or other material) to an AWS bucket.
+# The bucket is configured with versioning and a 7-day expiration for
+# old file versions, so we get that much rolling history.
+
+# This requires secret credentials, so it must be run as root.
+
+# Requires rclone 1.53 or later.
+# /var/ifarchive/lib/rclone.conf: rclone configuration (names AWS as the provider)
+# /var/ifarchive/lib/aws.config: AWS access keys (must be root to read)
+
+rclone --verbose --config /var/ifarchive/lib/rclone.conf --s3-shared-credentials-file /var/ifarchive/lib/aws.config sync /var/ifarchive/htdocs/if-archive s3:iftf-ifarchive-backup --checksum --links &> /var/ifarchive/logs/nightly-backup.log
+
+
