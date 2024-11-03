@@ -17,6 +17,8 @@ Related files in this repo:
 - `uncache.py`: Cloudflare API request to purge an Archive file from the CDN cache.
 - `nightly-backup`: Shell script wrapper for the `rclone` nightly backup to AWS.
 
+(Okay, some of these are only tangentially related. Miscellaneous admin scripts have accumulated here.)
+
 ## Setup
 
 The generator uses the Python Markdown and Jinja packages. To install these:
