@@ -794,6 +794,9 @@ def parse_directory_tree(treedir, archtree):
                 continue
 
             if ent.is_dir():
+                if ent.name == 'lost+found':
+                    # This occurs in the new storage volume but we skip it.
+                    continue
                 dir2 = archtree.get_directory(dirname2, oradd=True)
                 file = dir.files.get(ent.name)
                 if file is None:
