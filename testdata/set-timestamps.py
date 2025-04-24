@@ -6,6 +6,10 @@
 import sys, os
 import time
 
+dirname = 'testdata/if-archive'
+if len(sys.argv) >= 2:
+    dirname = sys.argv[1]
+
 common_timestamp = 1540000000  # 20 Oct 2018
 
 timestamps = {
@@ -17,7 +21,7 @@ timestamps = {
     'game1-pre':  1538800000,
 }
 
-for root, dirs, files in os.walk('testdata/if-archive'):
+for root, dirs, files in os.walk(dirname):
     for file in files:
         val = timestamps.get(file, common_timestamp)
         path = os.path.join(root, file)
