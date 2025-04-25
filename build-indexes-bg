@@ -12,7 +12,7 @@
 
 (
     if [ "$1" == "--all" ]; then
-	rm -f /var/ifarchive/htdocs/build.lasttime
+        rm -f /var/ifarchive/htdocs/build.lasttime
     fi
 
     /var/ifarchive/bin/make-master-index
