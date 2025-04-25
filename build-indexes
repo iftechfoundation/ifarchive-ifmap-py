@@ -48,11 +48,16 @@ find . -type d -print0 | xargs -0 chmod 775
 find . -type d -print0 | xargs -0 chgrp ifarchive
 
 # Tell Unbox that Master-Index.xml has updated.
-echo -n 'Unbox: '
 unboxkey=$(sed -E -n 's/UnboxRefreshKey[[:space:]]*=[[:space:]]*([a-zA-Z0-9-]*)/\1/p' /var/ifarchive/lib/ifarch.config)
-curl --silent --data "key=$unboxkey" "https://unbox.ifarchive.org/?recheck_index"
-echo
 
+if [ $unboxkey ]; then
+  echo -n 'Unbox: '
+  curl --silent --data "key=$unboxkey" "https://unbox.ifarchive.org/?recheck_index"
+  echo
+else
+  echo 'Not notifying Unbox'
+fi
+       
 echo 'Done.'
 
 # Clean up the lock file.
