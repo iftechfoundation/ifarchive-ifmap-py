@@ -5,10 +5,23 @@
 # feed.
 # (Run this as root, please.)
 
+# The -a argument removes build.lasttime, which means that ifmap.py
+# will regenerate all index pages instead of just the most recent changes.
+# The -s argument rebuilds the search index as well.
+
 # Note that this takes roughly 15 seconds to run, if the checksum cache
 # (htdocs/checksum-cache.txt) already exists. Recreating the cache
 # from scratch takes more like 150 seconds.
 # (That's as of 2023. No doubt the times will creep up in future years.)
+
+while getopts "as" flag; do
+    if [ $flag = "a" ]; then
+        allflag=-a
+    fi
+    if [ $flag = "s" ]; then
+        searchflag=-s
+    fi
+done
 
 # Protect this script from running if it (or build-indexes) is already
 # running. (It will fail if build.lock already exists.)
@@ -26,6 +39,10 @@ set +o noclobber
 # and the RSS feed file.
 
 echo 'Rebuilding indexes...'
+
+if [ $allflag ]; then
+    rm -f /var/ifarchive/htdocs/build.lasttime
+fi
 
 touch /var/ifarchive/htdocs/build.lasttime.tmp
 

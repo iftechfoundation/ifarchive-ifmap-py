@@ -4,26 +4,19 @@
 # but in the background. This script can therefore be invoked by the
 # admin server tool without blocking httpd.
 
-# The -a argument removes build.lasttime, which means that the
-# build-indexes script (when we get there) will regenerate all index
-# pages instead of just the most recent changes. It's hacky to delete
-# this outside the build.lock, but it would be more hacky to pass
-# an argument all the way down to ifmap.py.
+# We pass the -a (rebuild all) and -s (rebuild search index) args down
+# to build-indexes.
 
 while getopts "as" flag; do
     if [ $flag = "a" ]; then
-        allflag=true
+        allflag=-a
     fi
     if [ $flag = "s" ]; then
-        searchflag=true
+        searchflag=-s
     fi
 done
 
 (
-    if [ $allflag ]; then
-        rm -f /var/ifarchive/htdocs/build.lasttime
-    fi
-
     /var/ifarchive/bin/make-master-index
-    /var/ifarchive/bin/build-indexes
+    /var/ifarchive/bin/build-indexes $allflag $searchflag
 ) &> /var/ifarchive/htdocs/build.out &
