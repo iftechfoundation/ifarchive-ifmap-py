@@ -41,7 +41,7 @@ set +o noclobber
 echo 'Rebuilding indexes...'
 
 if [ $allflag ]; then
-    rm -f /var/ifarchive/htdocs/build.lasttime
+  rm -f /var/ifarchive/htdocs/build.lasttime
 fi
 
 touch /var/ifarchive/htdocs/build.lasttime.tmp
@@ -74,7 +74,12 @@ if [ $unboxkey ]; then
 else
   echo 'Not notifying Unbox'
 fi
-       
+
+if [ $searchflag ]; then
+  echo 'Updating search index...'
+  python3 /var/ifarchive/wsgi-bin/search.wsgi build
+fi
+
 echo 'Done.'
 
 # Clean up the lock file.
