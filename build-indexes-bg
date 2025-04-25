@@ -10,12 +10,12 @@
 # this outside the build.lock, but it would be more hacky to pass
 # an argument all the way down to ifmap.py.
 
-while getopts "ai" flag; do
+while getopts "as" flag; do
     if [ $flag = "a" ]; then
         allflag=true
     fi
-    if [ $flag = "i" ]; then
-        indexflag=true
+    if [ $flag = "s" ]; then
+        searchflag=true
     fi
 done
 
