@@ -406,8 +406,8 @@ class Directory:
             self.putkey('parentdir', parentdirname)
 
         # To be filled in later
-        self.lastchange = 0
-        self.doit = True
+        self.lastchange = 0   # only used for --since
+        self.doit = True      # only used for --since
         self.files = {}
         self.subdirs = {}
         self.parentdir = None
