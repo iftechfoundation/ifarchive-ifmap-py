@@ -8,6 +8,10 @@
 <parent>{{ dir.parentdir }}</parent>
 <filecount>{% if dir.count %}{{ dir.count }}{% else %}0{% endif %}</filecount>
 <subdircount>{% if dir.subdircount %}{{ dir.subdircount }}{% else %}0{% endif %}</subdircount>
+{%- if dir.date %}
+<date>{{ dir.datestr }}</date>
+<rawdate>{{ dir.date }}</rawdate>
+{%- endif %}
 {%- if dir._metadata %}
 <metadata>
 {%- for key, valls in dir._metadata %}

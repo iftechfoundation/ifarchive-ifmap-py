@@ -406,6 +406,7 @@ class Directory:
             self.putkey('parentdir', parentdirname)
 
         # To be filled in later
+        self.latestfile = 0
         self.lastchange = 0   # only used for --since
         self.doit = True      # only used for --since
         self.files = {}
@@ -728,6 +729,7 @@ def parse_directory_tree(treedir, archtree):
         sta = os.stat(pathname)
         if sta.st_mtime > dir.lastchange:
             # Get the directory mod time.
+            # (Note this affects lastchange but not latestfile.)
             dir.lastchange = sta.st_mtime
         
         for ent in os.scandir(pathname):
@@ -780,6 +782,9 @@ def parse_directory_tree(treedir, archtree):
                     # We also skip Index~, because I edit files in Emacs
                     # and it's a nuisance deleting the leftovers.
                     continue
+                if sta.st_mtime > dir.latestfile:
+                    dir.latestfile = sta.st_mtime
+                    
                 file = dir.files.get(ent.name)
                 if file is None:
                     file = File(ent.name, dir)
@@ -807,6 +812,13 @@ def parse_directory_tree(treedir, archtree):
                 continue
                         
         # End of internal scan_directory function.
+
+        # Set the directory date field to the latest contained file
+        # (if any).
+        if dir.latestfile:
+            dir.putkey('date', str(int(dir.latestfile)))
+            tmdat = time.gmtime(dir.latestfile)
+            dir.putkey('datestr', time.strftime('%d-%b-%Y', tmdat))
 
     # Call the above function recursively.
     scan_directory(ROOTNAME)
