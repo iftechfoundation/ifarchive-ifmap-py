@@ -6,7 +6,7 @@
 <directory>
 <name>if-archive</name>
 <parent></parent>
-<filecount>3</filecount>
+<filecount>4</filecount>
 <subdircount>4</subdircount>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
@@ -32,6 +32,16 @@ Or, go delving into the hierarchical tree shown here.
 
 
 <file>
+<name>comp.</name>
+<directory>if-archive</directory>
+<path>if-archive/comp.</path>
+<description>
+
+Competitions. This is a long line of text so we can see how the column width is going to work out in real life.
+</description>
+</file>
+
+<file>
 <name>compfile1</name>
 <directory>if-archive</directory>
 <path>if-archive/compfile1</path>
@@ -55,11 +65,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>2932</size>
+<size>3055</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>8344bd7f85bebadb323614cf4d5b3b13</md5>
-<sha512>8be8ace8c855d2ea05531d4bc6810231f490a4a2f37dd8fa82f66fbec19427cb07d752677de95844f85a315e01a8e3d0d16238bd45ca2c5a9d97049d57604b53</sha512>
+<md5>bd5ba54bbaa560cfce2fc9646c4f65b4</md5>
+<sha512>d287e49cf2476a0a8cc14d1cae31d509335d7ee7bf086f7284439e084e7a8c153abeb649fab94e1f403673edb96b98d14099f89d5a67652fd2067ba326ceaa64</sha512>
 </file>
 
 
