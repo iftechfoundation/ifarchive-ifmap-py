@@ -6,7 +6,7 @@
 <directory>
 <name>if-archive</name>
 <parent></parent>
-<filecount>4</filecount>
+<filecount>3</filecount>
 <subdircount>4</subdircount>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
@@ -32,16 +32,6 @@ Or, go delving into the hierarchical tree shown here.
 
 
 <file>
-<name>comp.</name>
-<directory>if-archive</directory>
-<path>if-archive/comp.</path>
-<description>
-
-Competitions. This is a long line of text so we can see how the column width is going to work out in real life.
-</description>
-</file>
-
-<file>
 <name>compfile1</name>
 <directory>if-archive</directory>
 <path>if-archive/compfile1</path>
@@ -65,11 +55,11 @@ Competitions. This is a long line of text so we can see how the column width is 
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>3055</size>
+<size>3054</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>bd5ba54bbaa560cfce2fc9646c4f65b4</md5>
-<sha512>d287e49cf2476a0a8cc14d1cae31d509335d7ee7bf086f7284439e084e7a8c153abeb649fab94e1f403673edb96b98d14099f89d5a67652fd2067ba326ceaa64</sha512>
+<md5>d250f7503401d6c2d15fbcd1ea935714</md5>
+<sha512>3cdd15e4302e6f2a8eec8b6cacac54bb5fcf69346e2b82d8b03064efd61c4edb21a1118c3c9c67d8000f0dad950a1ddb4973039234fcf2b952c0cc8ce874585c</sha512>
 </file>
 
 
@@ -167,6 +157,10 @@ Release 1 / Serial number 000000
 <subdircount>1</subdircount>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
+<parentdesc dir="if-archive">
+
+Competitions. This is a long line of text so we can see how the column width is going to work out in real life.
+</parentdesc>
 </directory>
 
 
