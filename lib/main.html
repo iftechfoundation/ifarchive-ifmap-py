@@ -19,6 +19,20 @@
 </div>
 {% endif %}
 
+<div class="SearchBox">
+  <form class="SearchForm" action="http://localhost:8080/dump" method="POST">
+  <div class="InputBox">
+    <input class="FormField" name="searchbar" type="text" placeholder="Search">
+  </div>
+  <div class="ButtonBox">
+    {% if parentdir %}
+      <input class="FormButton" name="submitdir" type="submit" formaction="http://localhost:8080/dump?dir={{ dir|urlencode }}" value="Search within">
+    {% endif %}
+    <input class="FormButton" name="submit" type="submit" value="Search all">
+  </div>
+  </form>
+</div>
+
 {% endblock %}
 
 {% block description %}
