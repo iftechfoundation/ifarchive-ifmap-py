@@ -44,9 +44,12 @@ if [ $allflag ]; then
   rm -f /var/ifarchive/htdocs/build.lasttime
 fi
 
+# Look up the SearchURL key in ifarch.config
+SEARCHURL=`/var/ifarchive/bin/configparse.py SearchURL /search`
+
 touch /var/ifarchive/htdocs/build.lasttime.tmp
 
-/var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs --since /var/ifarchive/htdocs/build.lasttime
+/var/ifarchive/bin/ifmap.py --index /var/ifarchive/htdocs/if-archive/Master-Index --src /var/ifarchive/lib/ifmap --tree /var/ifarchive/htdocs --since /var/ifarchive/htdocs/build.lasttime --searchurl $SEARCHURL
 
 mv /var/ifarchive/htdocs/build.lasttime.tmp /var/ifarchive/htdocs/build.lasttime
 
