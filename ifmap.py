@@ -41,6 +41,9 @@ popt.add_option('--dest',
 popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
+popt.add_option('--searchurl',
+                action='store', dest='searchurl', default='/search',
+                help='URL to direct the search form to (default "/search")')
 popt.add_option('-v', '--verbose',
                 action='count', dest='verbose', default=0,
                 help='print verbose output (repeat for more)')
@@ -1349,6 +1352,7 @@ if __name__ == '__main__':
         autoescape = select_autoescape(),
         keep_trailing_newline = True,
     )
+    jenv.globals['searchurl'] = opts.searchurl
     
     convertermeta = markdown.Markdown(extensions = ['meta', InternalLinkExt()])
     
