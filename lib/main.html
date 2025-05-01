@@ -8,22 +8,25 @@
 <h1>Index: {{ wbrlinkslash(_dirlinkels) }}</h1>
 </div>
 
-{% if parentdir %}
-<div class="ParentLinks">
-<ul id="parentlist">
-<li><a href="/indexes/{{ parentdir|urlencode }}/">Up to parent</a>
-<li><a href="/indexes/{{ rootdir|urlencode }}/">Up to root</a>
-<li><a href="/{{ dir|urlencode }}/">See raw files</a>
-</ul>
-<hr>
-</div>
-{% endif %}
+<div class="Subheader">
 
 <div class="SearchBox">
   <form class="SearchForm" action="{{ searchurl }}" method="POST">
-  <input class="FormField" name="searchbar" type="text" placeholder="Search">
+  <input class="FormField" name="searchbar" type="text" placeholder="Search for...">
   <input class="FormButton" name="submit" type="submit" value="Search">
   </form>
+</div>
+
+{% if parentdir %}
+<div class="ParentLinks">
+  <ul id="parentlist">
+  <li><a href="/indexes/{{ parentdir|urlencode }}/">Up to parent</a>
+  <li><a href="/indexes/{{ rootdir|urlencode }}/">Up to root</a>
+  <li><a href="/{{ dir|urlencode }}/">See raw files</a>
+  </ul>
+</div>
+{% endif %}
+
 </div>
 
 {% endblock %}
