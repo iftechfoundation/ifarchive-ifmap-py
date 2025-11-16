@@ -39,6 +39,7 @@ set +o noclobber
 # and the RSS feed file.
 
 echo 'Rebuilding indexes...'
+starttime=`date +%s`
 
 if [ $allflag ]; then
   rm -f /var/ifarchive/htdocs/build.lasttime
@@ -83,7 +84,8 @@ if [ $searchflag ]; then
   python3 /var/ifarchive/wsgi-bin/search.wsgi build
 fi
 
-echo 'Done.'
+endtime=`date +%s`
+echo "Done after $((($endtime - $starttime))) seconds."
 
 # Clean up the lock file.
 
