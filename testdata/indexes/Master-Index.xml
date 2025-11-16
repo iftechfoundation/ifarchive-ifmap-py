@@ -55,11 +55,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>3090</size>
+<size>3217</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>65d6c78145bf4416a84a658039c30377</md5>
-<sha512>a1b0c34602eb186c33a41861bf89519dbbd84d8120442ba77926ce3af116dccafa123e79fccaa41196b2a36498772c693994313ad8868e1004f32e5f1d2e5cc0</sha512>
+<md5>00c0904dae4ebaccad0ad77daf3d2e33</md5>
+<sha512>bb12a3dd0929dc06b772a6d1f22214b6ecc997d4fc8e4cfee534a7f07b27d907fef60f87d884aa41cd0829400e04395e4e2a7a1193ee2751a04638c5ab626b03</sha512>
 </file>
 
 
@@ -208,6 +208,11 @@ Competitions. This is a long line of text so we can see how the column width is 
 <rawdate>1539700000</rawdate>
 <md5>e4f08d6708151f1197d8e4728f1b8693</md5>
 <sha512>2b6c836d8f28e47cc5ff2ef3b96da60974e8c8e74b0300e6fad6959ba5a175ca86bd312142a23713fad2f1e6f35ca21aed41339e7720f4551bddd578d5fb42d8</sha512>
+<metadata>
+  <item><key>safety</key>
+    <value>visual-porn, visual-gore</value>
+  </item>
+</metadata>
 </file>
 
 <file>

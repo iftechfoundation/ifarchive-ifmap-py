@@ -62,6 +62,13 @@ unbox-link: false
 
 ------------------------------------------------------
 
+# if-archive/comp/files:
+## all.zip
+safety: visual-porn, visual-gore
+
+
+------------------------------------------------------
+
 # if-archive/games:
 
 Hey: these are some game files.
