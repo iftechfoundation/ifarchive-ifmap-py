@@ -55,11 +55,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>3054</size>
+<size>3090</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>d250f7503401d6c2d15fbcd1ea935714</md5>
-<sha512>3cdd15e4302e6f2a8eec8b6cacac54bb5fcf69346e2b82d8b03064efd61c4edb21a1118c3c9c67d8000f0dad950a1ddb4973039234fcf2b952c0cc8ce874585c</sha512>
+<md5>65d6c78145bf4416a84a658039c30377</md5>
+<sha512>a1b0c34602eb186c33a41861bf89519dbbd84d8120442ba77926ce3af116dccafa123e79fccaa41196b2a36498772c693994313ad8868e1004f32e5f1d2e5cc0</sha512>
 </file>
 
 
@@ -316,6 +316,9 @@ Linked to comp/files.
   <item><key>ifwiki</key>
     <value>Adventure</value>
   </item>
+  <item><key>safety</key>
+    <value>text-porn</value>
+  </item>
 </metadata>
 <description>
 
@@ -417,6 +420,9 @@ A double-depth directory.
   <item><key>tuid</key>
     <value>ghi98765</value>
     <value>ghij987654</value>
+  </item>
+  <item><key>safety</key>
+    <value>self-harm</value>
   </item>
 </metadata>
 <description>

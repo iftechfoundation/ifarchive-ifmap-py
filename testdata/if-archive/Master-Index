@@ -73,6 +73,7 @@ Hey: these are some game files.
 ## game1
 tuid: xyz111
 ifwiki: Adventure
+safety: text-porn
 
 Game number 1.
 
@@ -99,6 +100,7 @@ A double-depth directory.
 
 ## old/older/game1-pre
 tuid: ghi98765
+safety: self-harm
 
 Triple-depth file reference.
 

@@ -2,3 +2,4 @@
 ifwiki: Game
 tuid: ghi98765
 tuid: ghij987654
+safety: self-harm
