@@ -247,6 +247,13 @@ def pluralize(val, singular='', plural='s'):
     else:
         return plural
 
+def splitflatten(valls):
+    res = []
+    for val in valls:
+        ls = [ it.strip() for it in val.split(',') ]
+        res.extend(ls)
+    return res
+    
 filehash_pattern = re.compile('([^a-zA-Z0-9_.,;:()@/-])')
 filehash_escaper = lambda match: '=%02X=' % (ord(match.group(1)),)
 def filehash(val):
@@ -1322,6 +1329,11 @@ def generate_metadata(dirmap):
 
 
 def generate_blockmap(dirmap, mappath):
+    """Write out the blocktag.map file, if mappath is passed in. If not,
+    we check the validity of safety tags but do not write the file.
+    """
+    safety_set = set(safety_tags)
+    
     ls = []
     for dir in dirmap.values():
         for file in dir.files.values():
@@ -1329,6 +1341,12 @@ def generate_blockmap(dirmap, mappath):
                 continue
             if file.metadata and 'safety' in file.metadata:
                 tagls = file.metadata['safety']
+                tagls = splitflatten(tagls)
+                tagset = set(tagls)
+                badtags = tagset.difference(safety_set)
+                if badtags:
+                    sys.stderr.write('File has bad tags %s: %s\n' % (badtags, file.path,))
+                    
                 tagstr = ':' + ', '.join(tagls)
                 ls.append( ('/'+file.path, tagstr) )
                 if file.backsymlinks:
@@ -1337,15 +1355,16 @@ def generate_blockmap(dirmap, mappath):
     
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': int(time.time()) }
-    
-    filename = mappath
-    tempname = mappath+'__temp'
-    writer = SafeWriter(tempname, filename)
-    fl = writer.stream()
-    template.stream(itermap).dump(fl)
-    for (path, val) in ls:
-        fl.write('%s\t%s\n' % (path, val,))
-    writer.resolve()
+
+    if mappath:
+        filename = mappath
+        tempname = mappath+'__temp'
+        writer = SafeWriter(tempname, filename)
+        fl = writer.stream()
+        template.stream(itermap).dump(fl)
+        for (path, val) in ls:
+            fl.write('%s\t%s\n' % (path, val,))
+        writer.resolve()
 
 
 # Begin work!
@@ -1417,8 +1436,7 @@ if __name__ == '__main__':
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
 
-    if opts.blockmappath:
-        generate_blockmap(archtree.dirmap, opts.blockmappath)
+    generate_blockmap(archtree.dirmap, opts.blockmappath)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
 
