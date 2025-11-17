@@ -1312,9 +1312,18 @@ def generate_metadata(dirmap):
 
 
 def generate_blockmap(dirmap):
+    ls = []
     for dir in dirmap.values():
         for file in dir.files.values():
-            pass
+            if file.isdir or file.isdeep or file.islink:
+                continue
+            if file.metadata and 'safety' in file.metadata:
+                tagls = file.metadata['safety']
+                tagstr = ':' + ', '.join(tagls)
+                ls.append( ('/'+file.path, tagstr) )
+                if file.backsymlinks:
+                    for lfile in file.backsymlinks:
+                        ls.append( ('/'+lfile.path, tagstr) )
     
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': int(time.time()) }
@@ -1323,7 +1332,9 @@ def generate_blockmap(dirmap):
     tempname = opts.blockpath+'__temp'
     writer = SafeWriter(tempname, filename)
     fl = writer.stream()
-    template.stream(itermap).dump(writer.stream())
+    template.stream(itermap).dump(fl)
+    for (path, val) in ls:
+        fl.write('%s\t%s\n' % (path, val,))
     writer.resolve()
 
 
