@@ -1,0 +1,16 @@
+# File blocking tags for the archiveblock plugin
+# See: https://github.com/iftechfoundation/ifarchive-archiveblock
+
+# This file is generated from the "safety" tags in the Index files.
+# Last generated: {{ date|isodate }}
+
+# Each line represents a file or directory which is blocked in the UK.
+# A pathname that ends with "/*" tags all the files in that directory.
+# A pathname that ends with "/**" tags all the files in that directory *and*
+# its subdirectories.
+
+# The next field is separated from the pathname by a tab. The field has
+# the form "FLAGS:TAGS". The FLAGS is empty or "u" (meaning "block this
+# file in the UK"). The TAGS are a comma-separated list of values;
+# see https://ifarchive.org/misc/org-procedures.html.
+

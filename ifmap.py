@@ -41,6 +41,9 @@ popt.add_option('--dest',
 popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
+popt.add_option('--blockmap',
+                action='store', dest='blockpath', default='./blocktag.map',
+                help='path to write blocktag map file (default "./blocktag.map")')
 popt.add_option('--searchurl',
                 action='store', dest='searchurl', default='/search',
                 help='URL to direct the search form to (default "/search")')
@@ -1307,6 +1310,23 @@ def generate_metadata(dirmap):
             writer.stream().write('</metadata>\n')
             writer.resolve()
 
+
+def generate_blockmap(dirmap):
+    for dir in dirmap.values():
+        for file in dir.files.values():
+            pass
+    
+    template = jenv.get_template('blocktag-head.txt')
+    itermap = { 'date': int(time.time()) }
+    
+    filename = opts.blockpath
+    tempname = opts.blockpath+'__temp'
+    writer = SafeWriter(tempname, filename)
+    fl = writer.stream()
+    template.stream(itermap).dump(writer.stream())
+    writer.resolve()
+
+
 # Begin work!
 # We only do this if we're the executing script. If this is just an imported
 # module, we do no work. (This lets the test script "import ifmap" for unit
@@ -1375,6 +1395,8 @@ if __name__ == '__main__':
     
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
+
+    generate_blockmap(archtree.dirmap)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
 
