@@ -67,6 +67,8 @@ safety_tags = {
     'unknown': 'Content not reviewed',
 }
 
+ukblock_tags = safety_tags.copy()
+ukblock_tags.pop('text-porn')
 
 class DirList:
     """DirList: A list of directories, loaded from a source file.
@@ -1333,6 +1335,7 @@ def generate_blockmap(dirmap, mappath):
     we check the validity of safety tags but do not write the file.
     """
     safety_set = set(safety_tags)
+    ukblock_set = set(ukblock_tags)
     
     ls = []
     for dir in dirmap.values():
@@ -1346,8 +1349,10 @@ def generate_blockmap(dirmap, mappath):
                 badtags = tagset.difference(safety_set)
                 if badtags:
                     sys.stderr.write('File has bad tags %s: %s\n' % (badtags, file.path,))
-                    
-                tagstr = ':' + ', '.join(tagls)
+                flags = ''
+                if tagset.intersection(ukblock_set):
+                    flags = 'u'
+                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+file.path, tagstr) )
                 if file.backsymlinks:
                     for lfile in file.backsymlinks:
