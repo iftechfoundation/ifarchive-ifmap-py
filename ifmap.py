@@ -58,6 +58,16 @@ popt.add_option('--since',
                 help='only build index/metadata for directories changed since this file')
 
 
+safety_tags = {
+    'text-porn': 'Pornographic (sexual) text',
+    'visual-porn': 'Pornographic (sexual) images',
+    'visual-gore': 'Violent images or depictions of gore',
+    'self-harm': 'Content which encourages or provides instructions for suicide or self-injury',
+    'eating-disorder': 'Content which encourages or provides instructions for an eating disorder or behavior associated with same',
+    'unknown': 'Content not reviewed',
+}
+
+
 class DirList:
     """DirList: A list of directories, loaded from a source file.
     """
