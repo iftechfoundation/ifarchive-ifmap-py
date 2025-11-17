@@ -42,8 +42,8 @@ popt.add_option('--meta',
                 action='store', dest='metadir', default='metadata',
                 help='directory to write metadata files (relative to --tree; default "metadata")')
 popt.add_option('--blockmap',
-                action='store', dest='blockpath', default='./blocktag.map',
-                help='path to write blocktag map file (default "./blocktag.map")')
+                action='store', dest='blockmappath',
+                help='path to write blocktag map file (default: none)')
 popt.add_option('--searchurl',
                 action='store', dest='searchurl', default='/search',
                 help='URL to direct the search form to (default "/search")')
@@ -1311,7 +1311,7 @@ def generate_metadata(dirmap):
             writer.resolve()
 
 
-def generate_blockmap(dirmap):
+def generate_blockmap(dirmap, mappath):
     ls = []
     for dir in dirmap.values():
         for file in dir.files.values():
@@ -1328,8 +1328,8 @@ def generate_blockmap(dirmap):
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': int(time.time()) }
     
-    filename = opts.blockpath
-    tempname = opts.blockpath+'__temp'
+    filename = mappath
+    tempname = mappath+'__temp'
     writer = SafeWriter(tempname, filename)
     fl = writer.stream()
     template.stream(itermap).dump(fl)
@@ -1407,7 +1407,8 @@ if __name__ == '__main__':
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
 
-    generate_blockmap(archtree.dirmap)
+    if opts.blockmappath:
+        generate_blockmap(archtree.dirmap, opts.blockmappath)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
 
