@@ -1358,7 +1358,9 @@ def generate_blockmap(dirmap, mappath):
                 if file.backsymlinks:
                     for lfile in file.backsymlinks:
                         ls.append( ('/'+lfile.path, tagstr) )
-    
+
+    ls.sort()
+                        
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': int(time.time()) }
 
