@@ -253,6 +253,7 @@ def splitflatten(valls):
     res = []
     for val in valls:
         ls = [ it.strip() for it in val.split(',') ]
+        ls = [ it for it in ls if it ]
         res.extend(ls)
     return res
     
