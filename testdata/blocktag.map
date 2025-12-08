@@ -14,6 +14,7 @@
 # file in the UK"). The TAGS are a comma-separated list of values;
 # see https://ifarchive.org/misc/org-procedures.html.
 
+/if-archive/unprocessed/**	u:unknown
 /if-archive/comp/files/all.zip	u:visual-porn, visual-gore
 /if-archive/games/all.zip	u:visual-porn, visual-gore
 /if-archive/games/game1	:text-porn
