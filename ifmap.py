@@ -1362,7 +1362,7 @@ def generate_blockmap(dirmap, mappath):
     ls.sort()
                         
     template = jenv.get_template('blocktag-head.txt')
-    itermap = { 'date': int(time.time()) }
+    itermap = { 'date': curdate }
 
     if mappath:
         filename = mappath
