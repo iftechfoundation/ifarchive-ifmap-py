@@ -1350,7 +1350,11 @@ def generate_blockmap(dirmap, mappath):
         tagset = set(tagls)
         badtags = tagset.difference(safety_set)
         if badtags:
-            sys.stderr.write('%s has bad tags %s: %s\n' % (fdir.__class__.__name__, badtags, file.path,))
+            badls = ','.join(badtags)
+            if isinstance(fdir, Directory):
+                sys.stderr.write('Dir has bad tags (%s): %s\n' % (badls, fdir.dir,))
+            else:
+                sys.stderr.write('File has bad tags (%s): %s\n' % (badls, fdir.path,))
         flags = ''
         if tagset.intersection(ukblock_set):
             flags = 'u'
@@ -1361,12 +1365,9 @@ def generate_blockmap(dirmap, mappath):
     for dir in dirmap.values():
         if dir.metadata:
             if 'safety' in dir.metadata:
-                tagls = dir.metadata['safety']
-                tagls = splitflatten(tagls, skipnone=True)
-                tagset = set(tagls)
-                badtags = tagset.difference(safety_set)
-                if badtags:
-                    sys.stderr.write('Dir has bad tags %s: %s\n' % (badtags, file.path,))
+                metals = dir.metadata['safety']
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/**', tagstr) )
 
         for file in dir.files.values():
             if file.isdir or file.isdeep or file.islink:
