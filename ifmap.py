@@ -1368,6 +1368,24 @@ def generate_blockmap(dirmap, mappath):
                 metals = dir.metadata['safety']
                 tagstr = genline(dir, metals)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
+            if 'blocktree' in dir.metadata:
+                metals = dir.metadata['blocktree']
+                tagls = splitflatten(metals, skipnone=True)
+                if tagls == ['yes'] or tagls == ['true']:
+                    metals = [ 'unknown' ]
+                elif tagls == ['no'] or tagls == ['false']:
+                    metals = [ 'none' ]
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/**', tagstr) )
+            if 'blockdir' in dir.metadata:
+                metals = dir.metadata['blockdir']
+                tagls = splitflatten(metals, skipnone=True)
+                if tagls == ['yes'] or tagls == ['true']:
+                    metals = [ 'unknown' ]
+                elif tagls == ['no'] or tagls == ['false']:
+                    metals = [ 'none' ]
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/*', tagstr) )
 
         for file in dir.files.values():
             if file.isdir or file.isdeep or file.islink:
