@@ -252,8 +252,8 @@ def pluralize(val, singular='', plural='s'):
 def splitflatten(valls, skipnone=False):
     """Given a list of strings (as from a metadata key), split them
     by commas and flatten the result.
-    If skipnone is true, the string "none" is ignored (although it doesn't
-    erase other items).
+    If skipnone is true, the special case "none" is mapped to an empty
+    list.
     """
     res = []
     for val in valls:
@@ -261,7 +261,11 @@ def splitflatten(valls, skipnone=False):
         ls = [ it for it in ls if it ]
         res.extend(ls)
     if skipnone:
-        res = [ val for val in res if val != 'none' ]
+        if res == [ 'none' ]:
+            res = []
+        elif 'none' in res:
+            sys.stderr.write('Cannot combine "none" with other items: %s\n' % (valls,))
+    
     return res
     
 filehash_pattern = re.compile('([^a-zA-Z0-9_.,;:()@/-])')
