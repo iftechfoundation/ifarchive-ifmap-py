@@ -1346,6 +1346,7 @@ def generate_blockmap(dirmap, mappath):
             if file.metadata and 'safety' in file.metadata:
                 tagls = file.metadata['safety']
                 tagls = splitflatten(tagls)
+                tagls = [ val for val in tagls if val != 'none' ]
                 tagset = set(tagls)
                 badtags = tagset.difference(safety_set)
                 if badtags:
