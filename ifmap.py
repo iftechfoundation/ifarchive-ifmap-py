@@ -249,12 +249,19 @@ def pluralize(val, singular='', plural='s'):
     else:
         return plural
 
-def splitflatten(valls):
+def splitflatten(valls, skipnone=False):
+    """Given a list of strings (as from a metadata key), split them
+    by commas and flatten the result.
+    If skipnone is true, the string "none" is ignored (although it doesn't
+    erase other items).
+    """
     res = []
     for val in valls:
         ls = [ it.strip() for it in val.split(',') ]
         ls = [ it for it in ls if it ]
         res.extend(ls)
+    if skipnone:
+        res = [ val for val in res if val != 'none' ]
     return res
     
 filehash_pattern = re.compile('([^a-zA-Z0-9_.,;:()@/-])')
@@ -1337,24 +1344,36 @@ def generate_blockmap(dirmap, mappath):
     """
     safety_set = set(safety_tags)
     ukblock_set = set(ukblock_tags)
+
+    def genline(fdir, metals):
+        tagls = splitflatten(metals, skipnone=True)
+        tagset = set(tagls)
+        badtags = tagset.difference(safety_set)
+        if badtags:
+            sys.stderr.write('%s has bad tags %s: %s\n' % (fdir.__class__.__name__, badtags, file.path,))
+        flags = ''
+        if tagset.intersection(ukblock_set):
+            flags = 'u'
+        tagstr = '%s:%s' % (flags, ', '.join(tagls),)
+        return tagstr
     
     ls = []
     for dir in dirmap.values():
+        if dir.metadata:
+            if 'safety' in dir.metadata:
+                tagls = dir.metadata['safety']
+                tagls = splitflatten(tagls, skipnone=True)
+                tagset = set(tagls)
+                badtags = tagset.difference(safety_set)
+                if badtags:
+                    sys.stderr.write('Dir has bad tags %s: %s\n' % (badtags, file.path,))
+
         for file in dir.files.values():
             if file.isdir or file.isdeep or file.islink:
                 continue
             if file.metadata and 'safety' in file.metadata:
-                tagls = file.metadata['safety']
-                tagls = splitflatten(tagls)
-                tagls = [ val for val in tagls if val != 'none' ]
-                tagset = set(tagls)
-                badtags = tagset.difference(safety_set)
-                if badtags:
-                    sys.stderr.write('File has bad tags %s: %s\n' % (badtags, file.path,))
-                flags = ''
-                if tagset.intersection(ukblock_set):
-                    flags = 'u'
-                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
+                metals = file.metadata['safety']
+                tagstr = genline(file, metals)
                 ls.append( ('/'+file.path, tagstr) )
                 if file.backsymlinks:
                     for lfile in file.backsymlinks:
