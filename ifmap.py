@@ -1367,10 +1367,6 @@ def generate_blockmap(dirmap, mappath):
     
     ls = []
     for dir in dirmap.values():
-        if dir.dir == '/if-archive/unprocessed':
-            # special case
-            tagstr = 'u:unknown'
-            ls.append( ('/'+dir.dir+'/**', tagstr) )
         if dir.metadata:
             if 'safety' in dir.metadata:
                 metals = dir.metadata['safety']
@@ -1407,7 +1403,10 @@ def generate_blockmap(dirmap, mappath):
                         ls.append( ('/'+lfile.path, tagstr) )
 
     ls.sort()
-                        
+
+    # Special-case unprocessed.
+    ls.insert(0, ('/if-archive/unprocessed/**', 'u:unknown'))
+    
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': curdate }
 
