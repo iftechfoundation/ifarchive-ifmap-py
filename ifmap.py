@@ -451,6 +451,7 @@ class Directory:
         self.parentdir = None
         self.parentdescs = OrderedDict()  # xmldescs really
         self.metadata = OrderedDict()
+        self.dirsafety = None
 
     def __repr__(self):
         return '<Directory %s>' % (self.dir,)
@@ -1014,8 +1015,20 @@ def construct_blockmap(dirmap):
                     for lfile in file.backsymlinks:
                         ls.append( ('/'+lfile.path, tagstr) )
 
-    ls.sort()
+    def itermark(dir, treetags):
+        if dir.dir in blocktree_map:
+            treetags = blocktree_map[dir.dir]
+        dirtags = treetags
+        if dir.dir in blockdir_map:
+            dirtags = blockdir_map[dir.dir]
+        dir.dirsafety = dirtags
+        for subdir in dir.subdirs.values():
+            itermark(subdir, treetags)
 
+    itermark(dirmap['if-archive'], [])
+                        
+    # The map (list) itself.
+    ls.sort()
     # Special-case unprocessed.
     ls.insert(0, ('/if-archive/unprocessed/**', 'u:unknown'))
 
