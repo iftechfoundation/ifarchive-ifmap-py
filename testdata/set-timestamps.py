@@ -14,6 +14,8 @@ common_timestamp = 1540000000  # 20 Oct 2018
 
 timestamps = {
     'file':       1500000000,
+    'file-safe':  1500000000,
+    'file-porn':  1500000000,
     'file-1.txt': 1539500000,
     'file-2.txt': 1539600000,
     'file-3.txt': 1539700000,

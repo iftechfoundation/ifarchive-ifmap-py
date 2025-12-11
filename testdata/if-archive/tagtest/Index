@@ -2,3 +2,9 @@ blocktree: yes
 
 
 # file
+
+# file-safe
+safety: none
+
+# file-porn
+safety: visual-porn
