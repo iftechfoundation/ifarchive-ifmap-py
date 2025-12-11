@@ -1,0 +1,2 @@
+# if-archive/tagtest/file-safe
+safety: none
