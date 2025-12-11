@@ -28,7 +28,8 @@
   {%- set comma = joiner(', ') %}
   <{{ datel }} class="FileData">Content: 
   {% for val in dat.safety -%}
-    {{ comma() }}<span>{{ tag_table.get(val, val) }}</span>
+    {% set taglabel, tagdesc = tag_table.get(val, (val, None)) %}
+    {{ comma() }}<span title="{{ tagdesc }}">{{ taglabel }}</span>
   {%- endfor %}
 {%- endif %}
 
