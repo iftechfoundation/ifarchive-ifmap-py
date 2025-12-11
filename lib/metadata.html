@@ -1,3 +1,5 @@
+{% from 'tagdef.html' import tag_table %}
+
 {%- if dat.tuid %}
   {%- set comma = joiner(', ') %}
   <{{ datel }} class="FileData">
@@ -21,3 +23,12 @@
     {{ comma() }}<a href="https://www.ifwiki.org/{{ val|replace(' ','_')|urlencode }}">{{ val }}</a>
   {%- endfor %}
 {%- endif %}
+
+{%- if dat.safety %}
+  {%- set comma = joiner(', ') %}
+  <{{ datel }} class="FileData">Content: 
+  {% for val in dat.safety -%}
+    {{ comma() }}<span>{{ tag_table.get(val, val) }}</span>
+  {%- endfor %}
+{%- endif %}
+
