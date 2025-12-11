@@ -1499,7 +1499,8 @@ if __name__ == '__main__':
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
 
-    generate_blockmap(blocklist, opts.blockmappath)
+    if opts.blockmappath:
+        generate_blockmap(blocklist, opts.blockmappath)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
 
