@@ -55,11 +55,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>3217</size>
+<size>3249</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>00c0904dae4ebaccad0ad77daf3d2e33</md5>
-<sha512>bb12a3dd0929dc06b772a6d1f22214b6ecc997d4fc8e4cfee534a7f07b27d907fef60f87d884aa41cd0829400e04395e4e2a7a1193ee2751a04638c5ab626b03</sha512>
+<md5>93edda9e1311aa01964265bf74364306</md5>
+<sha512>7cf2d0ac85a83e76b515b65c7207750814f8bda53a3a4ba3b249f3034dd5ac98688851d8b54dbd85a15541155494ff77564af7a751a434e24fc19b2768a733d5</sha512>
 </file>
 
 
@@ -224,6 +224,11 @@ Competitions. This is a long line of text so we can see how the column width is 
 <rawdate>1539500000</rawdate>
 <md5>f6994894a975f34178b43db4062cece1</md5>
 <sha512>474be20011ed9c91c4f0bba91e505489140f0b60ba2e1966623934498ba15f0f0a4a90dc0f6fe0893b92c7fcd5513eed83172b049b2c4f0f8efe81b069575f44</sha512>
+<metadata>
+  <item><key>ifwiki</key>
+    <value>File One</value>
+  </item>
+</metadata>
 </file>
 
 <file>
