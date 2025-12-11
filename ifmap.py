@@ -974,6 +974,7 @@ def construct_blockmap(dirmap):
             if 'safety' in dir.metadata:
                 metals = dir.metadata['safety']
                 tagls, flags = genline(dir, metals)
+                blocktree_map[dir.dir] = tagls
                 tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
             if 'blocktree' in dir.metadata:
@@ -986,6 +987,7 @@ def construct_blockmap(dirmap):
                 elif tagls == ['no'] or tagls == ['false']:
                     metals = [ 'none' ]
                 tagls, flags = genline(dir, metals)
+                blocktree_map[dir.dir] = tagls
                 tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
             if 'blockdir' in dir.metadata:
@@ -996,6 +998,7 @@ def construct_blockmap(dirmap):
                 elif tagls == ['no'] or tagls == ['false']:
                     metals = [ 'none' ]
                 tagls, flags = genline(dir, metals)
+                blockdir_map[dir.dir] = tagls
                 tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/*', tagstr) )
 
