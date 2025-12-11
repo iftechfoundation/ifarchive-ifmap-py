@@ -55,11 +55,11 @@ Or, go delving into the hierarchical tree shown here.
 <name>Master-Index</name>
 <directory>if-archive</directory>
 <path>if-archive/Master-Index</path>
-<size>3968</size>
+<size>4063</size>
 <date>20-Oct-2018</date>
 <rawdate>1540000000</rawdate>
-<md5>cf41dc90671a34183b4ea3cbb0694bdc</md5>
-<sha512>127152699b50806b51471f34fa9f0e0b0bd859c4b9a8a4f519ee02a287b08f2b6046e3b5b8774a66c8473e7a4a1ffb9a089fc190dd6356937b4fe0562a9e8863</sha512>
+<md5>8573978c71f5a81bea253cc63bd889ac</md5>
+<sha512>15c2fe5d10f325a2809b9a719e1408758480636464d1dd1d957bd9b3c40b84bfdaca7d691d96e1c8c55c5f0132d693b1d62d2bcbdf94cae52a54f89d607402c7</sha512>
 </file>
 
 
@@ -622,7 +622,7 @@ Deep description.
 <directory>
 <name>if-archive/tagtest</name>
 <parent>if-archive</parent>
-<filecount>1</filecount>
+<filecount>3</filecount>
 <subdircount>3</subdircount>
 <date>14-Jul-2017</date>
 <rawdate>1500000000</rawdate>
@@ -648,6 +648,38 @@ Deep description.
 <sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
 </file>
 
+<file>
+<name>file-porn</name>
+<directory>if-archive/tagtest</directory>
+<path>if-archive/tagtest/file-porn</path>
+<size>0</size>
+<date>14-Jul-2017</date>
+<rawdate>1500000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
+<metadata>
+  <item><key>safety</key>
+    <value>visual-porn</value>
+  </item>
+</metadata>
+</file>
+
+<file>
+<name>file-safe</name>
+<directory>if-archive/tagtest</directory>
+<path>if-archive/tagtest/file-safe</path>
+<size>0</size>
+<date>14-Jul-2017</date>
+<rawdate>1500000000</rawdate>
+<md5>d41d8cd98f00b204e9800998ecf8427e</md5>
+<sha512>cf83e1357eefb8bdf1542850d66d8007d620e4050b5715dc83f4a921d36ce9ce47d0d13c5d85f2b0ff8318d2877eec2f63b931bd47417a81a538327af927da3e</sha512>
+<metadata>
+  <item><key>safety</key>
+    <value>none</value>
+  </item>
+</metadata>
+</file>
+
 
 
 
@@ -658,6 +690,14 @@ Deep description.
 <subdircount>2</subdircount>
 <date>14-Jul-2017</date>
 <rawdate>1500000000</rawdate>
+<metadata>
+  <item><key>blockdir</key>
+    <value>text-porn</value>
+  </item>
+</metadata>
+<description>
+
+</description>
 </directory>
 
 
@@ -706,6 +746,14 @@ Deep description.
 <subdircount>0</subdircount>
 <date>14-Jul-2017</date>
 <rawdate>1500000000</rawdate>
+<metadata>
+  <item><key>blocktree</key>
+    <value>no</value>
+  </item>
+</metadata>
+<description>
+
+</description>
 </directory>
 
 
