@@ -979,6 +979,7 @@ def file_detail_map(file):
         itermap['hasunboxlink'] = True
         
     if file.metadata:
+        ### pull from symlink if file link?
         itermap['_metadata'] = file.metadata
     if file.backsymlinks:
         ls = list(file.backsymlinks)
@@ -1342,9 +1343,8 @@ def generate_metadata(dirmap):
             writer.resolve()
 
 
-def generate_blockmap(dirmap, mappath):
-    """Write out the blocktag.map file, if mappath is passed in. If not,
-    we check the validity of safety tags but do not write the file.
+def compute_blockmap(dirmap):
+    """Check the validity of safety tags and construct a blocklist.
     """
     safety_set = set(safety_tags)
     ukblock_set = set(ukblock_tags)
@@ -1406,19 +1406,23 @@ def generate_blockmap(dirmap, mappath):
 
     # Special-case unprocessed.
     ls.insert(0, ('/if-archive/unprocessed/**', 'u:unknown'))
+
+    return ls
     
+def generate_blockmap(blocklist, mappath):
+    """Write out the blocktag.map file.
+    """
     template = jenv.get_template('blocktag-head.txt')
     itermap = { 'date': curdate }
 
-    if mappath:
-        filename = mappath
-        tempname = mappath+'__temp'
-        writer = SafeWriter(tempname, filename)
-        fl = writer.stream()
-        template.stream(itermap).dump(fl)
-        for (path, val) in ls:
-            fl.write('%s\t%s\n' % (path, val,))
-        writer.resolve()
+    filename = mappath
+    tempname = mappath+'__temp'
+    writer = SafeWriter(tempname, filename)
+    fl = writer.stream()
+    template.stream(itermap).dump(fl)
+    for (path, val) in blocklist:
+        fl.write('%s\t%s\n' % (path, val,))
+    writer.resolve()
 
 
 # Begin work!
@@ -1488,10 +1492,12 @@ if __name__ == '__main__':
         for dir in archtree.dirmap.values():
             dir.doit = (dir.lastchange >= dirsince)
     
+    blocklist = compute_blockmap(archtree.dirmap)
+    
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
 
-    generate_blockmap(archtree.dirmap, opts.blockmappath)
+    generate_blockmap(blocklist, opts.blockmappath)
     
     generate_rss(archtree.dirmap, indexmtime, jenv=jenv)
 
