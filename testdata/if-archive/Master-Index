@@ -189,9 +189,16 @@ blocktree: yes
 
 ## file
 
+## file-safe
+safety: none
+
+## file-porn
+safety: visual-porn
+
 ------------------------------------------------------
 
 # if-archive/tagtest/dir1:
+blockdir: text-porn
 
 ## file
 
@@ -204,6 +211,7 @@ blocktree: yes
 ------------------------------------------------------
 
 # if-archive/tagtest/dir1/sub2:
+blocktree: no
 
 ## file
 

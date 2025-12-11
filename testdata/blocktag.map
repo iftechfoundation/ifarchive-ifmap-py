@@ -19,3 +19,11 @@
 /if-archive/games/all.zip	u:visual-porn, visual-gore
 /if-archive/games/game1	:text-porn
 /if-archive/games/old/older/game1-pre	u:self-harm
+/if-archive/tagtest/**	u:unknown
+/if-archive/tagtest/dir1/*	:text-porn
+/if-archive/tagtest/dir1/sub2/**	:
+/if-archive/tagtest/dir2/**	:
+/if-archive/tagtest/dir3/*	:
+/if-archive/tagtest/dir3/**	u:unknown
+/if-archive/tagtest/file-porn	u:visual-porn
+/if-archive/tagtest/file-safe	:
