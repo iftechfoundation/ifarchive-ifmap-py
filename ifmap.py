@@ -950,6 +950,9 @@ def construct_blockmap(dirmap):
     safety_set = set(safety_tags)
     ukblock_set = set(ukblock_tags)
 
+    blocktree_map = {}
+    blockdir_map = {}
+
     def genline(fdir, metals):
         tagls = splitflatten(metals, skipnone=True)
         tagset = set(tagls)
@@ -963,15 +966,15 @@ def construct_blockmap(dirmap):
         flags = ''
         if tagset.intersection(ukblock_set):
             flags = 'u'
-        tagstr = '%s:%s' % (flags, ', '.join(tagls),)
-        return tagstr
+        return tagls, flags
     
     ls = []
     for dir in dirmap.values():
         if dir.metadata:
             if 'safety' in dir.metadata:
                 metals = dir.metadata['safety']
-                tagstr = genline(dir, metals)
+                tagls, flags = genline(dir, metals)
+                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
             if 'blocktree' in dir.metadata:
                 if 'safety' in dir.metadata:
@@ -982,7 +985,8 @@ def construct_blockmap(dirmap):
                     metals = [ 'unknown' ]
                 elif tagls == ['no'] or tagls == ['false']:
                     metals = [ 'none' ]
-                tagstr = genline(dir, metals)
+                tagls, flags = genline(dir, metals)
+                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
             if 'blockdir' in dir.metadata:
                 metals = dir.metadata['blockdir']
@@ -991,7 +995,8 @@ def construct_blockmap(dirmap):
                     metals = [ 'unknown' ]
                 elif tagls == ['no'] or tagls == ['false']:
                     metals = [ 'none' ]
-                tagstr = genline(dir, metals)
+                tagls, flags = genline(dir, metals)
+                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+dir.dir+'/*', tagstr) )
 
         for file in dir.files.values():
@@ -999,7 +1004,8 @@ def construct_blockmap(dirmap):
                 continue
             if file.metadata and 'safety' in file.metadata:
                 metals = file.metadata['safety']
-                tagstr = genline(file, metals)
+                tagls, flags = genline(file, metals)
+                tagstr = '%s:%s' % (flags, ', '.join(tagls),)
                 ls.append( ('/'+file.path, tagstr) )
                 if file.backsymlinks:
                     for lfile in file.backsymlinks:
@@ -1052,6 +1058,7 @@ def file_detail_map(file):
         
     if file.metadata:
         ### pull from symlink if file link?
+        ### and maybe we should use synthetic/munged safety tag lists
         itermap['_metadata'] = file.metadata
     if file.backsymlinks:
         ls = list(file.backsymlinks)
