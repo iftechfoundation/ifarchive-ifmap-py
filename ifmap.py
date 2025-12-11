@@ -941,9 +941,11 @@ def check_missing_files(dirmap):
                     sys.stderr.write('File without index entry: %s\n' % (file.path,))
 
 
-def compute_blockmap(dirmap):
+def construct_blockmap(dirmap):
     """Check the validity of safety tags and construct a blockmap.
     This is actually a list of (dir, taginfo) pairs, ready to write out.
+
+    While we're at it, we add dirsafety flags to directories.
     """
     safety_set = set(safety_tags)
     ukblock_set = set(ukblock_tags)
@@ -972,6 +974,8 @@ def compute_blockmap(dirmap):
                 tagstr = genline(dir, metals)
                 ls.append( ('/'+dir.dir+'/**', tagstr) )
             if 'blocktree' in dir.metadata:
+                if 'safety' in dir.metadata:
+                    sys.stderr.write('Dir has both safety and blocktree: %s' % (dir.dir,))
                 metals = dir.metadata['blocktree']
                 tagls = splitflatten(metals, skipnone=True)
                 if tagls == ['yes'] or tagls == ['true']:
@@ -1494,7 +1498,7 @@ if __name__ == '__main__':
         for dir in archtree.dirmap.values():
             dir.doit = (dir.lastchange >= dirsince)
     
-    blocklist = compute_blockmap(archtree.dirmap)
+    blocklist = construct_blockmap(archtree.dirmap)
     
     generate_output(archtree.dirmap, jenv=jenv)
     generate_metadata(archtree.dirmap)
