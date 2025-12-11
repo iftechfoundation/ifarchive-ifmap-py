@@ -941,6 +941,74 @@ def check_missing_files(dirmap):
                     sys.stderr.write('File without index entry: %s\n' % (file.path,))
 
 
+def compute_blockmap(dirmap):
+    """Check the validity of safety tags and construct a blockmap.
+    This is actually a list of (dir, taginfo) pairs, ready to write out.
+    """
+    safety_set = set(safety_tags)
+    ukblock_set = set(ukblock_tags)
+
+    def genline(fdir, metals):
+        tagls = splitflatten(metals, skipnone=True)
+        tagset = set(tagls)
+        badtags = tagset.difference(safety_set)
+        if badtags:
+            badls = ','.join(badtags)
+            if isinstance(fdir, Directory):
+                sys.stderr.write('Dir has bad tags (%s): %s\n' % (badls, fdir.dir,))
+            else:
+                sys.stderr.write('File has bad tags (%s): %s\n' % (badls, fdir.path,))
+        flags = ''
+        if tagset.intersection(ukblock_set):
+            flags = 'u'
+        tagstr = '%s:%s' % (flags, ', '.join(tagls),)
+        return tagstr
+    
+    ls = []
+    for dir in dirmap.values():
+        if dir.metadata:
+            if 'safety' in dir.metadata:
+                metals = dir.metadata['safety']
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/**', tagstr) )
+            if 'blocktree' in dir.metadata:
+                metals = dir.metadata['blocktree']
+                tagls = splitflatten(metals, skipnone=True)
+                if tagls == ['yes'] or tagls == ['true']:
+                    metals = [ 'unknown' ]
+                elif tagls == ['no'] or tagls == ['false']:
+                    metals = [ 'none' ]
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/**', tagstr) )
+            if 'blockdir' in dir.metadata:
+                metals = dir.metadata['blockdir']
+                tagls = splitflatten(metals, skipnone=True)
+                if tagls == ['yes'] or tagls == ['true']:
+                    metals = [ 'unknown' ]
+                elif tagls == ['no'] or tagls == ['false']:
+                    metals = [ 'none' ]
+                tagstr = genline(dir, metals)
+                ls.append( ('/'+dir.dir+'/*', tagstr) )
+
+        for file in dir.files.values():
+            if file.isdir or file.isdeep or file.islink:
+                continue
+            if file.metadata and 'safety' in file.metadata:
+                metals = file.metadata['safety']
+                tagstr = genline(file, metals)
+                ls.append( ('/'+file.path, tagstr) )
+                if file.backsymlinks:
+                    for lfile in file.backsymlinks:
+                        ls.append( ('/'+lfile.path, tagstr) )
+
+    ls.sort()
+
+    # Special-case unprocessed.
+    ls.insert(0, ('/if-archive/unprocessed/**', 'u:unknown'))
+
+    return ls
+
+
 def parity_flip(map):
     """Utility function to change the "parity" entry in a dict from "Even"
     to "Odd" and vice versa. Call this at the top of a loop. The dict
@@ -1343,72 +1411,6 @@ def generate_metadata(dirmap):
             writer.resolve()
 
 
-def compute_blockmap(dirmap):
-    """Check the validity of safety tags and construct a blocklist.
-    """
-    safety_set = set(safety_tags)
-    ukblock_set = set(ukblock_tags)
-
-    def genline(fdir, metals):
-        tagls = splitflatten(metals, skipnone=True)
-        tagset = set(tagls)
-        badtags = tagset.difference(safety_set)
-        if badtags:
-            badls = ','.join(badtags)
-            if isinstance(fdir, Directory):
-                sys.stderr.write('Dir has bad tags (%s): %s\n' % (badls, fdir.dir,))
-            else:
-                sys.stderr.write('File has bad tags (%s): %s\n' % (badls, fdir.path,))
-        flags = ''
-        if tagset.intersection(ukblock_set):
-            flags = 'u'
-        tagstr = '%s:%s' % (flags, ', '.join(tagls),)
-        return tagstr
-    
-    ls = []
-    for dir in dirmap.values():
-        if dir.metadata:
-            if 'safety' in dir.metadata:
-                metals = dir.metadata['safety']
-                tagstr = genline(dir, metals)
-                ls.append( ('/'+dir.dir+'/**', tagstr) )
-            if 'blocktree' in dir.metadata:
-                metals = dir.metadata['blocktree']
-                tagls = splitflatten(metals, skipnone=True)
-                if tagls == ['yes'] or tagls == ['true']:
-                    metals = [ 'unknown' ]
-                elif tagls == ['no'] or tagls == ['false']:
-                    metals = [ 'none' ]
-                tagstr = genline(dir, metals)
-                ls.append( ('/'+dir.dir+'/**', tagstr) )
-            if 'blockdir' in dir.metadata:
-                metals = dir.metadata['blockdir']
-                tagls = splitflatten(metals, skipnone=True)
-                if tagls == ['yes'] or tagls == ['true']:
-                    metals = [ 'unknown' ]
-                elif tagls == ['no'] or tagls == ['false']:
-                    metals = [ 'none' ]
-                tagstr = genline(dir, metals)
-                ls.append( ('/'+dir.dir+'/*', tagstr) )
-
-        for file in dir.files.values():
-            if file.isdir or file.isdeep or file.islink:
-                continue
-            if file.metadata and 'safety' in file.metadata:
-                metals = file.metadata['safety']
-                tagstr = genline(file, metals)
-                ls.append( ('/'+file.path, tagstr) )
-                if file.backsymlinks:
-                    for lfile in file.backsymlinks:
-                        ls.append( ('/'+lfile.path, tagstr) )
-
-    ls.sort()
-
-    # Special-case unprocessed.
-    ls.insert(0, ('/if-archive/unprocessed/**', 'u:unknown'))
-
-    return ls
-    
 def generate_blockmap(blocklist, mappath):
     """Write out the blocktag.map file.
     """
