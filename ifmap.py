@@ -1462,6 +1462,7 @@ if __name__ == '__main__':
             jenvfilter('isodate', isodate),
             jenvfilter('pluralize', pluralize),
             jenvfilter('filehash', filehash),
+            jenvfilter('splitflatten', splitflatten),
         ],
         autoescape = select_autoescape(),
         keep_trailing_newline = True,
