@@ -1,0 +1,17 @@
+{% from 'tagdef.html' import tag_table %}
+
+{% if _dirsafety == ['unknown'] %}
+<p>
+  This directory has not been reviewed for content warnings.
+  Unless specifically noted, all files may have content of any type.
+</p>
+{% else %}
+<p>
+  This directory has the following content warning:
+  {%- set comma = joiner(', ') %}
+  {% for val in _dirsafety -%}
+    {%- set taglabel, tagdesc = tag_table.get(val, (val, 'Explanation not available')) -%}
+    {{ comma() }}<span class="SafetyTag" title="{{ tagdesc }}">{{ taglabel }}</span>
+  {%- endfor %}.
+</p>
+{% endif %}
