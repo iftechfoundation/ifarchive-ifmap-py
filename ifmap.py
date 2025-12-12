@@ -1260,6 +1260,7 @@ def generate_output_indexes(dirmap):
             '_subdirs': [ subdir_detail_map(sdir) for sdir in subdirlist ],
             '_alsosubdirs': [ subdir_detail_map(sdir) for sdir in alsosubdirlist ],
             '_dirlinkels': dirlinkels,
+            '_dirsafety': dir.dirsafety,
             'rootdir': ROOTNAME,
         }
         if dir.metadata:
