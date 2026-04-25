@@ -15,6 +15,10 @@ popt.add_option('--stdin',
                 action='store_true', dest='stdin',
                 help='upload data streamed from stdin (the filename is still needed for the S3 side)')
 
+popt.add_option('--storage',
+                action='store', dest='storage',
+                help='storage class (STANDARD, STANDARD_IA, GLACIER_IR, etc)')
+
 popt.add_option('--config',
                 action='store', dest='config', metavar='PATH',
                 help='config file (default: $HOME/.aws/credentials)')
@@ -27,6 +31,10 @@ if len(args) < 2:
 
 filename = args[0]
 bucket = args[1]
+
+extraargs = None
+if opts.storage:
+    extraargs = { 'StorageClass': opts.storage }
 
 cliargs = {}
 
@@ -53,7 +61,7 @@ else:
     print('Uploading file as %s...' % (destfile,))
     infl = open(filename, 'rb')
 
-res = s3client.upload_fileobj(infl, bucket, destfile)
+res = s3client.upload_fileobj(infl, bucket, destfile, extraargs)
 
 if res is not None:
     print(res)
